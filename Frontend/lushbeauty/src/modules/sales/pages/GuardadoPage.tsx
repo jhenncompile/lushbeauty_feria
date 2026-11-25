@@ -1,6 +1,7 @@
 import { Navigate, useNavigate } from 'react-router-dom'
 import { formatBs } from '../../../shared/money'
 import { MobileScreen, ROUTES } from '../../../shared/layout'
+import { useConnection } from '../../../shared/connection'
 import { Button } from '../../../shared/ui'
 import { useRegistroServicio } from '../draft'
 import { formatPercent } from '../domain/sale'
@@ -8,6 +9,7 @@ import { formatPercent } from '../domain/sale'
 export function GuardadoPage() {
   const { saved, undoSaved } = useRegistroServicio()
   const navigate = useNavigate()
+  const { online } = useConnection()
   if (!saved) return <Navigate to={ROUTES.register} replace />
 
   const whole = saved.chargedCents % 100 === 0
@@ -24,7 +26,8 @@ export function GuardadoPage() {
           <p className="t-body">
             {saved.serviceName} · {saved.specialistName} · {saved.method}
           </p>
-          <p className="t-caption">{saved.savedAt} · Pendiente de confirmación del servidor</p>
+          <p className="t-caption">{saved.savedAt} ·{' '}
+            {online ? 'Enviado (simulado, sin servidor)' : 'Guardado en este teléfono: se enviará al volver la conexión'}</p>
         </section>
       }
       footer={

@@ -1,9 +1,12 @@
 import { formatBs } from '../../../shared/money'
 import { ADMIN_TABS, MobileScreen, ROUTES } from '../../../shared/layout'
-import { Button } from '../../../shared/ui'
+import { Link } from 'react-router-dom'
+import { useConnection } from '../../../shared/connection'
+import { Button, Tag } from '../../../shared/ui'
 import { TODAY } from '../fixtures'
 
 export function HoyPage() {
+  const { pending } = useConnection()
   const total = TODAY.byMethod.reduce((sum, item) => sum + item.cents, 0)
   return (
     <MobileScreen
@@ -37,6 +40,13 @@ export function HoyPage() {
             <span className="line__value">{formatBs(item.cents, { decimals: 0 })}</span>
           </div>
         ))}
+      </div>
+      <div>
+        <p className="eyebrow">Atajos</p>
+        <Link className="line line--link" style={{ marginTop: 'var(--space-2)' }} to={ROUTES.sync}>
+          <span className="line__label">Cola de envío</span>
+          {pending > 0 ? <Tag tone="rouge">{pending} por enviar</Tag> : <Tag tone="ok">Al día</Tag>}
+        </Link>
       </div>
     </MobileScreen>
   )
