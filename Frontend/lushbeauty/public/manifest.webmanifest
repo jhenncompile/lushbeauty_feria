@@ -1,0 +1,10 @@
+{
+  "name": "Lush Beauty Smart",
+  "short_name": "Lush Beauty",
+  "lang": "es",
+  "start_url": "/ingresar",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a0a0a",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
