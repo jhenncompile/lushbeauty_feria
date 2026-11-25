@@ -1,6 +1,6 @@
 # F00 · foundation
 
-**Plataformas:** BE · WEB · TRANS  **Semanas:** 1-2  **Estado:** pendiente
+**Plataformas:** BE · WEB · TRANS  **Semanas:** 1-2  **Estado:** UI parcial (solo F00-T5 en maqueta; backend y TRANS pendientes)
 
 ## Resultado esperado
 Un entorno reproducible (`docker compose up`) con API, base de datos y PWA que ya autentica por rol y aísla datos por salón. Sin esto ninguna otra feature es segura.
@@ -18,14 +18,14 @@ RF-19, RF-20 (base) · RN-06 · cap. 10 (principios, seguridad, despliegue)
 - [ ] **F00-T2 [BE]** Modelo `Salon`, `Usuario/Rol` y permisos por operación. *RED:* test de que una especialista no accede a endpoints de administración. *Acept.:* 403 y registro del intento.
 - [ ] **F00-T3 [BE]** Aislamiento por salón en todas las consultas (manager base + RLS en PostgreSQL). *RED:* usuario del salón A pide recursos del salón B. *Acept.:* 404/403; el test demuestra el aislamiento, no solo la presencia de `tenant_id`.
 - [ ] **F00-T4 [BE]** Auditoría base (`Auditoria`: actor, antes/después, evento). *RED:* cambiar un registro sin entrada de auditoría. *Acept.:* cada escritura deja bitácora.
-- [ ] **F00-T5 [WEB]** Scaffold PWA: login, shell con navegación según rol, manifest y service worker vacío. *Acept.:* instalable en móvil; las rutas se muestran según el rol.
+- [ ] **F00-T5 [WEB]** Scaffold PWA: login, shell con navegación según rol, manifest y service worker vacío. *Acept.:* instalable en móvil; las rutas se muestran según el rol. **UI parcial (rama `feat/f00-ui-shell-login`):** login, shell móvil/web, pestañas y guardas por rol con sesión simulada, manifest y service worker vacío hechos; faltan íconos PNG 192/512 para que sea instalable y el login real contra el API.
 - [ ] **F00-T6 [TRANS]** CI mínima (lint, tests) y `.env.example`. Los secretos no van al repo. *Acept.:* la CI corre en cada push.
 
 ## Dependencias
 Ninguna. Bloquea todas las demás.
 
 ## Evidencia
-_(se completa al cerrar)_
+UI (parcial, `feat/f00-ui-shell-login`): `pnpm test` 14 pruebas (dinero en centavos; ingreso con errores; entrada por rol; redirección de una especialista que pide `/caja`), `pnpm lint` y `pnpm build` sin errores. No verificado: render visual en navegador ni instalación PWA. Sin backend: la sesión y el rol son simulados en memoria.
 
 ## Siguiente paso
 F01-caja-ventas-pagos
