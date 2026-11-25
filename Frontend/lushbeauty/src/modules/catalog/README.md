@@ -2,7 +2,7 @@
 
 **Responsabilidad:** servicios con precio de lista y duración, combos y reglas de comisión y descuento vigentes.
 
-**Contrato público (`index.ts`):** `listServices()`, `getPolicy()`, tipos `CatalogService` e `IllustrativePolicy`.
+**Contrato público (`index.ts`):** `listServices()`, `listCombos()`, `getPolicy()`, `WebCatalogoPage` (lectura), tipos `CatalogService` e `IllustrativePolicy`.
 
 **Eventos:** no emite ni consume (fase de UI).
 

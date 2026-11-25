@@ -14,3 +14,8 @@ export const ILLUSTRATIVE_POLICY: IllustrativePolicy = {
   commissionBase: 'lista',
   maxDiscountBps: 1000,
 }
+
+export const COMBOS = [
+  { id: 'combo-1', name: 'Manicura + Pedicura + Tips', lines: 3 },
+  { id: 'combo-2', name: 'Lifting + Henna + Cejas', lines: 3 },
+]

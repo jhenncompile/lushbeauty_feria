@@ -1,4 +1,4 @@
-import { ILLUSTRATIVE_POLICY, SERVICES } from './fixtures'
+import { COMBOS, ILLUSTRATIVE_POLICY, SERVICES } from './fixtures'
 import type { CatalogService, IllustrativePolicy } from './types'
 
 export type { CatalogService, IllustrativePolicy } from './types'
@@ -11,3 +11,9 @@ export function listServices(): CatalogService[] {
 export function getPolicy(): IllustrativePolicy {
   return ILLUSTRATIVE_POLICY
 }
+
+export function listCombos(): Array<{ id: string; name: string; lines: number }> {
+  return COMBOS
+}
+
+export { WebCatalogoPage } from './pages/WebCatalogoPage'
