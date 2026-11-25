@@ -1,0 +1,6 @@
+export { SalesProvider } from './SalesProvider'
+export { DescuentoPage } from './pages/DescuentoPage'
+export { GuardadoPage } from './pages/GuardadoPage'
+export { HoyPage } from './pages/HoyPage'
+export { RegistrarPage } from './pages/RegistrarPage'
+export { WebVentasPage } from './pages/WebVentasPage'

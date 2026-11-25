@@ -11,7 +11,7 @@ export function TopBar({ title, backTo }: TopBarProps) {
       <Link className="bar__link" to={backTo}>
         Volver
       </Link>
-      <span className="eyebrow bar__title">{title}</span>
+      <h1 className="eyebrow bar__title">{title}</h1>
       <span />
     </header>
   )
