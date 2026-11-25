@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { ROUTES, useDocumentTitle } from '../../../shared/layout'
 import { ART, Backdrop, Button, Field, Wordmark } from '../../../shared/ui'
 import { homeRouteFor } from '../domain/access'
 import { useSession } from '../session'
 import type { Role } from '../types'
 
 export function LoginPage() {
+  useDocumentTitle('Ingresar · Lush Beauty Smart')
   const { signIn } = useSession()
   const navigate = useNavigate()
   const [user, setUser] = useState('')
@@ -76,6 +78,9 @@ export function LoginPage() {
               Ingresar como especialista
             </Button>
           </div>
+          <Link className="lb-btn lb-btn--link" style={{ alignSelf: 'flex-start' }} to={ROUTES.landing}>
+            Volver al inicio
+          </Link>
           <p className="t-caption">
             Si ingresa como especialista, solo verá sus propios servicios y su liquidación. Pantalla con datos
             ilustrativos: aún no hay conexión con el servidor.
