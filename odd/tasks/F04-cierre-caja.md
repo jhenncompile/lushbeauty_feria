@@ -1,6 +1,6 @@
 # F04 · cierre-caja
 
-**Plataformas:** BE · WEB  **Semana:** 2  **Estado:** pendiente
+**Plataformas:** BE · WEB  **Semana:** 2  **Estado:** UI parcial (T4 maqueta; backend pendiente)
 
 ## Resultado esperado
 Cerrar y conciliar la caja diaria: importe esperado vs declarado, diferencia y justificación.
@@ -17,13 +17,13 @@ RF-08 · HU (aviso de cierre, HU-08, en F13) · cap. 10 (K: endpoints de caja)
 - [ ] **F04-T1 [BE]** `GET /caja/resumen/?desde=&hasta=` consolida cobros por método y descuentos. *RED:* el resumen no coincide con la suma de pagos. *Acept.:* solo cuenta importes confirmados.
 - [ ] **F04-T2 [BE]** `POST /caja/cierres/` registra declarado, diferencia y justificación. *RED:* diferencia ≠ 0 sin justificación. *Acept.:* se rechaza.
 - [ ] **F04-T3 [BE]** Aprobar el cierre emite `caja.cierre_aprobado` al outbox (el publicador queda en F13). *Acept.:* el evento se persiste en la misma transacción.
-- [ ] **F04-T4 [WEB]** Pantalla de cierre diario: esperado, declarado, diferencia, justificar y aprobar. *Acept.:* flujo completo.
+- [ ] **F04-T4 [WEB]** Pantalla de cierre diario: esperado, declarado, diferencia, justificar y aprobar. *Acept.:* flujo completo. **UI parcial (`feat/f04-ui-cierre-caja`):** móvil y web con esperado, efectivo contado, diferencia con palabra, justificación obligatoria y cierre que requiere conexión. Falta la aprobación del cierre y el historial real de cierres.
 
 ## Dependencias
 F01. El outbox lo cierra F13.
 
 ## Evidencia
-_(se completa al cerrar)_
+UI (parcial, `feat/f04-ui-cierre-caja`): `pnpm test` 65 pruebas en verde. Dominio: contado Bs 402 contra esperado Bs 412 → falta Bs 10,00, total declarado Bs 682 sobre Bs 692; cuadra y sobra también cubiertos. Pantalla: sin contar no se cierra; con diferencia exige justificación; cerrada queda de solo lectura; sin conexión el botón se deshabilita con explicación. `pnpm lint` y `pnpm build` sin errores. No se inspeccionó visualmente. Desviación del diseño: el efectivo contado empieza vacío (el diseño lo trae precargado en 402) para no simular un conteo que nadie hizo. QR y transferencia se toman iguales a lo esperado.
 
 ## Siguiente paso
 F05-pwa-offline-sync

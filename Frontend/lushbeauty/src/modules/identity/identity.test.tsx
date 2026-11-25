@@ -1,22 +1,11 @@
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { AppRoutes } from '../../app/routes'
-import { SalesProvider } from '../sales'
-import { SessionProvider } from './index'
+import { renderApp } from '../../test/renderApp'
 import type { Session } from './types'
 
 function renderAt(path: string, initial: Session | null = null) {
-  return render(
-    <MemoryRouter initialEntries={[path]}>
-      <SessionProvider initial={initial}>
-        <SalesProvider>
-          <AppRoutes />
-        </SalesProvider>
-      </SessionProvider>
-    </MemoryRouter>,
-  )
+  return renderApp(path, initial)
 }
 
 describe('ingreso', () => {
