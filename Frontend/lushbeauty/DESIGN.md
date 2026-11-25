@@ -118,12 +118,12 @@ Estado: ✅ se implementa en esta fase (UI con datos sintéticos, sin backend) �
 | F04 | Caja | Web | `cashier` | `/web/caja` | ✅ |
 | F05 | Sin conexión · cola de envío | Móvil | `offline` | `/sincronizacion` | ✅ |
 | F07 | Panel financiero | Web | `analytics` | `/web/panel` | ✅ maqueta |
-| F06 | Importar · mapear / revisar (móvil), Importar planilla (web) | Ambas | `imports` | — | 📄 |
-| F11 | Lush Insight (móvil y web) | Ambas | `insight` | — | 📄 |
-| F12 | Lush Guard (móvil y web) | Ambas | `guard` | — | 📄 |
-| F08–F10 | Simulador What-If, Comparación multicriterio, Recomendación, Historial de decisiones (móvil); Decision Studio (web) | Ambas | `decision_scenarios` y afines | — | 📄 |
-| F00/F14 | Ajustes (usuarias y roles, avisos n8n, seguridad), Auditoría | Web | `identity`, `audit`, `notifications` | — | 📄 |
-| — | Inicio público (landing) y Banner para feria | Web / impreso | — | — | 📄 |
+| F06 | Importar · mapear / revisar (móvil), Importar planilla (web) | Ambas | `imports` | `/importar`, `/importar/revisar`, `/web/importar` | ✅ maqueta |
+| F11 | Lush Insight (móvil y web) | Ambas | `insight` | `/insight`, `/web/insight` | ✅ maqueta |
+| F12 | Lush Guard (móvil y web) | Ambas | `guard` | `/guard`, `/web/guard` | ✅ maqueta |
+| F08–F10 | Simulador What-If, Comparación multicriterio, Recomendación, Historial de decisiones (móvil); Decision Studio (web) | Ambas | `decisions` (frontend) | `/decisiones…`, `/web/decisiones` | ✅ maqueta |
+| F00/F14 | Ajustes (usuarias y roles, avisos n8n, seguridad), Auditoría | Web | `identity`, `audit`, `notifications` | `/web/ajustes`, `/web/auditoria` | ✅ maqueta |
+| — | Inicio público (landing) y Banner para feria | Web / impreso | `site` | `/inicio`, `/feria` | ✅ |
 
 ## 6. Flujos clave
 
@@ -186,3 +186,10 @@ No se inventan; la UI usa los valores del diseño solo como texto ilustrativo.
 ## 13. Discrepancia con el README
 
 El README define una sola PWA y excluye una app nativa. El equipo decidió implementar **ambas**: la PWA cubre todo y `Mobile/lushbeauty` (Flutter) replica solo las vistas de especialista (ver `Mobile/lushbeauty/DESIGN.md`). Se asume el costo de mantener dos clientes; el contenido y los tokens deben coincidir con este documento.
+
+## 9. Capa «Maison» y movimiento
+
+- **Láminas** de línea fina (`public/art/contour.svg`, `orbit.svg`) con `Backdrop` y `Orbit` (`shared/ui`): siempre decorativas (`alt=""`), detrás del contenido (`.above`). La lámina circular se centra sobre el logo.
+- **Monograma LB** en `Wordmark` (`variant="mark" | "stacked"`).
+- **Movimiento con animejs** (`shared/motion`): entrada escalonada de bloques (`useEnter`, ya en `MobileScreen` y `WebScreen`), aparición al scroll (`useReveal`, `.reveal`) y cifras que cuentan hasta su valor exacto (`CountBs`). Todo se apaga con `prefers-reduced-motion`; sin JS quedan los keyframes de `lush.css`.
+- El banner de feria (`/feria`) es una propuesta de impresión: datos del stand y QR son marcadores `[…]` hasta que el equipo los defina.
