@@ -34,3 +34,6 @@ body { background: var(--surface); }
 .row-select { background: none; border: 0; padding: 0; min-height: var(--touch-min); font: 400 15px/20px var(--font-sans); color: var(--ink); text-align: left; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .row-select[aria-pressed="true"] { font-weight: 500; }
 .row-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* animejs (shared/motion) toma la entrada de bloques; los keyframes de lush.css quedan de respaldo sin JS */
+.has-motion .lx .main > *, .has-motion .lx .wrap.stack > *, .has-motion .lx .wrap.stack--lg > *, .has-motion .reveal { animation: none; }

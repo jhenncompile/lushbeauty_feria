@@ -1,7 +1,9 @@
+import { Mark } from './Mark'
 import { cx } from './cx'
 
 interface WordmarkProps {
-  variant?: 'horizontal' | 'stacked'
+  /** `mark` es solo el monograma; `stacked` lo pone sobre el nombre. */
+  variant?: 'horizontal' | 'stacked' | 'mark'
   tone?: 'ink' | 'inverse'
   size?: number
   descriptor?: string
@@ -15,12 +17,33 @@ export function Wordmark({
   descriptor,
   className,
 }: WordmarkProps) {
-  return (
-    <span className={cx('lb-wm', `lb-wm--${tone}`, `lb-wm--${variant}`, className)}>
-      <span className="lb-wm__name" style={{ fontSize: size }}>
-        LUSH BEAUTY
+  const classes = cx('lb-wm', `lb-wm--${tone}`, `lb-wm--${variant}`, className)
+  const name = (
+    <span className="lb-wm__name" style={{ fontSize: size }}>
+      LUSH BEAUTY
+    </span>
+  )
+  const desc = descriptor ? <span className="lb-wm__desc">{descriptor}</span> : null
+  if (variant === 'mark') {
+    return (
+      <span className={classes} role="img" aria-label="Lush Beauty">
+        <Mark height={size} />
       </span>
-      {descriptor ? <span className="lb-wm__desc">{descriptor}</span> : null}
+    )
+  }
+  if (variant === 'stacked') {
+    return (
+      <span className={classes} role="img" aria-label="Lush Beauty">
+        <Mark height={Math.round(size * 3.2)} />
+        {name}
+        {desc}
+      </span>
+    )
+  }
+  return (
+    <span className={classes}>
+      {name}
+      {desc}
     </span>
   )
 }
