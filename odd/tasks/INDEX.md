@@ -32,6 +32,8 @@ Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10
 
 **Web (administradora)**: F00-T5 shell y login · F01-T5 venta · F02-T4 políticas · F03-T5 liquidación · F04-T4 cierre · F06-T6 vista previa de importación · F07-T3/T4 dashboard · F08-T5/T6 escenarios · F09-T4 matriz · F10-T5/T6 recomendación y seguimiento · F11-T5 chat · F12-T4 alertas · F13-T6 eventos.
 
+**Mobile Flutter (réplica de las vistas de especialista, decisión «ambas»)**: implementadas con datos sintéticos en `Mobile/lushbeauty`: ingreso, Hoy, registrar/descuento/guardado, sincronización, Mi liquidación y cierre de caja. Ver `Mobile/lushbeauty/DESIGN.md`.
+
 **Backend**: F00-T2/T3/T4 · F01-T1..T4 · F02-T1..T3 · F03-T1..T4 · F04-T1..T3 · F05-T1/T2 · F06-T1..T5 · F07-T1/T2 · F08-T1..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T1/T2/T3/T5.
 
 **Transversal**: F00-T1/T6 · F03-T7 · F05-T6 · F06-T7 · F10-T7 · F11-T6 · F13-T4 · F14-T1..T6.
