@@ -15,7 +15,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 2 | [F04 cierre-caja](F04-cierre-caja.md) | UI parcial (T4 maqueta) | Protegida |
 | 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | UI parcial (T5 maqueta) | Alta |
 | 3 | [F06 importador-excel](F06-importador-excel.md) | pendiente | Alta |
-| 3-4 | [F07 dashboard-financiero](F07-dashboard-financiero.md) | pendiente | Alta |
+| 3-4 | [F07 dashboard-financiero](F07-dashboard-financiero.md) | UI parcial (T3 maqueta) | Alta |
 | 4 | [F08 dss-contribucion-whatif](F08-dss-contribucion-whatif.md) | pendiente | Protegida (ciclo DSS) |
 | 5 | [F09 dss-matriz-sensibilidad](F09-dss-matriz-sensibilidad.md) | pendiente | Protegida (ciclo DSS) |
 | 6 | [F10 dss-recomendacion-decisiones](F10-dss-recomendacion-decisiones.md) | pendiente | Protegida (ciclo DSS) |
