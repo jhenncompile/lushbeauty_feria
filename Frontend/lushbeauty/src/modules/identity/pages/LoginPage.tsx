@@ -36,7 +36,7 @@ export function LoginPage() {
         <Backdrop />
         <div className="above rise d2" style={{ position: 'relative' }}>
           <Orbit
-            style={{ left: '50%', top: '50%', width: 'min(520px, 130vw)', aspectRatio: '1', transform: 'translate(-50%, -50%)' }}
+            style={{ left: '50%', top: '50%', width: 'clamp(420px, 60vw, 860px)', aspectRatio: '1', transform: 'translate(-50%, -50%)' }}
             opacity={0.5}
           />
           <Wordmark variant="stacked" tone="inverse" size={28} descriptor="Salón de belleza" />
