@@ -103,7 +103,7 @@ export function WebVentasPage() {
                     <td className="l">
                       <button
                         type="button"
-                        className="lb-btn lb-btn--link"
+                        className="row-select"
                         aria-pressed={row.id === selected.id}
                         onClick={() => select(row.id)}
                       >

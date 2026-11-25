@@ -22,3 +22,15 @@ body { background: var(--surface); }
 
 /* offline · conmutador solo de desarrollo */
 .dev-toggle { position: fixed; right: var(--space-3); bottom: var(--space-3); z-index: 20; min-height: 40px; padding: 0 var(--space-4); background: var(--surface); }
+
+/* enlaces con aspecto de botón y estado: sin subrayado por defecto (el diseño no los subraya) */
+.lx a.lb-btn:not(.lb-btn--link) { text-decoration: none; }
+.status a { text-decoration: none; }
+.status a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.line--link { text-decoration: none; }
+
+/* tablas web: cifras y fechas en una línea; la tabla hace scroll dentro de su caja */
+.tbl--web td { white-space: nowrap; }
+.row-select { background: none; border: 0; padding: 0; min-height: var(--touch-min); font: 400 15px/20px var(--font-sans); color: var(--ink); text-align: left; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.row-select[aria-pressed="true"] { font-weight: 500; }
+.row-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
