@@ -21,7 +21,8 @@ export function LoginPage() {
     setErrors(next)
     if (next.user || next.secret) return
     signIn({ userName: user.trim(), role })
-    navigate(homeRouteFor(role), { replace: true })
+    const wide = typeof window.matchMedia === 'function' && window.matchMedia('(min-width: 1000px)').matches
+    navigate(homeRouteFor(role, wide), { replace: true })
   }
 
   function onSubmit(event: FormEvent) {

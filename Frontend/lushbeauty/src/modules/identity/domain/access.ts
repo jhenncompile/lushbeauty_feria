@@ -2,10 +2,10 @@ import { ROUTES } from '../../../shared/layout'
 import type { Role } from '../types'
 
 /** Pantalla de inicio de cada rol tras ingresar. */
-export function homeRouteFor(role: Role): string {
+export function homeRouteFor(role: Role, wideScreen = false): string {
   switch (role) {
     case 'administradora':
-      return ROUTES.home
+      return wideScreen ? ROUTES.webPanel : ROUTES.home
     case 'especialista':
       return ROUTES.register
     case 'lector':
