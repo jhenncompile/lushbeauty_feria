@@ -1,0 +1,6 @@
+export { PayrollProvider } from './PayrollProvider'
+export { AprobadaPage } from './pages/AprobadaPage'
+export { DetalleLiquidacionPage } from './pages/DetalleLiquidacionPage'
+export { LiquidacionPage } from './pages/LiquidacionPage'
+export { MiLiquidacionPage } from './pages/MiLiquidacionPage'
+export { WebNominaPage } from './pages/WebNominaPage'

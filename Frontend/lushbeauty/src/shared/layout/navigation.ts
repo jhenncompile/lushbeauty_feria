@@ -10,6 +10,7 @@ export const ROUTES = {
   cashClose: '/caja',
   payroll: '/nomina',
   payrollApproved: '/nomina/aprobada',
+  payrollDetail: '/nomina/:id',
   myPayroll: '/mi-liquidacion',
   sync: '/sincronizacion',
   webPanel: '/web/panel',
@@ -18,6 +19,10 @@ export const ROUTES = {
   webPayroll: '/web/nomina',
   webCatalog: '/web/catalogo',
 } as const
+
+export function payrollDetailRoute(id: string): string {
+  return `/nomina/${id}`
+}
 
 export const ADMIN_TABS: TabItem[] = [
   { label: 'Hoy', to: ROUTES.home },

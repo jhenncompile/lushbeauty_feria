@@ -11,7 +11,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 1-2 | [F00 foundation](F00-foundation.md) | UI parcial (T5 maqueta) | Protegida |
 | 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | UI parcial (T5/T6 maqueta) | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | UI parcial (T4 lectura) | Protegida |
-| 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | pendiente | Protegida |
+| 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | UI parcial (T5/T6 maqueta) | Protegida |
 | 2 | [F04 cierre-caja](F04-cierre-caja.md) | pendiente | Protegida |
 | 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | pendiente | Alta |
 | 3 | [F06 importador-excel](F06-importador-excel.md) | pendiente | Alta |
