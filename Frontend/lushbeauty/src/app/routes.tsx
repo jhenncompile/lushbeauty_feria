@@ -1,11 +1,19 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { WebCatalogoPage } from '../modules/catalog'
 import { LoginPage, RequireRole } from '../modules/identity'
+import {
+  AprobadaPage,
+  DetalleLiquidacionPage,
+  LiquidacionPage,
+  MiLiquidacionPage,
+  WebNominaPage,
+} from '../modules/payroll'
 import { DescuentoPage, GuardadoPage, HoyPage, RegistrarPage, WebVentasPage } from '../modules/sales'
 import { ROUTES } from '../shared/layout'
 import { ShellHome } from './ShellHome'
 
 const ADMIN = ['administradora'] as const
+const SPECIALIST = ['especialista'] as const
 const ANYONE_WHO_REGISTERS = ['administradora', 'especialista'] as const
 
 export function AppRoutes() {
@@ -66,6 +74,46 @@ export function AppRoutes() {
         element={
           <RequireRole allow={ADMIN}>
             <WebCatalogoPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.payroll}
+        element={
+          <RequireRole allow={ADMIN}>
+            <LiquidacionPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.payrollApproved}
+        element={
+          <RequireRole allow={ADMIN}>
+            <AprobadaPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.payrollDetail}
+        element={
+          <RequireRole allow={ADMIN}>
+            <DetalleLiquidacionPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.myPayroll}
+        element={
+          <RequireRole allow={SPECIALIST}>
+            <MiLiquidacionPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.webPayroll}
+        element={
+          <RequireRole allow={ADMIN}>
+            <WebNominaPage />
           </RequireRole>
         }
       />
