@@ -19,24 +19,33 @@ El README del repo define una sola PWA y excluye una app nativa. El equipo decid
 | F04 | Cierre de caja | `cashier` | `/caja` |
 | F05 | Sin conexión · cola de envío | `offline` | `/sincronizacion` |
 
+Estado: **implementadas** con datos sintéticos y sin backend. La administradora ve 2 pestañas en el teléfono (Hoy, Caja); Nómina y Decisiones se usan desde la PWA. La especialista ve Registrar y Mi liquidación.
+
 No incluidas (se usan desde la PWA): nómina de administradora, ventas web, catálogo, panel, importar, Guard, Insight, Decision Studio, ajustes, auditoría.
 
 ## Estructura
 
 ```
 lib/
-  app/            router y raíz de la app
+  app/            LushApp: compone controladores y rutas (sin paquetes externos)
   shared/
-    theme/        tokens (colores Blanc/Noir, espacios), ThemeData cuadrado, Jost
-    ui/           LushButton, LushField, LushChoice, LushStat, LushTag, LushLine, StatusBar, BottomTabs
+    theme/        tokens.dart (colores Blanc, espacios, estilos Jost), theme.dart (ThemeData cuadrado)
+    ui/           LushButton, LushField, LushChoice, lush_parts (LushTag, LushLine, LushStat, LushPanel), LushScreen (barra, estado, pie, pestañas)
+    state/        ControllerScope: expone un ChangeNotifier a los descendientes
     money.dart    importes en centavos (int), formato «Bs 1.236» / «Bs 112,00»
+    connection.dart, routes.dart
   modules/<modulo>/
-    domain/       reglas puras (p. ej. porcentaje de descuento), sin Flutter
+    domain/       reglas puras (descuento, conciliación), sin Flutter
     pages/        pantallas
-    fixtures.dart datos sintéticos propios del módulo
     <modulo>.dart API pública del módulo (único archivo que importan otros módulos)
     README.md
 ```
+
+## Cómo ejecutar
+
+- `flutter test` y `flutter analyze` (sin dispositivo).
+- `flutter run -d chrome` para ver la app; en debug aparece un botón «Simular sin conexión» para probar la cola.
+- `--dart-define=LUSH_DEMO_ROLE=administradora|especialista` salta el ingreso con un usuario sintético (demos y capturas).
 Misma regla de fronteras que el resto del repo: un módulo no importa archivos internos de otro.
 
 ## Equivalencias de diseño en Flutter
@@ -54,7 +63,7 @@ Misma regla de fronteras que el resto del repo: un módulo no importa archivos i
 | `prefers-reduced-motion` | `MediaQuery.disableAnimationsOf(context)` desactiva `rise`/`grow` |
 | Objetivo táctil 48px | `constraints: BoxConstraints(minHeight: 48)` |
 
-Fuente: Jost 300/400/500 con el paquete `google_fonts` (descarga en runtime). Para uso offline real se empaquetan los `.ttf` en `assets/fonts/` antes de la feria.
+Fuente: Jost **empaquetada** como fuente variable en `assets/fonts/Jost-Variable.ttf` (licencia OFL en `assets/fonts/LICENSE-Jost.txt`); los pesos 300/400/500 se piden con `FontVariation.weight`. No depende de red.
 
 ## Reglas específicas del móvil
 

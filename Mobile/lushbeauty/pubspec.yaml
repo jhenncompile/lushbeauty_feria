@@ -58,6 +58,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # Jost (SIL Open Font License 1.1), fuente variable 100-900.
+  fonts:
+    - family: Jost
+      fonts:
+        - asset: assets/fonts/Jost-Variable.ttf
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
