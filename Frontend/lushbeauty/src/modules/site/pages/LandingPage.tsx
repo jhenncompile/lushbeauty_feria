@@ -1,20 +1,19 @@
 import { Link } from 'react-router-dom'
-import { ROUTES } from '../../../shared/layout'
+import { ROUTES, useDocumentTitle } from '../../../shared/layout'
 import { useReveal } from '../../../shared/motion'
 import { ART, Backdrop, Orbit, ServiceRow, Stat, Wordmark } from '../../../shared/ui'
+import { DecisionDemo } from '../components/DecisionDemo'
 import { CHAPTERS, FAQ, SERVICES, STEPS } from '../fixtures'
 
 const SERVICE_NAMES = ['Manicura', 'Pedicura', 'Depilación', 'Cejas', 'Pestañas', 'Lush Little Princess']
 
 /** Inicio público: presenta el sistema. Cifras de la «planilla de ejemplo»: ilustrativas. */
 export function LandingPage() {
+  useDocumentTitle('Lush Beauty Smart · Caja y nómina para salones')
   const page = useReveal<HTMLDivElement>()
   return (
-    <div className="lx web" ref={page}>
-      <section className="noir hero-full">
-        <Backdrop />
-        <Orbit style={{ right: '-6%', top: '50%', width: 'min(760px, 78vw)', aspectRatio: '1', marginTop: -380 }} opacity={0.7} />
-        <header className="lb-nav" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 3, background: 'transparent', borderBottomColor: 'rgba(255,255,255,.16)' }}>
+    <div className="lx web" ref={page} style={{ position: 'relative' }}>
+        <header className="lb-nav noir" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 3, background: 'transparent', borderBottomColor: 'rgba(255,255,255,.16)' }}>
           <nav className="lb-nav__links" aria-label="Principal">
             <a className="lb-nav__link" href="#sistema">Sistema</a>
             <a className="lb-nav__link" href="#como">Cómo funciona</a>
@@ -24,6 +23,10 @@ export function LandingPage() {
           <Link className="lb-nav__brand" to={ROUTES.landing} aria-label="Lush Beauty, inicio"><Wordmark size={20} /></Link>
           <div className="lb-nav__actions"><Link className="lb-nav__link" to={ROUTES.login}>Ingresar</Link></div>
         </header>
+      <main>
+      <section className="noir hero-full">
+        <Backdrop />
+        <Orbit style={{ right: '-6%', top: '50%', width: 'min(760px, 78vw)', aspectRatio: '1', marginTop: -380 }} opacity={0.7} />
         <div className="wrap above" style={{ paddingBottom: 'var(--space-8)' }}>
           <p className="eyebrow rise d1">Lush Beauty Smart · Caja y nómina</p>
           <h1 style={{ margin: 'var(--space-5) 0 0' }}>
@@ -42,7 +45,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="marquee" aria-label="Servicios del salón">
+      <section className="marquee" aria-hidden="true">
         <div className="marquee__track" aria-hidden="true">
           {[0, 1].flatMap((copy) =>
             SERVICE_NAMES.flatMap((name) => [<span key={`${copy}-${name}`}>{name}</span>, <i key={`${copy}-${name}-dot`}>·</i>]),
@@ -118,7 +121,6 @@ export function LandingPage() {
             <div className="plate plate--light" style={{ minHeight: 560, flex: 1 }}>
               <img className="spin" src={ART.orbit} alt="" aria-hidden="true" style={{ padding: 'var(--space-6)', filter: 'invert(1)' }} />
             </div>
-            <p className="t-caption">Lámina de la casa. Sustituible por fotografía en blanco y negro.</p>
           </div>
           <div className="stack--lg stack" style={{ justifyContent: 'center' }}>
             <div className="stack">
@@ -198,11 +200,7 @@ export function LandingPage() {
               <div className="line" style={{ paddingTop: 0 }}><span className="t-body">100 servicios por semana</span><span className="tag">Supuesto</span></div>
               <div className="line" style={{ paddingTop: 0 }}><span className="t-body">Comisión de 35&thinsp;% sobre lista</span><span className="tag tag--ok">Dato</span></div>
             </div>
-            <div className="row">
-              <Link className="lb-btn lb-btn--primary" to={ROUTES.login}>Aprobar</Link>
-              <Link className="lb-btn lb-btn--secondary" to={ROUTES.login}>Descartar</Link>
-            </div>
-            <p className="t-caption">Escenario hipotético e ilustrativo.</p>
+            <DecisionDemo />
           </div>
         </div>
       </section>
@@ -237,6 +235,8 @@ export function LandingPage() {
         </div>
       </section>
 
+      </main>
+
       <section className="noir rel" style={{ overflow: 'hidden' }}>
         <Backdrop opacity={0.35} />
         <div className="mark-bg" aria-hidden="true" style={{ right: '-4%', top: '-6%', color: '#1c1c1c' }}><Wordmark variant="mark" size={620} /></div>
@@ -250,6 +250,8 @@ export function LandingPage() {
             <p className="t-caption">Lush Beauty Smart · Santa Cruz de la Sierra, Bolivia</p>
           </div>
           <p className="t-caption" style={{ maxWidth: '48ch' }}>
+            Prototipo con datos ilustrativos: el registro sin conexión, los comprobantes y los avisos se muestran como maqueta hasta conectar el servidor.
+            <br />
             Proyecto académico · Universidad Autónoma Gabriel René Moreno · Economía para la gestión · Semestre 2 – 2026
           </p>
         </footer>
