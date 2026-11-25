@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { getPolicy, listServices } from '../catalog'
 import { listSpecialists } from '../identity'
+import { useOfflineQueue } from '../offline'
 import { DraftContext } from './draft'
 import type { DraftApi } from './draft'
 import { calculateSale } from './domain/sale'
@@ -24,6 +25,7 @@ export function SalesProvider({ children }: { children: ReactNode }) {
   const services = listServices()
   const specialists = listSpecialists()
   const policy = getPolicy()
+  const offline = useOfflineQueue()
   const [draft, setDraft] = useState<Draft>(() => newDraft(services))
   const [saved, setSaved] = useState<SavedSale | null>(null)
 
@@ -51,6 +53,11 @@ export function SalesProvider({ children }: { children: ReactNode }) {
       commissionBps: policy.commissionBps,
       savedAt: dateFormat.format(new Date()),
     }
+    offline.enqueue({
+      id: record.clientUuid,
+      label: `${record.serviceName} · ${record.specialistName}`,
+      amountCents: record.chargedCents,
+    })
     setSaved(record)
     setDraft(newDraft(services))
     return record

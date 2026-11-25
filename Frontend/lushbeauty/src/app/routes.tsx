@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { SincronizacionPage } from '../modules/offline'
 import { CierreCajaPage, WebCajaPage } from '../modules/cashier'
 import { WebCatalogoPage } from '../modules/catalog'
 import { LoginPage, RequireRole } from '../modules/identity'
@@ -122,6 +123,14 @@ export function AppRoutes() {
         element={
           <RequireRole allow={ADMIN}>
             <WebCajaPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.sync}
+        element={
+          <RequireRole allow={ANYONE_WHO_REGISTERS}>
+            <SincronizacionPage />
           </RequireRole>
         }
       />
