@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { CierreCajaPage, WebCajaPage } from '../modules/cashier'
 import { WebCatalogoPage } from '../modules/catalog'
 import { LoginPage, RequireRole } from '../modules/identity'
 import {
@@ -10,7 +11,6 @@ import {
 } from '../modules/payroll'
 import { DescuentoPage, GuardadoPage, HoyPage, RegistrarPage, WebVentasPage } from '../modules/sales'
 import { ROUTES } from '../shared/layout'
-import { ShellHome } from './ShellHome'
 
 const ADMIN = ['administradora'] as const
 const SPECIALIST = ['especialista'] as const
@@ -33,7 +33,7 @@ export function AppRoutes() {
         path={ROUTES.cashClose}
         element={
           <RequireRole allow={ADMIN}>
-            <ShellHome title="Cierre de caja" />
+            <CierreCajaPage />
           </RequireRole>
         }
       />
@@ -114,6 +114,14 @@ export function AppRoutes() {
         element={
           <RequireRole allow={ADMIN}>
             <WebNominaPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.webCash}
+        element={
+          <RequireRole allow={ADMIN}>
+            <WebCajaPage />
           </RequireRole>
         }
       />

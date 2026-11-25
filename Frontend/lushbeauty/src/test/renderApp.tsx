@@ -5,6 +5,7 @@ import { ConnectionContext } from '../shared/connection'
 import type { ConnectionState } from '../shared/connection'
 import { SessionProvider } from '../modules/identity'
 import type { Session } from '../modules/identity'
+import { CashProvider } from '../modules/cashier'
 import { PayrollProvider } from '../modules/payroll'
 import { SalesProvider } from '../modules/sales'
 
@@ -19,7 +20,9 @@ export function renderApp(path: string, session: Session | null = ADMIN, connect
         <SessionProvider initial={session}>
           <SalesProvider>
             <PayrollProvider>
-              <AppRoutes />
+              <CashProvider>
+                <AppRoutes />
+              </CashProvider>
             </PayrollProvider>
           </SalesProvider>
         </SessionProvider>
