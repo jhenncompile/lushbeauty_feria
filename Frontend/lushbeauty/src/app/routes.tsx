@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { WebCatalogoPage } from '../modules/catalog'
 import { LoginPage, RequireRole } from '../modules/identity'
 import { DescuentoPage, GuardadoPage, HoyPage, RegistrarPage, WebVentasPage } from '../modules/sales'
 import { ROUTES } from '../shared/layout'
@@ -57,6 +58,14 @@ export function AppRoutes() {
         element={
           <RequireRole allow={ADMIN}>
             <WebVentasPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.webCatalog}
+        element={
+          <RequireRole allow={ADMIN}>
+            <WebCatalogoPage />
           </RequireRole>
         }
       />

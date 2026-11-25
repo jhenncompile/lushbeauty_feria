@@ -1,6 +1,6 @@
 # F02 · comisiones-versionadas
 
-**Plataformas:** BE · WEB  **Semana:** 2  **Estado:** pendiente
+**Plataformas:** BE · WEB  **Semana:** 2  **Estado:** UI parcial (T4 solo lectura)
 
 ## Resultado esperado
 La comisión de cada línea se calcula con la regla vigente al vender y nunca se recalcula hacia atrás.
@@ -17,13 +17,13 @@ RF-05 · RN-02 · HU-03 · CP-02, CP-09
 - [ ] **F02-T1 [BE]** Entidad versionada `ReglaComision` (porcentaje, base, `fecha_inicio`, motivo). *RED:* dos reglas con vigencia solapada. *Acept.:* se rechaza el solapamiento.
 - [ ] **F02-T2 [BE]** Cálculo por línea con snapshot. *RED:* CP-02 (35 % sobre lista Bs 120 → Bs 42,00). *Acept.:* se guardan tasa, base y política aplicada en la línea.
 - [ ] **F02-T3 [BE]** Inmutabilidad histórica. *RED:* CP-09, modificar una política ya aplicada. *Acept.:* las ventas históricas no se recalculan.
-- [ ] **F02-T4 [WEB]** Pantalla de políticas de comisión (solo administradora): crear versión nueva, ver historial. *Acept.:* HU-03, el cambio conserva el motivo y no pisa la versión anterior.
+- [ ] **F02-T4 [WEB]** Pantalla de políticas de comisión (solo administradora): crear versión nueva, ver historial. *Acept.:* HU-03, el cambio conserva el motivo y no pisa la versión anterior. **UI parcial (`feat/f02-ui-catalogo-politicas`):** pantalla «Catálogo y reglas» solo de lectura (servicios, comisión vigente, descuento máximo, combos). Faltan crear versión nueva con motivo e historial de versiones.
 
 ## Dependencias
 F01. **Bloqueo a validar:** si la base es precio de lista o importe neto (el documento usa lista como caso ilustrativo).
 
 ## Evidencia
-_(se completa al cerrar)_
+UI (parcial, `feat/f02-ui-catalogo-politicas`): `pnpm test` 34 pruebas en verde (la pantalla lista los 6 servicios y muestra 35 % y 10 % rotulados como ilustrativos; una especialista no accede), `pnpm lint` y `pnpm build` sin errores. No se inspeccionó visualmente. Los valores 35 % «sobre lista» y 10 % son del diseño, no decisiones de negocio (decisiones abiertas 2 y 6).
 
 ## Siguiente paso
 F03-liquidacion-semanal
