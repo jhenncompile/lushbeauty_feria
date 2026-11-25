@@ -19,3 +19,6 @@ body { background: var(--surface); }
 /* sales · hoy */
 .hoy__hero { margin: calc(var(--space-5) * -1) calc(var(--space-5) * -1) 0; padding: var(--space-7) var(--space-5); }
 .hoy__total { margin: 0; font: 300 80px/1 var(--font-sans); letter-spacing: -.03em; font-variant-numeric: lining-nums tabular-nums; }
+
+/* offline · conmutador solo de desarrollo */
+.dev-toggle { position: fixed; right: var(--space-3); bottom: var(--space-3); z-index: 20; min-height: 40px; padding: 0 var(--space-4); background: var(--surface); }
