@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Backdrop, Button, Field, Orbit, Wordmark } from '../../../shared/ui'
+import { ART, Backdrop, Button, Field, Wordmark } from '../../../shared/ui'
 import { homeRouteFor } from '../domain/access'
 import { useSession } from '../session'
 import type { Role } from '../types'
@@ -34,11 +34,11 @@ export function LoginPage() {
     <div className="lx web login">
       <section className="lb-on-inverse rel login__brand">
         <Backdrop />
-        <div className="above rise d2" style={{ position: 'relative' }}>
-          <Orbit
-            style={{ left: '50%', top: '50%', width: 'clamp(420px, 60vw, 860px)', aspectRatio: '1', transform: 'translate(-50%, -50%)' }}
-            opacity={0.5}
-          />
+        <div className="login__orbit" aria-hidden="true">
+          <img className="spin" src={ART.orbit} alt="" style={{ width: '100%', height: '100%' }} />
+        </div>
+        <span />
+        <div className="above rise d2">
           <Wordmark variant="stacked" tone="inverse" size={28} descriptor="Salón de belleza" />
         </div>
         <p className="t-caption above rise d4">El arte del detalle, con las cuentas claras.</p>
