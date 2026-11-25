@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useConnection } from '../connection'
+import { useEnter } from '../motion'
 import { StatusBar, Wordmark, cx } from '../ui'
 import { ROUTES, WEB_LINKS } from './navigation'
 
@@ -11,6 +12,7 @@ interface WebScreenProps {
 /** Pantalla web: navegación superior, estado de conexión y contenido centrado. */
 export function WebScreen({ children }: WebScreenProps) {
   const { online, pending } = useConnection()
+  const main = useEnter<HTMLElement>()
   const link = ({ isActive }: { isActive: boolean }) => cx('lb-nav__link', isActive && 'is-current')
   return (
     <div className="lx web">
@@ -26,7 +28,7 @@ export function WebScreen({ children }: WebScreenProps) {
           <Wordmark size={20} />
         </Link>
         <div className="lb-nav__actions">
-          <Link className="lb-nav__link" to="/web/ajustes">
+          <Link className="lb-nav__link" to={ROUTES.webSettings}>
             Ajustes
           </Link>
           <Link className="lb-nav__link" to={ROUTES.login}>
@@ -42,7 +44,7 @@ export function WebScreen({ children }: WebScreenProps) {
         ))}
       </nav>
       <StatusBar online={online} pending={pending} />
-      <main className="wrap stack--lg stack" style={{ paddingBlock: 'var(--space-7) var(--space-9)' }}>
+      <main className="wrap stack--lg stack" ref={main} style={{ paddingBlock: 'var(--space-7) var(--space-9)' }}>
         {children}
       </main>
     </div>

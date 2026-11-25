@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { formatBs } from '../../../shared/money'
 import { ROUTES, WebScreen } from '../../../shared/layout'
-import { Stat, Tag } from '../../../shared/ui'
+import { ART, Stat, Tag } from '../../../shared/ui'
 import { oneDecimalPercent, wholePercent } from '../domain/metrics'
 import { BY_METHOD, BY_SPECIALIST, PERIOD, SUMMARY } from '../fixtures'
 
@@ -11,10 +11,13 @@ export function WebPanelPage() {
   const methodsTotal = BY_METHOD.reduce((total, row) => total + row.cents, 0)
   return (
     <WebScreen>
-      <div className="stack" style={{ gap: 'var(--space-2)' }}>
-        <p className="eyebrow">{PERIOD}</p>
-        <h1 className="display-lg">Panel financiero</h1>
-        <p className="body-lg muted">Cobrado, comisionado y por pagar, a la vista.</p>
+      <div className="masthead noir" style={{ marginInline: 'calc(var(--space-7) * -1)', paddingInline: 'var(--space-7)' }}>
+        <img className="masthead__plate" src={ART.contour} alt="" aria-hidden="true" />
+        <div className="masthead__in">
+          <p className="eyebrow">{PERIOD}</p>
+          <h1 className="display-xl">Panel financiero</h1>
+          <p className="body-lg muted">Cobrado, comisionado y por pagar, a la vista.</p>
+        </div>
       </div>
       <section className="stack" aria-label="Resumen">
         <div className="grid grid--3">

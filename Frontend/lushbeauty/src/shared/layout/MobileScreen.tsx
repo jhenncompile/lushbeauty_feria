@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { useConnection } from '../connection'
+import { useEnter } from '../motion'
 import { StatusBar, Tabs, TopBar } from '../ui'
 import { ROUTES } from './navigation'
 import type { TabItem } from '../ui'
@@ -28,11 +29,14 @@ export function MobileScreen({
   children,
 }: MobileScreenProps) {
   const { online, pending } = useConnection()
+  const main = useEnter<HTMLElement>()
   return (
     <div className="lx mscreen">
       {header ?? (title && backTo ? <TopBar title={title} backTo={backTo} /> : null)}
       <StatusBar online={online} pending={pending} to={ROUTES.sync} />
-      <main className="main">{children}</main>
+      <main className="main" ref={main}>
+        {children}
+      </main>
       {footer ? (
         <div className="foot" style={footerBorderless ? { borderTop: 0 } : undefined}>
           {footer}
