@@ -1,0 +1,127 @@
+\section{Marco Metodológico}\label{cap:metodologico}
+
+\subsection{Tipo y diseño de investigación}
+
+\vspace{8pt}{\small\setstretch{1.0}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.1829\dimexpr\linewidth-6\tabcolsep\relax}>{\raggedright\arraybackslash}p{0.3902\dimexpr\linewidth-6\tabcolsep\relax}>{\raggedright\arraybackslash}p{0.4269\dimexpr\linewidth-6\tabcolsep\relax}}
+\caption{Características metodológicas de la investigación}\label{tab:v4_5}\\
+\toprule
+\textbf{Criterio} & \textbf{Elección} & \textbf{Justificación} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Criterio} & \textbf{Elección} & \textbf{Justificación} \\
+\midrule\endhead
+\bottomrule\endfoot
+\bottomrule\endlastfoot
+Enfoque & Cuantitativo con apoyo cualitativo (mixto con predominio cuantitativo) & Se miden tiempos y errores; la entrevista complementa la interpretación \\
+Alcance & Descriptivo y explicativo & Describe el proceso actual y explica el efecto del sistema sobre las variables \\
+Diseño & Preexperimental de preprueba y posprueba con un solo grupo & Existe un único salón; la línea base retrospectiva (registros previos del salón) actúa como preprueba \\
+Temporalidad & Longitudinal corto (cuatro semanas de línea base retrospectiva y cuatro de piloto) & Permite comparar semanas equivalentes \\
+Fuentes & Primarias (campo) con apoyo documental & Registros del salón, cuestionario de requerimientos, observación cronometrada y catálogo oficial \\
+\end{longtable}}
+\nota{Elaboración propia con base en Hernández Sampieri et al. (2014).}
+
+El enfoque y el diseño se establecieron conforme a las categorías propuestas por Hernández Sampieri et al. (2014). Se reconoce como limitación del diseño la ausencia de grupo de control, por lo que los resultados se interpretarán con cautela y se complementarán con la bitácora del sistema y con la entrevista a la administradora.
+
+
+La propuesta conserva la orientación aplicada, con mediciones cuantitativas complementadas por entrevistas y observación. El estudio establece un diseño preexperimental de preprueba y posprueba con un único salón, cuatro semanas retrospectivas y cuatro semanas de piloto. La incorporación de nuevas funciones exige añadir instrumentos de control, pero no modificar los objetivos de forma que se atribuyan resultados a IA sin un contraste específico. No se plantea un grupo de control inexistente.
+
+
+\subsection{Población y muestra}
+
+\textbf{Población.} Está conformada por (a) las tres personas que prestan servicios en el salón, incluida la administradora, y (b) los registros de servicios de las cuatro semanas previas al piloto, que constituyen la línea base retrospectiva, más los registros generados durante el piloto. La planilla de ejemplo de agosto de 2026, con 91 registros en un mes, se usa solo como referencia de volumen.
+
+
+\textbf{Muestra.} No se realiza muestreo. Dado el tamaño reducido de la población, se trabajará con un \textbf{censo}, es decir, con la totalidad de las tres trabajadoras y de los registros del periodo de estudio. Como referencia, una muestra de registros calculada con la fórmula para poblaciones finitas, n = N·Z²·p·q / [e²(N−1) + Z²·p·q], con N = 91, Z = 1,96, p = q = 0,5 y e = 0,05, requeriría 74 registros; por ello se verificará la totalidad de los registros.
+
+
+\textbf{Criterios de inclusión:} personal activo del salón durante el periodo de estudio; registros de servicios con estado completado; participación voluntaria. \textbf{Criterios de exclusión:} servicios cancelados (no generan comisión), registros duplicados y personal que no utilice el sistema durante el piloto.
+
+
+La población del piloto comprende a las tres personas del salón y los registros del período evaluado. Dado el número reducido de trabajadoras, se considera un censo para las encuestas, complementado con la revisión completa de transacciones disponibles. La planilla de 91 registros se usa únicamente para comprobar reglas y construir casos reproducibles; no debe interpretarse como un conjunto suficiente para entrenar un modelo generalizable.
+
+
+\subsection{Técnicas e instrumentos}
+
+\begin{vinetas}
+\item \textbf{Análisis documental:} revisión de la planilla de ejemplo de agosto de 2026, de los registros previos del salón y del catálogo oficial de servicios; instrumento: ficha de análisis documental.
+\item \textbf{Cuestionario de requerimientos:} obtención estructurada de las necesidades del salón por módulo, con escala de priorización de uno a cinco; aplicado a la administradora y a las especialistas; instrumento: Anexo A.
+\item \textbf{Observación estructurada:} medición cronometrada del registro de servicios, del cierre de caja y de la liquidación; instrumentos: ficha de observación cronometrada y ficha de conciliación (Anexo C).
+\item \textbf{Conciliación de cálculos:} comparación de la comisión calculada por el sistema con un cálculo de referencia independiente, primero con la planilla de ejemplo y luego con los registros reales del salón.
+\item \textbf{Encuesta de usabilidad:} cuestionario SUS de diez ítems traducido al español (Brooke, 1996); instrumento: Anexo B.
+\item \textbf{Entrevista semiestructurada} a la administradora sobre el proceso actual, las dificultades y la adopción del sistema; instrumento: guía de entrevista (Anexo D).
+\end{vinetas}
+
+\textbf{Validez y confiabilidad.} Los cuestionarios, las fichas y la guía de entrevista serán validados mediante juicio de expertos, integrado por el docente de la asignatura y un profesional del área de sistemas. Antes de su aplicación se realizará una prueba piloto con una persona del salón que no participe en la muestra, para detectar preguntas ambiguas. El cuestionario SUS es un instrumento estandarizado; su consistencia interna se reportará mediante el alfa de Cronbach (Cronbach, 1951), advirtiendo que con tres respondientes el coeficiente solo tiene valor referencial.
+
+
+\subsubsection{Instrumentos y procedimiento ampliados}
+
+Se utilizarán el cuestionario de requerimientos, la guía de entrevista, la ficha de observación cronometrada y el cuestionario SUS (Anexos A a D), ajustados para incluir importación, alertas, consultas explicativas y sincronización. La validación técnica tendrá casos de prueba automatizados con resultados de referencia calculados por separado de la implementación. El piloto recogerá condiciones de conectividad, tareas realizadas, tiempos, errores y comentarios de cada usuaria.
+
+
+La evaluación se organizará en cuatro momentos: establecimiento de la línea base; verificación del motor financiero mediante operaciones conocidas y casos límite; prueba de usabilidad con usuarias y escenarios de atención cotidiana; y análisis descriptivo del piloto. Las diferencias observadas pueden coincidir con cambios de temporada, aprendizaje o carga de trabajo; por lo tanto, no se interpretarán como causalidad demostrada por sí solas.
+
+
+\subsubsection{Evaluación experimental de decisiones}
+
+Se diseñarán tres tareas equivalentes en papel/Excel y en el DSS: comparar políticas de descuento, evaluar cambio de precio con costos directos y justificar un cierre de caja con diferencia. Para cada una se conservarán los mismos datos de entrada y un cálculo de referencia independiente. Se medirá tiempo de tarea, número de consultas o correcciones, resultado final y capacidad de explicar la decisión. En sesiones con pocas participantes se priorizará comparación descriptiva pareada, evitando exagerar inferencias estadísticas.
+
+
+Se ejecutarán pruebas metamórficas: al aumentar el descuento manteniendo constantes precio de lista, comisión sobre lista, materiales y cantidad, la contribución unitaria no puede aumentar; al duplicar el volumen con contribución positiva constante, el total debe duplicarse; al redistribuir pesos de criterios, el ranking debe actualizarse de forma reproducible. También se comprobará que los escenarios no cambien ventas reales.
+
+
+\subsubsection{Evaluación específica de IA y automatización}
+
+La importación inteligente se medirá con un conjunto etiquetado de variantes reales y sintéticas: porcentaje de sugerencias correctas, casos enviados a revisión y errores de aceptación. Lush Insight se evaluará mediante preguntas cerradas con respuesta de referencia, exactitud de cifras, respeto de permisos y manejo de períodos sin información. Lush Guard se comprobará con incidencias inyectadas y casos normales para revisar falsas alarmas. n8n se probará mediante eventos repetidos, error de correo y recuperación controlada. Para el DSS se añadirá un banco de casos con respuestas de referencia: exactitud decimal de contribución, umbral de volumen, puntuación ponderada, sensibilidad de pesos, detección de información insuficiente y cumplimiento de aprobación humana. Las explicaciones generadas se revisarán con una rúbrica de exactitud, trazabilidad, cautela y lenguaje comprensible.
+
+
+\subsubsection{Indicadores y metas de prueba}
+
+\vspace{8pt}{\small\setstretch{1.0}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.2500\dimexpr\linewidth-8\tabcolsep\relax}>{\raggedright\arraybackslash}p{0.2500\dimexpr\linewidth-8\tabcolsep\relax}>{\raggedright\arraybackslash}p{0.2500\dimexpr\linewidth-8\tabcolsep\relax}>{\raggedright\arraybackslash}p{0.2500\dimexpr\linewidth-8\tabcolsep\relax}}
+\caption{Objetivos de prueba y criterios de seguimiento}\label{tab:dss_7}\\
+\toprule
+\textbf{Dimensión} & \textbf{Indicador} & \textbf{Instrumento} & \textbf{Meta propuesta} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Dimensión} & \textbf{Indicador} & \textbf{Instrumento} & \textbf{Meta propuesta} \\
+\midrule\endhead
+\bottomrule\endfoot
+\bottomrule\endlastfoot
+Eficiencia & Tiempo de registro por servicio & Cronometría & < 15 s en flujo habitual \\
+Exactitud & Discrepancias de comisión & Conciliación independiente & 0 en casos de prueba \\
+Persistencia & Duplicados de ventas offline & Pruebas de reintento & 0 en escenarios probados \\
+Trazabilidad & Cambios críticos auditados & Consulta de bitácora & 100~\% de casos cubiertos \\
+Calidad de importación & Filas aceptadas o en revisión & Reporte de importación & 100~\% con estado explícito \\
+IA explicable & Respuestas fundamentadas & Batería de preguntas & Sin cifras inventadas en pruebas \\
+Automatización & Flujos ejecutados y recuperados & Logs de n8n & 3 flujos demostrados \\
+Usabilidad & Puntaje SUS y observaciones & Cuestionario / entrevista & Registrar, no prometer valor \\
+\end{longtable}}
+\nota{Elaboración propia. No representan resultados observados.}
+
+\subsection{Metodología de desarrollo del producto}
+
+El sistema se desarrollará con un marco ágil de trabajo en iteraciones cortas de una a dos semanas (Schwaber \& Sutherland, 2020), priorizando las funciones de caja y nómina del producto mínimo viable. La arquitectura es un monolito modular con interfaz web (React y TypeScript), API REST (Django y Django REST Framework) y base de datos PostgreSQL, conforme a la Figura~\ref{fig:v4_2}. Los cálculos monetarios se realizan en el servidor con tipos decimales para evitar errores de redondeo, y toda modificación queda registrada en una bitácora inmutable.
+
+
+El detalle de la arquitectura ampliada, de las reglas de negocio y de la estrategia de despliegue se presenta en el Capítulo~\ref{cap:arquitectura}.
+
+\subsection{Procedimiento de análisis}
+
+Los datos se procesarán en hojas de cálculo y en el lenguaje Python, con estadística descriptiva (media, mediana, desviación estándar y porcentajes). Para contrastar la hipótesis, las mediciones de tiempo y de errores se organizan como datos pareados por trabajadora y semana: con tres trabajadoras y cuatro semanas se obtienen n = 12 pares, lo que permite aplicar la prueba de rangos con signo de Wilcoxon sobre los tiempos. Para las proporciones de error, de conteo pequeño, se utilizará la prueba exacta de Fisher. El nivel de significación será α = 0,05. Por el tamaño de la muestra, se reportarán también los tamaños del efecto y los resultados se interpretarán como evidencia de tendencia, no como generalizable.
+
+
+La entrevista y las respuestas abiertas del cuestionario de requerimientos se analizarán mediante categorías temáticas: proceso actual, dificultades, necesidades priorizadas y adopción.
+
+
+\textbf{Aspectos éticos.} Se solicitará consentimiento informado a todas las participantes (Anexo E). Se garantizará la confidencialidad de los datos de sueldos y de clientes: los nombres de clientes se sustituirán por códigos y las cifras del salón se presentarán de forma agregada. El acceso al sistema estará restringido por roles, y las cifras se emplearán exclusivamente con fines académicos y con autorización de la propietaria.
+
+
+\subsection{Limitaciones del estudio}
+
+El diseño tiene limitaciones que se reconocen desde el inicio. Primero, es preexperimental y no cuenta con grupo de control, por lo que las diferencias entre la línea base y el piloto no pueden atribuirse con certeza al sistema: pueden influir factores como la temporada de mayor demanda, los cambios de personal o el efecto de novedad. Segundo, la muestra es de tres trabajadoras, lo que limita la generalización y la potencia de las pruebas estadísticas. Tercero, la administradora participa como propietaria, usuaria y evaluadora del sistema, lo que puede generar sesgo de deseabilidad; para mitigarlo, las encuestas y las entrevistas de las especialistas se aplicarán de forma anónima y se contrastarán con la bitácora del sistema. Cuarto, la planilla de agosto de 2026 es un ejemplo representativo y no un registro operativo, por lo que el diagnóstico se complementa con los registros reales del salón. Finalmente, los precios de los sistemas comerciales son referenciales y pueden cambiar, y no se localizaron antecedentes bolivianos verificables que permitan una comparación local directa.
+
+
+Se solicitará consentimiento informado al personal, se ocultarán identidades de clientas y se restringirá el acceso a remuneraciones. El Anexo G contiene respuestas ilustrativas derivadas del proyecto, no entrevistas reales; no se usarán como evidencia empírica. Asimismo, la muestra pequeña, el diseño preexperimental y la ausencia de una base histórica extensa limitan la generalización de resultados y la pertinencia de predicción automatizada de ingresos.
+
