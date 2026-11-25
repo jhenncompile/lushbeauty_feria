@@ -1,0 +1,37 @@
+\section{Justificación}\label{cap:justificacion}
+
+\subsection{Justificación teórica}
+
+El estudio aporta evidencia empírica sobre la aplicación de principios de ingeniería de software y de modelos de evaluación de sistemas de información en el contexto de una microempresa de servicios, un ámbito poco documentado en la literatura regional. Contrasta, con datos del salón, los supuestos sobre errores en hojas de cálculo (Panko, 1998) y sobre la utilidad y la facilidad de uso percibidas como determinantes de la adopción tecnológica (Davis, 1989).
+
+
+\subsection{Justificación práctica}
+
+El sistema resuelve un problema concreto: reemplazar la planilla por una herramienta que registre servicios contra un catálogo oficial, controle métodos de pago y cancelaciones, y calcule automáticamente la liquidación semanal (comisiones más propinas menos deducciones). La administradora podrá operar desde su teléfono, incluso con conexión intermitente, y obtener reportes en Excel y comprobantes en PDF listos para compartir con su personal.
+
+
+Las tareas manuales de la administradora se concentran en identificar servicios, comparar montos, cuadrar medios de pago y preparar pagos de personal. Un flujo único reduce la necesidad de copiar información entre hojas y facilita identificar diferencias antes de cerrar una semana. El simulador de políticas permite conocer el efecto de escenarios sin convertir la sugerencia de un algoritmo en una decisión salarial automática. Su valor económico debe determinarse con mediciones reales del tiempo de trabajo y de las discrepancias, no mediante ahorros supuestos.
+
+
+\subsection{Justificación metodológica}
+
+La investigación propone un procedimiento replicable para evaluar sistemas de gestión en microempresas con muestras pequeñas: línea base documental, pruebas de conciliación contra un cálculo de referencia, registro cronometrado de tiempos y cuestionario estandarizado de usabilidad (Brooke, 1996). Los instrumentos pueden reutilizarse en otros salones.
+
+
+\subsection{Justificación social}
+
+Beneficia a un emprendimiento liderado por mujeres y a sus especialistas, quienes recibirán liquidaciones transparentes, verificables y con detalle línea a línea. A mediano plazo, la arquitectura multi-inquilino permite ofrecer la solución a otros salones y pequeños negocios, fortaleciendo la formalización de su gestión financiera.
+
+
+La propuesta mantiene la comparación de una línea base con un piloto y el uso de instrumentos de observación y usabilidad. También protege la confidencialidad de la nómina de cada especialista y permite explicar cada liquidación línea por línea. Al ofrecer herramientas comprensibles para un negocio de pequeña escala, puede apoyar una gestión más transparente; esta posibilidad debe demostrarse empíricamente durante el piloto.
+
+
+\subsection{Justificación tecnológica}
+
+El monolito modular conserva la simplicidad operativa del sistema y separa responsabilidades críticas. React y TypeScript permiten una experiencia consistente en escritorio y teléfono; Django REST Framework centraliza las reglas; PostgreSQL facilita integridad transaccional y trazabilidad; IndexedDB conserva registros pendientes; n8n ejecuta comunicaciones desacopladas. Esta combinación prioriza demostrabilidad, mantenimiento y control por encima de la adopción de microservicios sin necesidad comprobada.
+
+
+\subsection{Justificación de innovación}
+
+El elemento distintivo no es la mera presencia de un chatbot o de machine learning. La innovación funcional está en enlazar, dentro de una operación pequeña, conciliación financiera, recuperación de datos de Excel y explicaciones de situaciones económicas con evidencia de origen. La importación inteligente se apoya primero en reglas y similitud textual; el análisis conversacional consulta funciones cerradas del backend; las alertas señalan hechos verificables. Se minimiza así el riesgo de respuestas atractivas pero financieramente incorrectas.
+

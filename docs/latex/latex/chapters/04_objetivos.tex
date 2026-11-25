@@ -1,0 +1,36 @@
+\section{Objetivos de la Investigación}\label{cap:objetivos}
+
+\subsection{Objetivo general}
+
+Diseñar y validar un sistema web móvil multi-inquilino para la gestión de caja y la liquidación semanal de comisiones del salón de belleza Lush Beauty, con el fin de reducir el tiempo y los errores del proceso actual basado en hojas de cálculo, entre noviembre de 2026 y marzo de 2027.
+
+
+En su ampliación hacia el soporte para decisiones, el objetivo general se precisa así: diseñar y evaluar como prototipo un Sistema Inteligente de Soporte para la Toma de Decisiones Financieras y Operativas para el salón de belleza Lush Beauty, integrando gestión de caja y nómina, análisis de rentabilidad por servicio, simulación de escenarios, comparación de alternativas y recomendaciones explicables, con el fin de facilitar decisiones informadas y mejorar la trazabilidad de sus fundamentos.
+
+\subsection{Objetivos específicos}
+
+\begin{vinetas}
+\item Describir el proceso actual de registro de servicios, cobro y liquidación de comisiones a partir de la planilla de ejemplo de agosto de 2026 y de la entrevista a la administradora.
+\item Identificar las inconsistencias y los riesgos de la planilla, cuantificando su impacto en los montos de comisión.
+\item Comparar sistemas comerciales similares mediante benchmarking para establecer las brechas funcionales por cubrir.
+\item Establecer los requisitos funcionales y no funcionales, el modelo de datos y la arquitectura del sistema propuesto.
+\item Evaluar el efecto del sistema sobre el tiempo de liquidación, la tasa de errores de cálculo y la usabilidad percibida respecto de la línea base.
+\item Implementar un núcleo transaccional para ventas y pagos con catálogo estructurado, cálculo decimal, reglas versionadas, autorización por rol y auditoría de cambios.
+\item Desarrollar una interfaz PWA mobile first capaz de registrar operaciones sin conexión y sincronizarlas sin producir duplicados.
+\item Construir un importador de Excel con mapeo de columnas, normalización de nombres, detección de duplicados y previsualización de correcciones.
+\item Incorporar Lush Insight, un asistente limitado a consultas financieras aprobadas, con respuestas respaldadas por cifras recuperadas desde la API.
+\item Desarrollar Lush Guard con alertas basadas en reglas, y evaluar de forma experimental un detector estadístico o de machine learning si existe volumen suficiente de datos.
+\item Automatizar con n8n los avisos de cierre de caja, las entregas seguras de liquidaciones y las notificaciones de operaciones que requieren revisión.
+\item Evaluar el MVP mediante pruebas de conciliación, tiempos de tarea, seguridad, sincronización, usabilidad y un recorrido demostrable para la feria.
+\item Construir un modelo de contribución económica por servicio, diferenciando ingresos cobrados, comisiones, materiales y costos no incluidos.
+\item Implementar un simulador What-If capaz de comparar descuentos, precios, reglas de comisión, costos directos y cantidades hipotéticas de servicios sin alterar transacciones.
+\item Desarrollar Lush Decision Studio con alternativas, criterios cuantificables y cualitativos, ponderaciones normalizadas, análisis de sensibilidad y registro de supuestos.
+\item Diseñar un motor de recomendaciones prescriptivas que utilice resultados calculados y ofrezca justificaciones, advertencias y aprobación humana.
+\item Registrar decisiones, expectativas, responsables y resultados posteriores para comparar lo esperado con lo observado.
+\item Evaluar calidad de decisiones mediante precisión de escenarios, tiempo de comparación, comprensión de explicaciones y trazabilidad de la recomendación.
+\end{vinetas}
+
+\subsection{Criterios de aceptación globales}
+
+El MVP de la materia deberá ejecutar al menos un caso de decisión completo: registrar o importar datos de prueba, calcular contribución, crear tres escenarios, comparar dos o más alternativas mediante criterios visibles, mostrar la sensibilidad a los pesos, generar una recomendación explicada, registrar una aprobación humana y dejar evidencia de una revisión posterior. Además, se comprobarán exactitud monetaria, permisos, no duplicación offline y procesos n8n sujetos a aprobación.
+

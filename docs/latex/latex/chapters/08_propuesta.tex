@@ -1,0 +1,90 @@
+\section{Propuesta funcional: Lush Beauty Smart}\label{cap:propuesta}
+
+Este capítulo describe la propuesta funcional Lush Beauty Smart, que conserva el núcleo de caja y nómina planteado en el diagnóstico y le añade importación asistida de planillas, asistencia financiera explicable, alertas y automatizaciones controladas. Las funciones se presentan como propuesta de diseño y no como resultados medidos.
+
+\subsection{Usuarios y roles}
+
+Se reconocen tres roles funcionales. La administradora configura catálogo, reglas, descuentos autorizados, cierres y liquidaciones; la especialista registra servicios y consulta exclusivamente el detalle que le corresponde; y el contador o lector de reportes, si es habilitado, accede a informes agregados o exportaciones autorizadas. Una misma persona puede cumplir más de un rol, conservándose los permisos por operación y el historial de sus acciones.
+
+
+\subsection{Módulo de caja y nómina}
+
+El núcleo financiero incluye catálogo de servicios, agrupaciones de combos, ventas con una o varias líneas, pagos por medio, propinas, descuentos motivados, cancelaciones, reglas de comisión con fecha de vigencia y deducciones de nómina. El cierre registra importe esperado, importe declarado, diferencias y justificación. La liquidación semanal se genera como borrador, se verifica y se aprueba; únicamente después se emite el comprobante definitivo y se habilitan automatizaciones.
+
+
+\subsubsection{Política de cálculo y conservación de evidencia}
+
+La comisión se calcula por línea aplicando a la base definida el porcentaje vigente en el momento de registrar la venta. Para el caso ilustrativo, la base inicial es el precio de lista y la tasa es 35~\%. La venta guarda una copia inmutable del precio de lista, descuento, importe cobrado, tasa y política aplicada. Un cambio posterior de catálogo o porcentaje no recalcula operaciones históricas. Las devoluciones y anulaciones generan ajustes trazables en vez de eliminar filas utilizadas en una liquidación.
+
+
+\subsection{Centro de inteligencia financiera}
+
+El panel presenta ventas brutas, netas, descuentos, comisiones estimadas, propinas, pagos por método y cierres pendientes. Permite filtrar por período, especialista y servicio, distinguiendo importes realmente cobrados de registros no confirmados. Un simulador calcula escenarios de comisión sobre precio de lista o importe neto, sin afectar las liquidaciones aprobadas. Las recomendaciones de política se presentan como comparaciones numéricas, no como órdenes de reducir pagos.
+
+
+\subsection{Importador inteligente de planillas}
+
+El usuario carga un archivo .xlsx; el sistema identifica hojas y columnas, ofrece el mapeo de datos y presenta una vista previa. Una capa de normalización elimina espacios redundantes, unifica mayúsculas y consulta aliases conocidos. Si persisten dudas, una similitud textual como RapidFuzz ordena alternativas por cercanía; los casos por debajo de un umbral conservador quedan pendientes de revisión. Un LLM puede proponerse como recurso opcional de interpretación, sin aceptar cambios automáticamente.
+
+
+Los combos conocidos se descomponen usando reglas explícitas del catálogo. Cada registro importado conserva la fuente, hoja, número de fila, propuesta de corrección y decisión final. Los registros con información financiera incompleta no se integran silenciosamente: se identifican como pendientes, se rechazan con causa o se aceptan con autorización según las reglas definidas. La importación completa se ensaya en una transacción controlada para evitar estados parciales.
+
+
+\subsection{Lush Insight: asistente financiero explicable}
+
+Lush Insight permite preguntas como “¿Qué servicios tuvieron más descuentos esta semana?”, “¿Qué movimientos de caja necesitan revisión?” o “¿Qué diferencia existe entre dos políticas de comisión?”. El flujo valida identidad, identifica una intención de lectura, ejecuta una función de consulta del backend con filtros permitidos, recibe un resultado estructurado y genera una explicación en español. La pantalla permite abrir el reporte fuente desde el cual se calcula cada cifra.
+
+
+El alcance del MVP se limita a un conjunto reducido y evaluable de intenciones: resumen de caja por periodo, distribución por método de pago, composición de liquidación, comparación de comisiones y listado de anomalías. La respuesta no podrá inventar cifras, acceder a salarios de otras especialistas o modificar registros. Si no existen datos, devuelve “Información insuficiente” y solicita un período o filtro válido.
+
+
+\subsection{Lush Guard: alertas y control de calidad}
+
+El módulo Lush Guard genera alertas explicables mediante reglas configurables. Ejemplos: descuento superior al autorizado, pago sin método, discrepancia entre total cobrado y pagos asociados, un servicio sin correspondencia de catálogo, edición tardía de una liquidación ya cerrada y reintentos de sincronización con clave repetida. Cada alerta identifica la regla, el dato observado, el umbral utilizado y el estado de revisión. No se clasifica automáticamente una anomalía como conducta indebida.
+
+
+La etapa experimental considera estadísticas descriptivas por servicio y, si hay suficientes datos validados, un clasificador no supervisado como Isolation Forest. Se evaluaría con conjuntos etiquetados de casos de prueba y revisión humana; se documentarían falsos positivos y falsos negativos. Sin historial suficiente, el componente ML quedará marcado como prueba de concepto y no como sistema desplegado.
+
+
+\subsection{Experiencia móvil y operación sin conexión}
+
+La PWA dispondrá de una pantalla de registro que prioriza selección rápida de servicio, especialista, cliente opcional, monto y método de pago. Toda operación local recibe un UUID y estado visible: pendiente, enviada, confirmada o requiere revisión. En ausencia de internet el registro permanece en IndexedDB; al restaurar conectividad, el cliente reintenta el envío utilizando una clave de idempotencia que evita crear una venta duplicada en el servidor.
+
+
+La interfaz aclarará cuándo una venta todavía no está confirmada por el servidor. La aprobación de liquidaciones, cambios de reglas y cierres finales se ejecutará en línea en el MVP. React Native con Expo se considera una opción posterior, una vez validada la necesidad de servicios nativos adicionales; no se desarrollarán dos aplicaciones clientes simultáneamente para la feria.
+
+
+\subsection{Flujos n8n propuestos}
+
+\begin{vinetas}
+\item Cierre de caja aprobado: evento emitido por Django, consulta de resumen consolidado, elaboración de notificación y envío a la administradora.
+\item Liquidación semanal aprobada: emisión de PDF en el backend, creación de enlace temporal de acceso autorizado y notificación individual a la especialista correspondiente.
+\item Alerta de revisión: emisión de incidencia verificable, deduplicación por identificador de evento y envío de una comunicación sin exponer información salarial innecesaria.
+\end{vinetas}
+
+La plataforma mantiene un registro de cada evento enviado y de su acuse, con reintentos limitados ante fallos. Las notificaciones nunca constituyen el registro contable oficial. WhatsApp se reserva a una integración oficial futura; en el MVP se propone compartir manualmente el PDF o notificar por correo.
+
+
+\subsection{Priorización del alcance}
+
+\vspace{8pt}{\small\setstretch{1.0}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.3333\dimexpr\linewidth-6\tabcolsep\relax}>{\raggedright\arraybackslash}p{0.3333\dimexpr\linewidth-6\tabcolsep\relax}>{\raggedright\arraybackslash}p{0.3333\dimexpr\linewidth-6\tabcolsep\relax}}
+\caption{Alcance recomendado para un MVP demostrable}\label{tab:dss_4}\\
+\toprule
+\textbf{Función} & \textbf{Demostración} & \textbf{Fase posterior} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Función} & \textbf{Demostración} & \textbf{Fase posterior} \\
+\midrule\endhead
+\bottomrule\endfoot
+\bottomrule\endlastfoot
+Caja y liquidaciones & Completa y probada & Nuevas reglas verificadas \\
+Dashboard financiero & Completo & Analítica avanzada \\
+PWA y sincronización & Funcional & Cobertura de más dispositivos \\
+Importador Excel & Funcional con revisión humana & Aliases aprendidos de historial \\
+Lush Insight & Cinco intenciones controladas & Más consultas autorizadas \\
+Lush Guard & Reglas y alertas & ML validado con historial \\
+n8n & Tres flujos controlados & Más canales e integraciones \\
+React Native, agenda, inventario & Excluido & Evaluación de viabilidad \\
+\end{longtable}}
+\nota{Las funciones en fase posterior no son compromisos del piloto original.}

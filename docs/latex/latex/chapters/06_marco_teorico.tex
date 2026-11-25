@@ -1,0 +1,183 @@
+\section{Marco Teórico}\label{cap:marco}
+
+El marco teórico reúne los antecedentes y los fundamentos conceptuales que sustentan el estudio: los sistemas de información para el registro de transacciones, la ingeniería de requisitos, la calidad del producto, los errores en hojas de cálculo, las arquitecturas multi-inquilino, el diseño móvil primero y los modelos de éxito y aceptación de los sistemas. Su propósito es justificar por qué las variables seleccionadas (eficiencia, exactitud y usabilidad) son adecuadas para evaluar la propuesta, y cómo cada fundamento se traduce en requisitos concretos del sistema. Además, se incorporan los fundamentos tecnológicos y de decisión de la ampliación Lush Beauty Smart DSS: las transacciones atómicas, el funcionamiento sin conexión, la inteligencia artificial con herramientas restringidas, la detección de anomalías, la automatización con n8n, los sistemas de soporte para decisiones, el análisis de escenarios What-If y el análisis multicriterio.
+
+\subsection{Antecedentes de la investigación}
+
+\subsubsection{Estudios sobre errores en hojas de cálculo}
+
+Panko (1998) sintetizó los hallazgos de auditorías realizadas sobre hojas de cálculo en uso y concluyó que los errores son frecuentes y difíciles de detectar para quien construyó el archivo. Su trabajo es el antecedente más directo del problema de Lush Beauty, porque la planilla de comisiones del salón es una hoja de cálculo de uso operativo: contiene fórmulas repetidas en cada hoja, datos digitados a mano y ningún mecanismo de validación. El argumento de Panko sustenta la decisión de calcular las comisiones en un servidor y no en la planilla de cada persona.
+
+
+\subsubsection{Sistemas web para la gestión de salones de belleza}
+
+Ochoa López (2021), en una propuesta tecnológica de la Universidad Agraria del Ecuador, desarrolló un sistema web para administrar los procesos de una peluquería y de un salón de estética en Milagro, Ecuador, implementado en Python. El documento consultado permitió verificar su alcance a partir de la portada y del índice; el contenido completo debe revisarse para confirmar si incluye cálculo de comisiones, caja y liquidación de personal. Su pertinencia radica en que aborda el mismo problema de gestión administrativa en un salón de tamaño comparable.
+
+
+Meré Espino (2016), en un proyecto fin de carrera de la Universidad de Las Palmas de Gran Canaria, propuso un sitio web para un negocio de tratamientos de belleza con un área privada para gestionar la agenda, enviar publicidad y citar a los clientes. Según el resumen del repositorio, el énfasis está en la presencia en línea y en la agenda, no en la caja ni en la liquidación del personal, lo que lo distingue del problema que aborda este estudio.
+
+
+\subsubsection{Vacío identificado}
+
+Los antecedentes revisados se concentran en la agenda, las citas y la presencia web de los salones. Ninguno de los consultados trata de forma explícita la liquidación semanal de comisiones con deducciones, excedentes y propinas, ni el cuadre de caja por método de pago. Tampoco se localizaron trabajos bolivianos verificables sobre el tema en los repositorios consultados; esa búsqueda debe completarse en los repositorios de universidades bolivianas durante la revisión bibliográfica. Esta brecha justifica un sistema que prioriza la caja y la nómina, y deja la agenda para una etapa posterior. Los sistemas comerciales se analizan en el Capítulo~\ref{cap:benchmarking}.
+
+
+\subsection{Bases teóricas}
+
+\subsubsection{Sistemas de información y procesamiento de transacciones}
+
+Laudon y Laudon (2016) definen un sistema de información como un conjunto de componentes interrelacionados que captan, procesan, almacenan y distribuyen información para apoyar la toma de decisiones y el control de una organización. Dentro de esta categoría, los sistemas de procesamiento de transacciones registran las operaciones cotidianas y alimentan a los demás niveles de información; de su exactitud depende la calidad de los reportes y de las decisiones que se derivan de ellos.
+
+
+En el salón, cada servicio prestado constituye una transacción que contiene fecha, especialista, servicio, precio, descuento, método de pago y, cuando corresponde, propina. Esa transacción alimenta tres procesos: el cuadre de la caja diaria, el cálculo de la comisión y la liquidación semanal. Por ello, el sistema debe garantizar que cada transacción se registre una sola vez, con la hora asignada por el servidor y con la regla de cálculo vigente en el momento de la venta.
+
+
+\subsubsection{Ingeniería de requisitos y técnicas de obtención}
+
+Sommerville (2011) describe la ingeniería de requisitos como un proceso que comprende la obtención, el análisis, la especificación y la validación de lo que un sistema debe hacer y de las restricciones bajo las que debe operar. Distingue entre requisitos funcionales, que describen los servicios que el sistema debe prestar, y requisitos no funcionales, que fijan propiedades como el desempeño, la seguridad o la facilidad de uso.
+
+
+Entre las técnicas de obtención, el mismo autor destaca las entrevistas, los cuestionarios, la observación del trabajo real y el análisis de documentos existentes. En este estudio, la planilla de ejemplo funciona como documento de análisis, la observación cronometrada mide el trabajo real y el cuestionario de requerimientos (Anexo A) recoge, de forma estructurada y comparable, las necesidades de la administradora y de las especialistas en los módulos de registro de servicios, comisiones, propinas, deducciones, clientes, importación y uso. La priorización con una escala de importancia permite separar lo imprescindible para el producto mínimo viable de lo que corresponde a etapas posteriores.
+
+
+\subsubsection{Calidad del producto y calidad en uso}
+
+La norma ISO/IEC 25010 (International Organization for Standardization [ISO] \& International Electrotechnical Commission [IEC], 2011) define un modelo de calidad del producto con ocho características: adecuación funcional, eficiencia de desempeño, compatibilidad, usabilidad, fiabilidad, seguridad, mantenibilidad y portabilidad. Complementa ese modelo con un modelo de calidad en uso, que evalúa la efectividad, la eficiencia, la satisfacción, la libertad frente al riesgo y la cobertura del contexto de uso.
+
+
+Para esta investigación, la adecuación funcional corresponde a la exactitud de los cálculos, la eficiencia de desempeño al tiempo de registro y de liquidación, y la usabilidad a la facilidad con que la especialista completa un registro. Estos vínculos explican la elección de los indicadores de la operacionalización (Capítulo~\ref{cap:operacionalizacion}).
+
+
+La calidad debe evaluarse tanto por exactitud funcional como por la facilidad de uso y la seguridad de los datos. Se mantienen los indicadores de tiempo de liquidación, tasa de discrepancias y cuestionario SUS descritos en la operacionalización de las variables, complementados con pruebas de sincronización offline, aislamiento por salón y verificación de permisos. Debido a la muestra pequeña prevista, la interpretación se centrará en resultados descriptivos y evidencia reproducible, evitando afirmaciones generales no respaldadas.
+
+\subsubsection{Errores en hojas de cálculo y control de cálculos}
+
+Panko (1998) clasifica los errores de las hojas de cálculo en mecánicos (fórmulas mal escritas o referencias equivocadas), lógicos (reglas de negocio aplicadas de forma incorrecta) y de omisión (datos o filas que faltan). Advierte, además, que la revisión realizada por la misma persona que elaboró el archivo detecta solo una parte de ellos.
+
+
+Esta clasificación orienta los controles del sistema propuesto. Los errores mecánicos se evitan con un motor de cálculo único en el servidor; los lógicos, con reglas de comisión configurables y con vigencia; y los de omisión, con validaciones de entrada y con un cuadre de control entre pagos, líneas y liquidaciones. Los cálculos monetarios se realizan con tipos decimales, y cada línea conserva una copia (\textit{snapshot}) de la regla y del precio aplicados, de modo que un cambio posterior no altere el pasado.
+
+
+En un sistema transaccional, cada servicio prestado origina un registro identificable y, cuando corresponde, uno o varios pagos. La suma de pagos debe corresponder al importe exigible; el cálculo de comisión debe aplicar la regla vigente en la fecha de la operación; y cualquier corrección debe quedar ligada a un motivo y a un usuario. El trabajo de Panko (1998) sobre errores en hojas de cálculo fundamenta la necesidad de validaciones y de un cálculo centralizado, mientras que la documentación de Django describe los mecanismos de transacción atómica que permiten confirmar o revertir operaciones compuestas (Django Software Foundation, s. f.-a).
+
+\subsubsection{Arquitectura multi-inquilino}
+
+Una arquitectura multi-inquilino (multi-tenant) es aquella en la que una misma instancia de la aplicación atiende a varios clientes —en este caso, salones— manteniendo sus datos aislados entre sí (Bezemer \& Zaidman, 2010). Aunque el estudio se centra en un único salón, el sistema incorpora desde su diseño un identificador de inquilino en cada entidad y un aislamiento por fila en la base de datos, de modo que la solución pueda ofrecerse más adelante a otros negocios sin reescribir el modelo de datos y sin que la información de un salón sea visible para otro. Esta decisión protege la confidencialidad de los sueldos y de las clientas, y se verifica mediante pruebas de aislamiento, no solo con la presencia del identificador.
+
+\subsubsection{Diseño móvil primero y aplicaciones web progresivas}
+
+El enfoque \textit{mobile first} propone diseñar primero para pantallas pequeñas y contextos de uso restringidos, y ampliar después hacia pantallas mayores. Wroblewski (2011) sostiene que esta restricción obliga a priorizar el contenido y las acciones esenciales, lo que produce interfaces más claras también en el escritorio.
+
+
+Una aplicación web progresiva (PWA) es un sitio web que puede instalarse en la pantalla de inicio del teléfono y que, mediante técnicas de almacenamiento local y de trabajo en segundo plano, puede seguir operando de forma parcial sin conexión. En el sistema propuesto, la PWA permite registrar servicios aunque falle la red del salón: cada registro queda en una cola local, se identifica con una clave única para que su reenvío no duplique la venta, y se sincroniza al recuperar la conexión. Estas decisiones responden al uso real de la administradora, que registra desde el teléfono durante la jornada.
+
+
+El enfoque mobile first diseña primero la acción cotidiana de registro con el menor número de pasos. Una aplicación web progresiva puede instalarse en el dispositivo y utilizar Service Workers e IndexedDB para mantener recursos e información durante interrupciones. No obstante, no debe suponerse que todos los navegadores ejecutan sincronizaciones en segundo plano de la misma manera; el producto incorporará reintentos al reabrir la aplicación o recuperar la conexión, además de un indicador visible de registros pendientes (Mozilla Developer Network [MDN], s. f.-a).
+
+\subsubsection{Modelos de éxito y aceptación de sistemas de información}
+
+DeLone y McLean (2003) propusieron un modelo de éxito de los sistemas de información que integra seis dimensiones: calidad del sistema, calidad de la información, calidad del servicio, uso, satisfacción del usuario y beneficios netos. El modelo permite evaluar un sistema más allá de su funcionamiento técnico, al considerar el uso que se le da y el beneficio que produce para la organización.
+
+
+Davis (1989), por su parte, demostró que la utilidad percibida y la facilidad de uso percibida predicen la intención de usar una tecnología. Ambos modelos orientan los indicadores del estudio: la utilidad se traduce en la reducción del tiempo de liquidación y de los errores; la facilidad de uso, en la puntuación de usabilidad; y la satisfacción y el uso continuado, en las entrevistas de seguimiento durante el piloto.
+
+
+\subsubsection{Inteligencia artificial generativa con herramientas restringidas}
+
+Un modelo de lenguaje es adecuado para traducir una pregunta de gestión a una consulta permitida y redactar un resumen comprensible, siempre que no sea la fuente de verdad financiera. Lush Insight expondrá herramientas tipadas, como consultar\_resumen\_caja(periodo) o consultar\_impacto\_descuentos(periodo), cuyas respuestas provendrán de cálculos del backend. El modelo no tendrá credenciales de escritura ni acceso directo a tablas completas de salarios y clientes. Toda respuesta incluirá período, magnitudes, alcance y advertencia cuando no existan datos suficientes.
+
+\subsubsection{Detección de anomalías y machine learning}
+
+La detección de anomalías busca identificar casos poco habituales con respecto a una distribución o una política. Para una base pequeña es preferible comenzar con reglas interpretables: descuentos superiores al umbral autorizado, ventas sin medio de pago, diferencias de caja, ediciones repetidas o precios fuera de catálogo. Isolation Forest, disponible en scikit-learn, constituye una alternativa experimental cuando el volumen y la calidad del historial sean adecuados; su salida representa atipicidad estadística, nunca prueba de fraude (scikit-learn Developers, s. f.-a).
+
+\subsubsection{Automatización mediante n8n}
+
+n8n permite conectar servicios mediante disparadores, condiciones y acciones. En Lush Beauty Smart se reservará para trabajos posteriores al registro contable, como generar avisos, distribuir comprobantes y solicitar revisiones. El backend publicará eventos autenticados que describan una acción ya aprobada. El flujo automatizado deberá incorporar control de duplicados, reintentos, límites de exposición de información y registros de ejecución. El cálculo de nómina no dependerá de un nodo de automatización (n8n, s. f.).
+
+\subsubsection{Sistemas de soporte para decisiones (DSS)}\label{sec:dss}
+
+Un sistema de soporte para decisiones integra datos, modelos analíticos y una interfaz de interacción para ayudar a una persona a evaluar problemas semiestructurados. En Lush Beauty Smart DSS, la base de datos proporciona hechos transaccionales; el componente de modelos produce escenarios, medidas de contribución y comparaciones; y la administradora aporta objetivos, límites y preferencias. El sistema no sustituye la responsabilidad de decidir.
+
+\subsubsection{Análisis de escenarios What-If y sensibilidad}
+
+La simulación What-If modifica supuestos controlados para estimar el efecto de una alternativa. Se deben identificar variables independientes (precio, descuento, demanda hipotética, comisión y materiales), reglas de negocio fijas, variables de salida y restricciones. El análisis de sensibilidad repite la comparación con diferentes supuestos para evaluar si una recomendación es estable o depende de una hipótesis frágil.
+
+\subsubsection{Análisis multicriterio y recomendaciones prescriptivas}
+
+Cuando una decisión incorpora resultados económicos, liquidez, dificultad operativa y riesgo, no basta elegir el mayor ingreso. Una matriz de puntuación ponderada constituye un primer instrumento exploratorio; debe documentar quién asigna pesos, cómo se normalizan las escalas y qué sucede cuando estos cambian. Una evaluación multicriterio completa requiere analizar compensaciones y sensibilidad de forma explícita, evitando presentar una puntuación simple como verdad objetiva (HM Treasury, s. f.).
+
+\subsubsection{Evaluación de artefactos y calidad de la explicación}
+
+La investigación de diseño construye y evalúa soluciones tecnológicas frente a problemas relevantes (Hevner et al., 2004). Para este DSS no alcanza medir si el software calcula: también importa si las alternativas son comprensibles, las recomendaciones son reproducibles y el usuario conserva control. Los principios de gestión de riesgos de IA de NIST (2023) respaldan documentar límites, validez y supervisión humana.
+
+\subsection{Definición de términos clave}
+
+\noindent \textbf{Análisis de sensibilidad.} Repetición de una comparación con distintos supuestos o pesos para evaluar si una recomendación es estable o depende de una hipótesis frágil.
+
+\noindent \textbf{Backoffice.} Módulo administrativo interno del negocio, no visible para el cliente final.
+
+\noindent \textbf{Benchmarking.} Proceso sistemático de comparar productos, procesos o prácticas con los de referentes del sector para identificar oportunidades de mejora.
+
+\noindent \textbf{Bitácora de auditoría.} Registro de solo inserción en el que se guardan las acciones realizadas en el sistema, con usuario, fecha, valor anterior y valor nuevo.
+
+\noindent \textbf{Cola de sincronización.} Conjunto de registros guardados en el dispositivo mientras no hay conexión, que se envían al servidor cuando la conexión se restablece.
+
+\noindent \textbf{Comisión.} Porción del precio de un servicio que corresponde a la especialista que lo realiza. En el caso de estudio, equivale al 35~\% del precio de lista como valor inicial de la regla.
+
+\noindent \textbf{Contribución por servicio.} Precio realmente cobrado menos la comisión reconocida y los costos variables directos del servicio; no equivale a la utilidad neta del negocio.
+
+\noindent \textbf{DSS (sistema de soporte para decisiones).} Sistema que integra datos, modelos analíticos y una interfaz de interacción para ayudar a una persona a evaluar problemas semiestructurados; no sustituye la responsabilidad de decidir.
+
+\noindent \textbf{Escenario What-If.} Simulación que modifica supuestos controlados (precio, descuento, comisión, costos, cantidad) para estimar el efecto de una alternativa sin alterar los registros reales.
+
+\noindent \textbf{Excedente de deducción.} Monto de deducciones que supera lo ganado en un periodo y que se descuenta en la liquidación siguiente, identificado como tal en los reportes.
+
+\noindent \textbf{Idempotencia.} Propiedad de una operación que, repetida con la misma clave, produce un solo resultado; evita duplicar ventas en reintentos de red.
+
+\noindent \textbf{IndexedDB.} Almacén local del navegador para datos estructurados y cola de trabajo.
+
+\noindent \textbf{Isolation Forest.} Algoritmo no supervisado para detectar valores estadísticamente atípicos.
+
+\noindent \textbf{Liquidación.} Cálculo periódico del monto neto a pagar a una trabajadora: sueldo fijo más comisiones y propinas, menos deducciones.
+
+\noindent \textbf{LLM.} Modelo de lenguaje que ayuda a interpretar preguntas y redactar respuestas.
+
+\noindent \textbf{Matriz ponderada.} Instrumento exploratorio de análisis multicriterio que suma puntuaciones normalizadas de cada alternativa según criterios con pesos explícitos.
+
+\noindent \textbf{Multi-inquilino.} Arquitectura en la que una misma aplicación atiende a varios negocios con datos aislados entre sí.
+
+\noindent \textbf{Outbox.} Tabla de eventos por enviar que se crea junto con la transacción principal.
+
+\noindent \textbf{PWA.} Aplicación web progresiva instalable en el teléfono que puede operar parcialmente sin conexión.
+
+\noindent \textbf{Requisito funcional.} Descripción de un servicio o comportamiento que el sistema debe ofrecer, por ejemplo, calcular la comisión de una línea de venta.
+
+\noindent \textbf{Requisito no funcional.} Restricción de calidad o de operación, como el tiempo de respuesta, la seguridad o la facilidad de uso.
+
+\noindent \textbf{Seguridad a nivel de fila (RLS).} Mecanismo de la base de datos que limita las filas visibles para cada sesión según una condición; en este caso, el inquilino.
+
+\noindent \textbf{Snapshot.} Copia de los valores vigentes en el momento de una transacción (precio y regla de comisión) que no cambia cuando se modifican los valores originales.
+
+\noindent \textbf{Tasa de error.} Proporción de líneas o liquidaciones cuyo resultado difiere del cálculo de referencia.
+
+\noindent \textbf{Tool calling.} Invocación de herramientas predeterminadas desde un asistente de lenguaje.
+
+\subsection{Relación entre los fundamentos teóricos y los requisitos del sistema}
+
+Los fundamentos anteriores se traducen en requisitos concretos. La correspondencia siguiente permite verificar que ninguna necesidad del salón quede sin sustento teórico y que ningún requisito quede sin justificación.
+
+
+\begin{vinetas}
+\item \textbf{Procesamiento de transacciones} (Laudon \& Laudon, 2016): cada servicio es una transacción con fecha, especialista y pago; requiere registro con fecha y hora automáticas y cobro único.
+\item \textbf{Requisitos funcionales y no funcionales} (Sommerville, 2011): las reglas de comisión son funcionales; el tiempo de respuesta y la facilidad de uso son no funcionales. Ambos se obtienen con el cuestionario de requerimientos.
+\item \textbf{Calidad del producto y en uso} (ISO/IEC, 2011): la exactitud, la eficiencia y la usabilidad se convierten en los indicadores de la operacionalización.
+\item \textbf{Errores en hojas de cálculo} (Panko, 1998): los errores mecánicos, lógicos y de omisión motivan el cálculo en servidor, las validaciones y la bitácora de cambios.
+\item \textbf{Arquitectura multi-inquilino} (Bezemer \& Zaidman, 2010): el identificador de inquilino y el aislamiento por fila protegen los datos de cada salón.
+\item \textbf{Diseño móvil primero y PWA} (Wroblewski, 2011): el flujo de registro se diseña para pocos toques y el registro funciona sin conexión.
+\item \textbf{Éxito y aceptación} (DeLone \& McLean, 2003; Davis, 1989): el uso, la satisfacción y la utilidad percibida se miden en el piloto.
+\item Transacciones atómicas y exactitud financiera (Django Software Foundation, s. f.-a): las operaciones compuestas se confirman o se revierten por completo, lo que sustenta el cierre de caja, la liquidación y la importación en transacciones controladas.
+\item Funcionamiento sin conexión (Mozilla Developer Network [MDN], s. f.-a): la cola local, la clave de idempotencia y el indicador de registros pendientes responden a las limitaciones de la sincronización en segundo plano de los navegadores.
+\item Inteligencia artificial con herramientas restringidas y detección de anomalías: Lush Insight consulta funciones cerradas del backend y Lush Guard comienza con reglas interpretables; el aprendizaje automático queda como experimento hasta contar con historial suficiente.
+\item Sistemas de soporte para decisiones, análisis What-If y multicriterio (HM Treasury, s. f.): la contribución por servicio, los escenarios, la matriz ponderada y la sensibilidad convierten los datos transaccionales en alternativas comparables, siempre con aprobación humana.
+\item Evaluación de artefactos y gestión de riesgos de IA (Hevner et al., 2004; National Institute of Standards and Technology [NIST], 2023): se documentan límites, validez y supervisión humana de las recomendaciones.
+\end{vinetas}
