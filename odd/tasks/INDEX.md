@@ -9,7 +9,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | Sem | Feature | Estado | Prioridad |
 |---|---|---|---|
 | 1-2 | [F00 foundation](F00-foundation.md) | UI parcial (T5 maqueta) | Protegida |
-| 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | pendiente | Protegida |
+| 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | UI parcial (T5/T6 maqueta) | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | pendiente | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | pendiente | Protegida |
 | 2 | [F04 cierre-caja](F04-cierre-caja.md) | pendiente | Protegida |

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import { AppRoutes } from '../../app/routes'
+import { SalesProvider } from '../sales'
 import { SessionProvider } from './index'
 import type { Session } from './types'
 
@@ -10,7 +11,9 @@ function renderAt(path: string, initial: Session | null = null) {
   return render(
     <MemoryRouter initialEntries={[path]}>
       <SessionProvider initial={initial}>
-        <AppRoutes />
+        <SalesProvider>
+          <AppRoutes />
+        </SalesProvider>
       </SessionProvider>
     </MemoryRouter>,
   )

@@ -11,3 +11,11 @@ body { background: var(--surface); }
 .login__brand { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--space-5); padding: var(--space-9) var(--space-7); min-height: 280px; }
 .login__main { display: flex; flex-direction: column; justify-content: center; padding: var(--space-7) var(--space-5); }
 .login__form { max-width: 420px; width: 100%; margin: 0 auto; }
+
+/* sales · servicio guardado */
+.saved__hero { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-9) var(--space-5) var(--space-7); }
+.saved__amount { margin: 0; font: 300 88px/1 var(--font-sans); letter-spacing: -.03em; }
+
+/* sales · hoy */
+.hoy__hero { margin: calc(var(--space-5) * -1) calc(var(--space-5) * -1) 0; padding: var(--space-7) var(--space-5); }
+.hoy__total { margin: 0; font: 300 80px/1 var(--font-sans); letter-spacing: -.03em; font-variant-numeric: lining-nums tabular-nums; }

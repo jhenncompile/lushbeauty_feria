@@ -1,10 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage, RequireRole } from '../modules/identity'
+import { DescuentoPage, GuardadoPage, HoyPage, RegistrarPage, WebVentasPage } from '../modules/sales'
 import { ROUTES } from '../shared/layout'
 import { ShellHome } from './ShellHome'
 
 const ADMIN = ['administradora'] as const
-const SPECIALIST = ['especialista'] as const
+const ANYONE_WHO_REGISTERS = ['administradora', 'especialista'] as const
 
 export function AppRoutes() {
   return (
@@ -15,7 +16,7 @@ export function AppRoutes() {
         path={ROUTES.home}
         element={
           <RequireRole allow={ADMIN}>
-            <ShellHome title="Hoy" />
+            <HoyPage />
           </RequireRole>
         }
       />
@@ -30,8 +31,32 @@ export function AppRoutes() {
       <Route
         path={ROUTES.register}
         element={
-          <RequireRole allow={SPECIALIST}>
-            <ShellHome title="Registrar servicio" />
+          <RequireRole allow={ANYONE_WHO_REGISTERS}>
+            <RegistrarPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.discount}
+        element={
+          <RequireRole allow={ANYONE_WHO_REGISTERS}>
+            <DescuentoPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.saved}
+        element={
+          <RequireRole allow={ANYONE_WHO_REGISTERS}>
+            <GuardadoPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.webSales}
+        element={
+          <RequireRole allow={ADMIN}>
+            <WebVentasPage />
           </RequireRole>
         }
       />

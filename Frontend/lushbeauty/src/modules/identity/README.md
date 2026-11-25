@@ -2,7 +2,7 @@
 
 **Responsabilidad:** ingreso, sesión y rol de la usuaria; decide qué rutas puede abrir cada rol.
 
-**Contrato público (`index.ts`):** `LoginPage`, `SessionProvider`, `useSession`, `RequireRole`, `homeRouteFor`, tipos `Role` y `Session`.
+**Contrato público (`index.ts`):** `LoginPage`, `SessionProvider`, `useSession`, `RequireRole`, `homeRouteFor`, `listSpecialists()`, tipos `Role`, `Session` y `Specialist`.
 
 **Eventos:** no emite ni consume (fase de UI).
 
