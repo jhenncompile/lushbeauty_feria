@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SincronizacionPage } from '../modules/offline'
+import { WebPanelPage } from '../modules/analytics'
 import { CierreCajaPage, WebCajaPage } from '../modules/cashier'
 import { WebCatalogoPage } from '../modules/catalog'
 import { LoginPage, RequireRole } from '../modules/identity'
@@ -131,6 +132,14 @@ export function AppRoutes() {
         element={
           <RequireRole allow={ANYONE_WHO_REGISTERS}>
             <SincronizacionPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path={ROUTES.webPanel}
+        element={
+          <RequireRole allow={['administradora', 'lector']}>
+            <WebPanelPage />
           </RequireRole>
         }
       />
