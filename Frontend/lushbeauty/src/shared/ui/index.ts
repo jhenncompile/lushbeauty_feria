@@ -1,4 +1,5 @@
-export { ART, Backdrop, Orbit } from './Art'
+export { ART } from './art'
+export { Backdrop, Orbit } from './Art'
 export { Button } from './Button'
 export { Choice } from './Choice'
 export { Field } from './Field'

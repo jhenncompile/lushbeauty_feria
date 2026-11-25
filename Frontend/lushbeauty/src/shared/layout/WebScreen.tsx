@@ -28,7 +28,7 @@ export function WebScreen({ children }: WebScreenProps) {
           <Wordmark size={20} />
         </Link>
         <div className="lb-nav__actions">
-          <Link className="lb-nav__link" to="/web/ajustes">
+          <Link className="lb-nav__link" to={ROUTES.webSettings}>
             Ajustes
           </Link>
           <Link className="lb-nav__link" to={ROUTES.login}>

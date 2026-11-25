@@ -2,7 +2,8 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { formatBs } from '../../../shared/money'
 import { MobileScreen, ROUTES } from '../../../shared/layout'
 import { useConnection } from '../../../shared/connection'
-import { Button } from '../../../shared/ui'
+import { CountBs } from '../../../shared/motion'
+import { Backdrop, Button } from '../../../shared/ui'
 import { useRegistroServicio } from '../draft'
 import { formatPercent } from '../domain/sale'
 
@@ -16,13 +17,16 @@ export function GuardadoPage() {
   return (
     <MobileScreen
       header={
-        <section className="lb-on-inverse saved__hero">
-          <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <section className="lb-on-inverse rel saved__hero">
+          <Backdrop opacity={0.4} />
+          <svg className="above" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
             <circle cx="20" cy="20" r="19" fill="none" stroke="currentColor" strokeWidth="1" />
             <path className="tick" d="M11 21 L18 28 L30 13" />
           </svg>
-          <p className="eyebrow">Servicio guardado</p>
-          <p className="saved__amount">{formatBs(saved.chargedCents, { decimals: whole ? 0 : 2 })}</p>
+          <p className="eyebrow above rise d1">Servicio guardado</p>
+          <p className="saved__amount above rise d2">
+            <CountBs cents={saved.chargedCents} decimals={whole ? 0 : 2} />
+          </p>
           <p className="t-body">
             {saved.serviceName} · {saved.specialistName} · {saved.method}
           </p>

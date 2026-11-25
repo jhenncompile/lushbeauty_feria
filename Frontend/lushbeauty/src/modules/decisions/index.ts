@@ -1,0 +1,5 @@
+export { ComparacionPage } from './pages/ComparacionPage'
+export { HistorialPage } from './pages/HistorialPage'
+export { RecomendacionPage } from './pages/RecomendacionPage'
+export { SimuladorPage } from './pages/SimuladorPage'
+export { WebDecisionesPage } from './pages/WebDecisionesPage'

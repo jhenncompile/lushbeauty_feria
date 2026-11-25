@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Field, Wordmark } from '../../../shared/ui'
+import { Backdrop, Button, Field, Orbit, Wordmark } from '../../../shared/ui'
 import { homeRouteFor } from '../domain/access'
 import { useSession } from '../session'
 import type { Role } from '../types'
@@ -32,12 +32,19 @@ export function LoginPage() {
 
   return (
     <div className="lx web login">
-      <section className="lb-on-inverse login__brand">
-        <Wordmark variant="stacked" tone="inverse" size={28} descriptor="Salón de belleza" />
-        <p className="t-caption">El arte del detalle, con las cuentas claras.</p>
+      <section className="lb-on-inverse rel login__brand">
+        <Backdrop />
+        <div className="above rise d2" style={{ position: 'relative' }}>
+          <Orbit
+            style={{ left: '50%', top: '50%', width: 'min(520px, 130vw)', aspectRatio: '1', transform: 'translate(-50%, -50%)' }}
+            opacity={0.5}
+          />
+          <Wordmark variant="stacked" tone="inverse" size={28} descriptor="Salón de belleza" />
+        </div>
+        <p className="t-caption above rise d4">El arte del detalle, con las cuentas claras.</p>
       </section>
       <main className="login__main">
-        <form className="stack stack--lg login__form" onSubmit={onSubmit} noValidate>
+        <form className="stack stack--lg login__form rise d3" onSubmit={onSubmit} noValidate>
           <div className="stack" style={{ gap: 'var(--space-2)' }}>
             <p className="eyebrow">Lush Beauty Smart</p>
             <h1 className="display-lg">Ingresar</h1>

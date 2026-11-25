@@ -18,6 +18,22 @@ export const ROUTES = {
   webCash: '/web/caja',
   webPayroll: '/web/nomina',
   webCatalog: '/web/catalogo',
+  webSettings: '/web/ajustes',
+  webAudit: '/web/auditoria',
+  webImport: '/web/importar',
+  webInsight: '/web/insight',
+  webGuard: '/web/guard',
+  webDecisions: '/web/decisiones',
+  landing: '/inicio',
+  fair: '/feria',
+  import: '/importar',
+  importReview: '/importar/revisar',
+  insight: '/insight',
+  guard: '/guard',
+  decisions: '/decisiones',
+  comparison: '/decisiones/comparacion',
+  recommendation: '/decisiones/recomendacion',
+  history: '/decisiones/historial',
 } as const
 
 export function payrollDetailRoute(id: string): string {
@@ -28,7 +44,7 @@ export const ADMIN_TABS: TabItem[] = [
   { label: 'Hoy', to: ROUTES.home },
   { label: 'Caja', to: ROUTES.cashClose },
   { label: 'Nómina', to: ROUTES.payroll },
-  { label: 'Decisiones', to: '/decisiones' },
+  { label: 'Decisiones', to: ROUTES.decisions },
 ]
 
 export const SPECIALIST_TABS: TabItem[] = [
@@ -41,5 +57,5 @@ export const WEB_LINKS: TabItem[] = [
   { label: 'Ventas', to: ROUTES.webSales },
   { label: 'Caja', to: ROUTES.webCash },
   { label: 'Nómina', to: ROUTES.webPayroll },
-  { label: 'Decisiones', to: '/web/decisiones' },
+  { label: 'Decisiones', to: ROUTES.webDecisions },
 ]
