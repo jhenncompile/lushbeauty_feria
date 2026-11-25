@@ -81,11 +81,12 @@ Presentacionales: reciben datos por props, sin lógica de negocio ni de red.
 | `Tag` | Estado en texto | neutro, ok, rouge. Texto siempre explícito («Pendiente», «Requiere revisión») |
 | `Panel` | Bloque sobre `surface-raised` | — |
 | `Steps` | Borrador → Verificada → Aprobada | `aria-current="step"` |
-| `Table` | Tablas numéricas | primera columna a la izquierda, cifras a la derecha, fila de total con filete negro; en móvil, scroll horizontal |
-| `TopBar` (móvil) | «Volver» · título eyebrow · vacío | — |
+| Tablas (`.tbl`, `.tbl--web`) | Tablas numéricas, con las clases del diseño (no hay componente React) | primera columna a la izquierda, cifras a la derecha, fila de total con filete negro; en móvil, scroll horizontal |
+| `TopBar` (móvil) | «Volver» · título (h1, eyebrow) · vacío | — |
+| `MobileScreen` (en `shared/layout`) | Barra, estado de conexión, contenido, pie y pestañas | — |
 | `StatusBar` | Conexión | en línea (punto ok) / sin conexión (banda negra, punto claro) |
 | `Tabs` (móvil) | Navegación inferior | 4 o 2 pestañas, `aria-current="page"` |
-| `WebNav` | Navegación web | enlaces centrados, marca al centro, «Ajustes · Salir» a la derecha; <720px se convierte en `mnav` en fila |
+| `WebScreen` (en `shared/layout`) | Navegación web + estado + contenido | enlaces centrados, marca al centro, «Ajustes · Salir» a la derecha; <720px se convierte en `mnav` en fila |
 | `ServiceRow` | Fila de catálogo | índice, título, descripción, duración, precio |
 
 ### Microcopy (español de Bolivia)
@@ -100,7 +101,7 @@ Estado: ✅ se implementa en esta fase (UI con datos sintéticos, sin backend) �
 
 | Feature | Pantalla (artboard) | Plataforma | Módulo | Ruta | Estado |
 |---|---|---|---|---|---|
-| F00 | Ingreso (Main / WebLogin) | Móvil y web | `identity` | `/ingresar` | ✅ |
+| F00 | Ingreso (Main / WebLogin), una sola pantalla responsive | Móvil y web | `identity` | `/ingresar` | ✅ |
 | F00 | Shell y navegación por rol | Ambas | `shared/layout` | — | ✅ |
 | F01 | Hoy | Móvil | `sales` | `/hoy` | ✅ |
 | F01 | Registrar servicio | Móvil | `sales` | `/registrar` | ✅ |
@@ -109,7 +110,7 @@ Estado: ✅ se implementa en esta fase (UI con datos sintéticos, sin backend) �
 | F01 | Ventas (tabla + venta seleccionada + anular) | Web | `sales` | `/web/ventas` | ✅ |
 | F02 | Catálogo y reglas (lectura) | Web | `catalog` | `/web/catalogo` | ✅ parcial |
 | F03 | Liquidación semanal | Móvil | `payroll` | `/nomina` | ✅ |
-| F03 | Detalle de liquidación | Móvil | `payroll` | `/nomina/:especialista` | ✅ |
+| F03 | Detalle de liquidación | Móvil | `payroll` | `/nomina/:id` | ✅ |
 | F03 | Liquidación aprobada | Móvil | `payroll` | `/nomina/aprobada` | ✅ |
 | F03 | Mi liquidación (especialista) | Móvil | `payroll` | `/mi-liquidacion` | ✅ |
 | F03 | Nómina | Web | `payroll` | `/web/nomina` | ✅ |
@@ -142,7 +143,7 @@ Estado: ✅ se implementa en esta fase (UI con datos sintéticos, sin backend) �
 
 - **Móvil (≤720px y vistas de especialista):** columna de 390px de referencia; cabecera de 56px, barra de estado, contenido con margen 24px, pie fijo con botón a ancho completo, pestañas inferiores de 56px.
 - **Web (≥721px):** `WebNav` de 72px, contenido centrado a 1280px, rejillas `cols--21` (2/3 + 1/3) que colapsan a una columna bajo 1000px; tablas con scroll horizontal dentro de su caja.
-- La PWA decide el shell por ruta (`/web/*` usa `WebShell`; el resto usa `MobileShell`), no por ancho de pantalla, para que la administradora pueda usar ambas en teléfono.
+- La PWA decide el shell por ruta (`/web/*` usa `WebScreen`; el resto usa `MobileScreen`), no por ancho de pantalla, para que la administradora pueda usar ambas en teléfono.
 
 ## 8. Accesibilidad
 
@@ -178,6 +179,10 @@ No se inventan; la UI usa los valores del diseño solo como texto ilustrativo.
 4. **Día de corte semanal y propinas** (F03): etiquetas de «Semana 17 – 23 nov» y la fila de propinas.
 5. **Pesos de la matriz** y **costos de materiales** (F08–F09): afectan solo a pantallas documentadas, no a esta fase.
 
-## 12. Discrepancia con el README
+## 12. Cómo ejecutarlo
+
+`pnpm dev` (en `Frontend/lushbeauty`), `pnpm test`, `pnpm lint`, `pnpm build`. En desarrollo aparece un botón «Simular sin conexión». Al ingresar en pantalla ancha, la administradora llega al Panel web; en pantalla angosta, a Hoy.
+
+## 13. Discrepancia con el README
 
 El README define una sola PWA y excluye una app nativa. El equipo decidió implementar **ambas**: la PWA cubre todo y `Mobile/lushbeauty` (Flutter) replica solo las vistas de especialista (ver `Mobile/lushbeauty/DESIGN.md`). Se asume el costo de mantener dos clientes; el contenido y los tokens deben coincidir con este documento.
