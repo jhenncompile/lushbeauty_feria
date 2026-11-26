@@ -1,0 +1,52 @@
+# Entorno de desarrollo: `docker compose up` levanta Postgres, API y frontend.
+# Las variables salen de `.env` (ver `.env.example`).
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?define POSTGRES_SUPERUSER_PASSWORD en .env}
+      APP_DB_NAME: ${POSTGRES_DB:-lushbeauty}
+      APP_DB_USER: ${POSTGRES_USER:-lushbeauty}
+      APP_DB_PASSWORD: ${POSTGRES_PASSWORD:?define POSTGRES_PASSWORD en .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./Backend/lushbeauty/docker/postgres-init.sh:/docker-entrypoint-initdb.d/01-app.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: ./Backend/lushbeauty
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8010"
+    environment:
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-true}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      POSTGRES_DB: ${POSTGRES_DB:-lushbeauty}
+      POSTGRES_USER: ${POSTGRES_USER:-lushbeauty}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+    volumes:
+      - ./Backend/lushbeauty:/app
+    ports:
+      - "8010:8010"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./Frontend/lushbeauty
+    command: pnpm dev --host 0.0.0.0 --port 5180
+    volumes:
+      - ./Frontend/lushbeauty:/app
+      - web_node_modules:/app/node_modules
+    ports:
+      - "5180:5180"
+
+volumes:
+  pgdata:
+  web_node_modules:
