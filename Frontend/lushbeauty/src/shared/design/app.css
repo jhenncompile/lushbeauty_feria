@@ -10,11 +10,11 @@ body { background: var(--surface); }
 .login { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); min-height: 100dvh; }
 /* Como en el diseño: marca arriba-centro, descriptor abajo; el perfil va abajo a la derecha, mirando hacia la marca */
 .login__brand { position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: var(--space-5); padding: var(--space-9) var(--space-7); min-height: 480px; overflow: hidden; }
-.login__orbit { position: absolute; z-index: -1; opacity: .45; right: -14%; bottom: -12%; width: 78%; aspect-ratio: 1; }
+.login__orbit { position: absolute; z-index: -1; opacity: .65; right: -14%; bottom: -12%; width: 78%; aspect-ratio: 1; }
 @media (max-width: 840px) {
   .login__brand { justify-content: center; padding: var(--space-9) var(--space-5); min-height: 0; }
   .login__brand > .t-caption { display: none; }
-  .login__orbit { right: -22%; bottom: -18%; width: 340px; opacity: .3; }
+  .login__orbit { right: -22%; bottom: -18%; width: 340px; opacity: .45; }
 }
 .login__main { display: flex; flex-direction: column; justify-content: center; padding: var(--space-7) var(--space-5); }
 .login__form { max-width: 420px; width: 100%; margin: 0 auto; }

@@ -191,7 +191,7 @@ El README define una sola PWA y excluye una app nativa. El equipo decidió imple
 
 - **Láminas** de línea fina del salón (`public/art/`), siempre decorativas (`alt=""`) y detrás del contenido (`.above`):
   - `waves.svg`: mechones de cabello que caen ondulando; fondo a sangre con `Backdrop`.
-  - `profile.svg`: perfil femenino a un solo trazo con `Profile`; no gira, se dibuja al cargar (sin animación con `prefers-reduced-motion`). Va en la portada de la landing, el ingreso (centrado sobre el logo) y el banner de feria. Una sola vez por pantalla.
+  - `profile.svg`: perfil femenino a un solo trazo fino (0,9) con `Profile`; no gira, se dibuja al cargar (sin animación con `prefers-reduced-motion`). Va en la portada de la landing, el ingreso (centrado sobre el logo) y el banner de feria. Una sola vez por pantalla.
   - `tools.svg`: tijeras, pincel, esmalte, peine y pestañas; tarjeta del catálogo en la landing.
 - **Monograma LB** en `Wordmark` (`variant="mark" | "stacked"`).
 - **Movimiento con animejs** (`shared/motion`): entrada escalonada de bloques (`useEnter`, ya en `MobileScreen` y `WebScreen`), aparición al scroll (`useReveal`, `.reveal`) y cifras que cuentan hasta su valor exacto (`CountBs`). Todo se apaga con `prefers-reduced-motion`; sin JS quedan los keyframes de `lush.css`.
