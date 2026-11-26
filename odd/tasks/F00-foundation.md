@@ -1,6 +1,6 @@
 # F00 · foundation
 
-**Plataformas:** BE · WEB · TRANS  **Semanas:** 1-2  **Estado:** T2/T3/T4/T5 hechos; T1/T6 hechos salvo verificación de `web` y de la CI en GitHub
+**Plataformas:** BE · WEB · TRANS  **Semanas:** 1-2  **Estado:** T2/T3/T4/T5/T7 hechos; T1/T6 hechos salvo verificación de `web` y de la CI en GitHub
 
 ## Resultado esperado
 Un entorno reproducible (`docker compose up`) con API, base de datos y PWA que ya autentica por rol y aísla datos por salón. Sin esto ninguna otra feature es segura.
@@ -20,7 +20,7 @@ RF-19, RF-20 (base) · RN-06 · cap. 10 (principios, seguridad, despliegue)
 - [x] **F00-T4 [BE]** Auditoría base (`Auditoria`: actor, antes/después, evento). *RED:* cambiar un registro sin entrada de auditoría. *Acept.:* cada escritura deja bitácora. **Hecho:** trigger `fn_auditar` en `salon`, `usuario`, `usuario_rol`; `auditoria` es de solo inserción. Los módulos futuros deben activarlo con `sql_activar_auditoria`. **Esquema DB (reducida):** el trigger `fn_auditar` ya audita toda escritura (excepto `auditoria` y `evento_outbox`) y la bitácora es de solo inserción. Queda: inyectar `app.usuario_id`, y que la aplicación escriba las acciones que el trigger no ve (`INICIAR_SESION`, `ACCESO_DENEGADO`, `CONSULTAR`, `EXPORTAR`). Tests: un UPDATE/DELETE/TRUNCATE sobre `auditoria` falla; una escritura sin `app.salon_id` no pasa silenciosa.
 - [x] **F00-T5 [WEB]** Scaffold PWA: login, shell con navegación según rol, manifest y service worker vacío. *Acept.:* instalable en móvil; las rutas se muestran según el rol. **Hecho** (`feat/f00-ui-shell-login` + `feat/f00-t5-login-real`): login real contra `POST /api/auth/login` (rol y token del servidor, token solo en memoria), errores de credenciales y de red, proxy `/api` de Vite, íconos PNG 192/512 y maskable. Se quitó el botón simulado «Ingresar como especialista».
 - [~] **F00-T6 [TRANS]** CI mínima (lint, tests) y `.env.example`. Los secretos no van al repo. *Acept.:* la CI corre en cada push. **Hecho:** `.github/workflows/ci.yml` y `.env.example`; la CI aún no se ha visto correr en GitHub.
-- [ ] **F00-T7 [BE]** *(nueva, desde el esquema)* Cargar `db/LushBeauty_feria_postgresql.sql` como migración base (RunSQL o equivalente) y consulta del historial por usuario sobre `v_historial_usuario` con permiso `AUDITORIA_VER`. *RED:* migrar una base vacía y verificar triggers, RLS y vistas; un lector sin `AUDITORIA_VER` recibe 403. *Acept.:* la base se levanta con un comando y los tests no dependen de datos reales. **Depende de la decisión nueva 7 (INDEX).**
+- [x] **F00-T7 [BE]** *(nueva, desde el esquema)* Historial por usuario con permiso `AUDITORIA_VER` y datos de prueba. **Hecho** (`feat/f00-t7-historial-seed`): decisión 7 cerrada como *migraciones por módulo* (el `.sql` queda como referencia, no se carga entero). `GET /api/identity/historial?usuario_id=&accion=&limite=` (solo administradora; 403 + `ACCESO_DENEGADO` al resto); el nombre del actor se resuelve en el servicio, no con un JOIN entre tablas de módulos distintos, así que no se creó `v_historial_usuario`. Seed: `python manage.py seed_demo` (solo con `DJANGO_DEBUG=true`, idempotente), módulo `apps/demo`.
 
 ## Dependencias
 Ninguna. Bloquea todas las demás.
@@ -28,6 +28,8 @@ Ninguna. Bloquea todas las demás.
 ## Evidencia
 Backend (`feat/f00-foundation`): `manage.py test` 24 pruebas OK sobre PostgreSQL 17 (dominio de roles; login y 401; 403 + auditoría; 404 entre salones; RLS con SQL crudo; auditoría antes/después sin `password_hash`; bitácora inmutable). Control negativo: con el rol `postgres` (superusuario) fallan 5 pruebas de aislamiento, es decir, las pruebas sí detectan RLS ausente. `docker compose up db api`: migra y responde. Frontend (`feat/f00-t5-login-real`): `pnpm test` 120 pruebas OK (nuevas: error 401, sin conexión, cuenta sin rol, `fetch` llamado con las credenciales), `pnpm lint` y `pnpm build` sin errores. No verificado: servicio `web` en Docker, CI en GitHub, instalación PWA en un móvil real ni el login contra el API levantado (en las pruebas `fetch` está simulado).
 UI (parcial, `feat/f00-ui-shell-login`): `pnpm test` 14 pruebas (dinero en centavos; ingreso con errores; entrada por rol; redirección de una especialista que pide `/caja`), `pnpm lint` y `pnpm build` sin errores. No verificado: render visual en navegador ni instalación PWA. Sin backend: la sesión y el rol son simulados en memoria.
+
+Backend (`feat/f00-t7-historial-seed`): `manage.py test` 88 pruebas OK en el contenedor `api` (8 de historial: actor, filtro, «Sistema», 403 y bitácora, 401, aislamiento entre salones, límite, parámetros inválidos; 6 de seed: login por rol, idempotencia, catálogo, segundo salón, ventas, negativa fuera de DEBUG). Verificado a mano: `migrate`, `seed_demo` dos veces (la segunda crea 0) y login real con `curl`. No verificado: la CI en GitHub ni el historial desde la UI web (no hay pantalla todavía). Los tests se escribieron junto con el código; no se observó el RED por separado.
 
 ## Siguiente paso
 Ver correr la CI en GitHub y probar el login contra el API levantado. Luego F01-caja-ventas-pagos (antes, decidir redondeo, RN-03).

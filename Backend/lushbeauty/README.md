@@ -7,7 +7,7 @@ apps/<modulo>/{domain,services,api,persistence,events,tests}  contracts.py  READ
 shared/                         contexto de salón (tenancy) y middleware, sin lógica de negocio
 ```
 
-Módulos hoy: `identity`, `audit`, `catalog`, `sales`.
+Módulos hoy: `identity`, `audit`, `catalog`, `sales` (más `demo`, solo siembra datos de desarrollo).
 
 ## Aislamiento por salón
 Dos capas: `SalonScopedManager` (ORM) y RLS en PostgreSQL (`app.salon_id`). El rol de la base que usa la app
@@ -22,4 +22,4 @@ Sin Docker: levanta un PostgreSQL, crea el rol con `docker/postgres-init.sh`, ex
 `.env.example` y corre `uv run python manage.py migrate` / `uv run python manage.py test`.
 Los tests necesitan PostgreSQL (el rol debe poder crear bases: `CREATEDB`).
 
-Los datos de prueba son siempre sintéticos.
+Los datos de prueba son siempre sintéticos. Para tener usuarios y catálogo en desarrollo: `python manage.py seed_demo` (cuentas y clave en `apps/demo/README.md`).

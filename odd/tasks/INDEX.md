@@ -8,7 +8,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 
 | Sem | Feature | Estado | Prioridad |
 |---|---|---|---|
-| 1-2 | [F00 foundation](F00-foundation.md) | Hecho; falta ver la CI en GitHub | Protegida |
+| 1-2 | [F00 foundation](F00-foundation.md) | Hecho (incluye T7); falta ver la CI en GitHub | Protegida |
 | 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5/T6 sin conectar | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | UI parcial (T4 lectura) | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | UI parcial (T5/T6 maqueta) | Protegida |
@@ -96,7 +96,7 @@ DSS-08 (proyección de caja) · DSS-09 (optimización de capacidad) · DSS-10 (p
 4. Pesos de la matriz multicriterio → F09.
 5. Fecha real de la feria, para revisar el plan de 8 semanas → todo el calendario.
 6. Día de corte semanal y política de propinas → F03.
-7. **Esquema único vs. módulos** (nueva). `db/…sql` tiene unas 60 claves foráneas compuestas entre tablas de lo que serían módulos distintos (p. ej. `linea_venta` → `servicio`, `especialista`, `regla_comision`, `liquidacion`), y la tabla `decision` es compartida por F08, F09 y F10. `AGENTS.md` regla 2 prohíbe FK entre módulos. Hay que decidir: relajar la regla (misma BD, FK dentro de ella, módulos que hablan por servicios) o rediseñar el esquema. Afecta F00-T7 y a toda la estructura de `persistence/`.
+7. ~~**Esquema único vs. módulos**~~ **Cerrada: migraciones por módulo** (sin FK entre módulos; `db/…sql` es la referencia). Texto original: `db/…sql` tiene unas 60 claves foráneas compuestas entre tablas de lo que serían módulos distintos (p. ej. `linea_venta` → `servicio`, `especialista`, `regla_comision`, `liquidacion`), y la tabla `decision` es compartida por F08, F09 y F10. `AGENTS.md` regla 2 prohíbe FK entre módulos. Hay que decidir: relajar la regla (misma BD, FK dentro de ella, módulos que hablan por servicios) o rediseñar el esquema. Afecta F00-T7 y a toda la estructura de `persistence/`.
 8. Umbral de descuento sin aprobación y registro de quién lo aprueba (el esquema solo tiene el tope de 50 %) → F01-T2.
 9. Eventos de cierre de caja: por método o al completar el día; nombre único del evento → F04-T3, F13.
 10. Dónde guardar la causa de un conflicto de sincronización → F05-T2.
