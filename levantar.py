@@ -6,14 +6,16 @@ Modos:
          migra y arranca Django.
   front  Instala dependencias del frontend (pnpm, lockfile congelado) y
          arranca Vite.
-  todo   Las dos cosas a la vez (modo por defecto).
+  todo   Las dos cosas a la vez.
+  Sin modo, muestra un menú para elegir (y los puertos, Enter = por defecto).
 
 Puertos fijos y propios del proyecto, para no confundirlo con otro que use
 los puertos por defecto (5173 de Vite, 8000 de Django). Si el puerto está
 ocupado, el script se detiene en vez de saltar a otro en silencio.
 
 Uso:
-  python levantar.py                      # back + front
+  python levantar.py                      # menú para elegir
+  python levantar.py todo                 # back + front, sin preguntar
   python levantar.py back                 # solo backend  -> http://127.0.0.1:8010
   python levantar.py front                # solo frontend -> http://127.0.0.1:5180
   python levantar.py todo --front-port 5190 --back-port 8020
@@ -164,14 +166,30 @@ def comando_backend(args: argparse.Namespace) -> list[str]:
 # --------------------------------------------------------------- frontend
 
 
+def candidatos_pnpm() -> list[str]:
+    """Todos los pnpm del PATH, en orden (shutil.which solo devuelve el primero)."""
+    encontrados: list[str] = []
+    for carpeta in os.environ.get("PATH", "").split(os.pathsep):
+        if not carpeta:
+            continue
+        ruta = shutil.which("pnpm", path=carpeta)
+        if ruta and ruta not in encontrados:
+            encontrados.append(ruta)
+    return encontrados
+
+
 def comando_pnpm() -> list[str]:
-    """pnpm instalado si funciona; si no, el de npx (pnpm 9, como el lockfile)."""
-    pnpm = shutil.which("pnpm")
-    if pnpm:
+    """El primer pnpm del PATH que responda; si ninguno, el de npx (pnpm 9).
+
+    En Windows el pnpm de Corepack (C:\\Program Files\\nodejs) suele ir primero
+    y fallar con Corepack viejo; por eso se prueban todos.
+    """
+    for pnpm in candidatos_pnpm():
         prueba = subprocess.run([pnpm, "--version"], capture_output=True, text=True)
         if prueba.returncode == 0:
             return [pnpm]
-        print("[aviso] El pnpm instalado no responde; se usa npx.")
+        print(f"[aviso] {pnpm} no responde; se prueba el siguiente.")
+    print("[aviso] Ningún pnpm instalado responde; se usa npx.")
     npx = shutil.which("npx")
     if not npx:
         sys.exit("[error] No se encontró pnpm ni npx. Instala Node.js (incluye npx).")
@@ -212,12 +230,14 @@ def leer_argumentos() -> argparse.Namespace:
         description="Levanta Lush Beauty en desarrollo (backend, frontend o ambos).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Ejemplos:\n"
-               "  python levantar.py\n"
+               "  python levantar.py            (menú)\n"
+               "  python levantar.py todo\n"
                "  python levantar.py back --makemigrations\n"
                "  python levantar.py front --front-port 5190",
     )
-    parser.add_argument("modo", nargs="?", choices=["back", "front", "todo"], default="todo",
-                        help="Qué levantar (por defecto: todo).")
+    parser.add_argument("modo", nargs="?", choices=["back", "front", "todo"], default=None,
+                        help="Qué levantar. Sin modo muestra un menú para elegir "
+                             "(o levanta todo si no hay terminal interactiva).")
     parser.add_argument("--host", default=HOST)
     parser.add_argument("--back-port", "--port", type=int, default=PUERTO_BACK,
                         help=f"Puerto de Django (por defecto {PUERTO_BACK}).")
@@ -240,8 +260,58 @@ def leer_argumentos() -> argparse.Namespace:
     return parser.parse_args()
 
 
+MENU = [
+    ("Todo (backend + frontend)", "todo", False),
+    ("Solo backend", "back", False),
+    ("Solo frontend", "front", False),
+    ("Backend: solo preparar y migrar (sin servidor)", "back", True),
+]
+
+
+def preguntar(texto: str, defecto: str) -> str:
+    try:
+        respuesta = input(f"{texto} [{defecto}]: ").strip()
+    except EOFError:
+        respuesta = ""
+    return respuesta or defecto
+
+
+def preguntar_puerto(texto: str, defecto: int) -> int:
+    while True:
+        valor = preguntar(texto, str(defecto))
+        if valor.isdigit() and 0 < int(valor) < 65536:
+            return int(valor)
+        print("   Escribe un número de puerto válido (1-65535).")
+
+
+def elegir_con_menu(args: argparse.Namespace) -> None:
+    print("\nLush Beauty · ¿qué quieres levantar?")
+    for i, (texto, _, _) in enumerate(MENU, start=1):
+        print(f"  {i}) {texto}")
+    print("  0) Salir")
+    while True:
+        opcion = preguntar("Opción", "1")
+        if opcion == "0":
+            sys.exit(0)
+        if opcion.isdigit() and 1 <= int(opcion) <= len(MENU):
+            break
+        print(f"   Elige un número del 0 al {len(MENU)}.")
+    _, args.modo, solo_migrar = MENU[int(opcion) - 1]
+    args.solo_migrar = args.solo_migrar or solo_migrar
+
+    if args.modo in ("front", "todo"):
+        args.front_port = preguntar_puerto("Puerto del frontend", args.front_port)
+    if args.modo in ("back", "todo") and not args.solo_migrar:
+        args.back_port = preguntar_puerto("Puerto del backend", args.back_port)
+
+
 def main() -> None:
     args = leer_argumentos()
+    if args.modo is None:
+        if sys.stdin.isatty():
+            elegir_con_menu(args)
+        else:
+            args.modo = "todo"
     con_back = args.modo in ("back", "todo")
     con_front = args.modo in ("front", "todo") and not args.solo_migrar
 
