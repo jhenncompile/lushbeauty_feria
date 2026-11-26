@@ -1,4 +1,4 @@
-export { ART } from './art'
+export { ART } from './artPaths'
 export { Backdrop, Orbit } from './Art'
 export { Button } from './Button'
 export { Choice } from './Choice'
