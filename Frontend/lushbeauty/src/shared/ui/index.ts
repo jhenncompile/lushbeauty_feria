@@ -1,5 +1,5 @@
 export { ART } from './artPaths'
-export { Backdrop, Orbit } from './Art'
+export { Backdrop, Profile } from './Art'
 export { Button } from './Button'
 export { Choice } from './Choice'
 export { Field } from './Field'
