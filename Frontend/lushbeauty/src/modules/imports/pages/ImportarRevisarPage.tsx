@@ -27,7 +27,7 @@ export function ImportarRevisarPage() {
     >
       <div>
         <p className="eyebrow">Paso 2 de 3 · Revisar</p>
-        <h1 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>91 filas leídas</h1>
+        <h2 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>91 filas leídas</h2>
       </div>
       <div>
         <div className="line line--top"><span className="line__label">Aceptadas</span><span className="line__value--md">{counts.accepted}</span></div>

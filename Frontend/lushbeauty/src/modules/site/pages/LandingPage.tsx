@@ -25,7 +25,7 @@ export function LandingPage() {
         </header>
       <main>
       <section className="noir hero-full">
-        <Profile src={ART.cover} style={{ right: '-2%', top: '50%', width: 'min(680px, 66vw)', aspectRatio: '1.25', marginTop: -272 }} opacity={0.9} />
+        <Profile src={ART.cover} className="hero-art" opacity={0.9} />
         <div className="wrap above" style={{ paddingBottom: 'var(--space-8)' }}>
           <p className="eyebrow rise d1">Lush Beauty Smart · Caja y nómina</p>
           <h1 style={{ margin: 'var(--space-5) 0 0' }}>

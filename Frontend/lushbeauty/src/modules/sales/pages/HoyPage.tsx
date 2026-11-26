@@ -33,9 +33,9 @@ export function HoyPage() {
       footerBorderless
     >
       <section className="noir rel hoy__hero">
-        <Backdrop opacity={0.4} />
+        <Backdrop opacity={0.16} />
         <div className="above stack">
-          <p className="eyebrow">{TODAY.label} · Hoy</p>
+          <h1 className="eyebrow">{TODAY.label} · Hoy</h1>
           <p className="hoy__total">
             <CountBs cents={total} />
           </p>

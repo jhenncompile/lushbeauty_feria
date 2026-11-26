@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 /**
  * Monograma LB: letras Jost; el pie de la L pasa por delante de la B y la corta con un filete de aire.
  * Trazo fino desde 40 px de alto; por debajo, corte más ancho (Jost Regular).
@@ -19,6 +21,10 @@ const MONO = {
 
 export function Mark({ height = 56 }: { height?: number }) {
   const m = height < 40 ? MONO.small : MONO.fine
+  // Cada monograma usa su propio id de máscara: dos en la misma página no deben compartirlo.
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '')
+  const defs = m.defs.replace(/id="(lbm-[fs])"/, `id="$1-${uid}"`)
+  const body = m.body.replace(/url\(#(lbm-[fs])\)/, `url(#$1-${uid})`)
   return (
     <svg
       className="lb-mark"
@@ -29,8 +35,8 @@ export function Mark({ height = 56 }: { height?: number }) {
       aria-hidden="true"
       focusable="false"
     >
-      <defs dangerouslySetInnerHTML={{ __html: m.defs }} />
-      <g dangerouslySetInnerHTML={{ __html: m.body }} />
+      <defs dangerouslySetInnerHTML={{ __html: defs }} />
+      <g dangerouslySetInnerHTML={{ __html: body }} />
     </svg>
   )
 }

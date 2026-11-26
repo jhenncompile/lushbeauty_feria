@@ -89,3 +89,12 @@ body { background: var(--surface); }
 .site .lb-nav__link, .site .lb-nav__actions { font-size: 13px; line-height: 18px; }
 .site .lb-btn { font-size: 13px; line-height: 18px; }
 .site .measure { max-width: 56ch; }
+
+/* site · ilustración de la portada: a la derecha en escritorio; arriba del título en tablet y celular */
+.site .hero-art { right: -2%; top: 50%; width: min(680px, 66vw); aspect-ratio: 1.25; margin-top: -272px; }
+@media (max-width: 1000px) {
+  .site .hero-full { justify-content: flex-start; min-height: 0; padding-top: 96px; }
+  .site .hero-art { position: relative !important; right: auto; top: auto; z-index: 0 !important; width: min(560px, 100%); margin: 0 auto 16px; }
+}
+/* ingreso en celular: solo la marca; la escena queda para pantallas anchas */
+@media (max-width: 840px) { .login__orbit { display: none; } }

@@ -13,7 +13,7 @@ export function ComparacionPage() {
     >
       <div>
         <p className="eyebrow">Comparación multicriterio</p>
-        <h1 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Tres alternativas</h1>
+        <h2 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Tres alternativas</h2>
       </div>
       <MatrixTable />
       <WeightsCheck />

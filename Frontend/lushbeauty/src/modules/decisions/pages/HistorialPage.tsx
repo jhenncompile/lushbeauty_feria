@@ -13,7 +13,7 @@ export function HistorialPage() {
     >
       <div>
         <p className="eyebrow">Historial</p>
-        <h1 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Decisiones</h1>
+        <h2 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Decisiones</h2>
       </div>
       {DECISIONS.map((decision) => (
         <article className="item" key={decision.code}>
