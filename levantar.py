@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
-"""Levanta el backend de Lush Beauty en un entorno virtual.
+"""Levanta Lush Beauty en desarrollo: backend, frontend o ambos.
 
-Pasos:
-  1. Crea el entorno virtual en Backend/lushbeauty/.venv (si no existe).
-  2. Instala las dependencias de pyproject.toml (con uv si está disponible,
-     si no con pip).
-  3. Ejecuta las migraciones (opcionalmente makemigrations antes).
-  4. Arranca el servidor de desarrollo de Django.
+Modos:
+  back   Crea/usa el .venv de Backend/lushbeauty, instala dependencias,
+         migra y arranca Django.
+  front  Instala dependencias del frontend (pnpm, lockfile congelado) y
+         arranca Vite.
+  todo   Las dos cosas a la vez (modo por defecto).
+
+Puertos fijos y propios del proyecto, para no confundirlo con otro que use
+los puertos por defecto (5173 de Vite, 8000 de Django). Si el puerto está
+ocupado, el script se detiene en vez de saltar a otro en silencio.
 
 Uso:
-  python levantar.py                    # todo y runserver en 127.0.0.1:8000
-  python levantar.py --port 9000        # otro puerto
-  python levantar.py --makemigrations   # genera migraciones antes de migrar
-  python levantar.py --solo-migrar      # prepara entorno y migra, sin servidor
-  python levantar.py --recrear          # borra y recrea el .venv
-  python levantar.py --frontend         # además levanta el frontend (pnpm dev)
+  python levantar.py                      # back + front
+  python levantar.py back                 # solo backend  -> http://127.0.0.1:8010
+  python levantar.py front                # solo frontend -> http://127.0.0.1:5180
+  python levantar.py todo --front-port 5190 --back-port 8020
+  python levantar.py back --makemigrations
+  python levantar.py back --solo-migrar   # prepara entorno y migra, sin servidor
+  python levantar.py back --recrear       # borra y recrea el .venv
+  python levantar.py front --sin-instalar # no corre pnpm install
 
 Solo usa la biblioteca estándar, así que se puede correr con el Python del
 sistema (>= 3.11 por tomllib; el proyecto pide 3.13).
@@ -25,6 +31,7 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import tomllib
@@ -37,6 +44,12 @@ FRONTEND = RAIZ / "Frontend" / "lushbeauty"
 VENV = BACKEND / ".venv"
 ES_WINDOWS = os.name == "nt"
 
+HOST = "127.0.0.1"
+PUERTO_BACK = 8010
+PUERTO_FRONT = 5180
+# El pnpm-lock.yaml es lockfileVersion 9.0.
+PNPM_RESPALDO = "pnpm@9"
+
 
 def info(msg: str) -> None:
     print(f"\n==> {msg}", flush=True)
@@ -47,6 +60,22 @@ def ejecutar(cmd: list[str | Path], cwd: Path = BACKEND, env: dict | None = None
     resultado = subprocess.run([str(c) for c in cmd], cwd=cwd, env=env)
     if resultado.returncode != 0:
         sys.exit(f"\n[error] El comando falló con código {resultado.returncode}.")
+
+
+def puerto_libre(host: str, puerto: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex((host, puerto)) != 0
+
+
+def exigir_puerto_libre(host: str, puerto: int, quien: str, opcion: str) -> None:
+    if not puerto_libre(host, puerto):
+        sys.exit(
+            f"[error] El puerto {puerto} ({quien}) ya está en uso en {host}. "
+            f"Cierra lo que lo ocupa o usa {opcion} <otro>."
+        )
+
+
+# ---------------------------------------------------------------- backend
 
 
 def python_del_venv() -> Path:
@@ -91,7 +120,7 @@ def crear_venv(recrear: bool, usar_uv: bool) -> None:
 
 
 def instalar_dependencias(usar_uv: bool) -> None:
-    info("Instalando dependencias")
+    info("Instalando dependencias del backend")
     if usar_uv:
         # uv sync usa uv.lock: versiones exactas y reproducibles.
         env = {**os.environ, "UV_PROJECT_ENVIRONMENT": str(VENV)}
@@ -110,34 +139,9 @@ def manage(*args: str) -> None:
     ejecutar([python_del_venv(), "manage.py", *args])
 
 
-def levantar_frontend() -> subprocess.Popen | None:
-    pnpm = shutil.which("pnpm")
-    if not pnpm:
-        print("[aviso] No se encontró pnpm; se omite el frontend.")
-        return None
-    info("Instalando y levantando el frontend (pnpm dev)")
-    subprocess.run([pnpm, "install"], cwd=FRONTEND, check=True)
-    return subprocess.Popen([pnpm, "dev"], cwd=FRONTEND)
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Levanta el backend de Lush Beauty.")
-    parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", default="8000")
-    parser.add_argument("--makemigrations", action="store_true",
-                        help="Genera migraciones nuevas antes de migrar.")
-    parser.add_argument("--solo-migrar", action="store_true",
-                        help="No arranca el servidor.")
-    parser.add_argument("--recrear", action="store_true",
-                        help="Borra y vuelve a crear el entorno virtual.")
-    parser.add_argument("--sin-uv", action="store_true",
-                        help="Fuerza venv + pip aunque uv esté instalado.")
-    parser.add_argument("--frontend", action="store_true",
-                        help="Además levanta el frontend con pnpm dev.")
-    args = parser.parse_args()
-
+def preparar_backend(args: argparse.Namespace) -> None:
     usar_uv = shutil.which("uv") is not None and not args.sin_uv
-    info(f"Usando {'uv' if usar_uv else 'venv + pip'}")
+    info(f"Backend: usando {'uv' if usar_uv else 'venv + pip'}")
 
     crear_venv(args.recrear, usar_uv)
     instalar_dependencias(usar_uv)
@@ -152,20 +156,131 @@ def main() -> None:
     info("Aplicando migraciones")
     manage("migrate")
 
-    if args.solo_migrar:
-        info("Listo. Entorno preparado y migraciones aplicadas.")
-        return
 
-    front = levantar_frontend() if args.frontend else None
-    info(f"Servidor en http://{args.host}:{args.port}/  (Ctrl+C para detener)")
+def comando_backend(args: argparse.Namespace) -> list[str]:
+    return [str(python_del_venv()), "manage.py", "runserver", f"{args.host}:{args.back_port}"]
+
+
+# --------------------------------------------------------------- frontend
+
+
+def comando_pnpm() -> list[str]:
+    """pnpm instalado si funciona; si no, el de npx (pnpm 9, como el lockfile)."""
+    pnpm = shutil.which("pnpm")
+    if pnpm:
+        prueba = subprocess.run([pnpm, "--version"], capture_output=True, text=True)
+        if prueba.returncode == 0:
+            return [pnpm]
+        print("[aviso] El pnpm instalado no responde; se usa npx.")
+    npx = shutil.which("npx")
+    if not npx:
+        sys.exit("[error] No se encontró pnpm ni npx. Instala Node.js (incluye npx).")
+    return [npx, "-y", PNPM_RESPALDO]
+
+
+def preparar_frontend(args: argparse.Namespace) -> list[str]:
+    pnpm = comando_pnpm()
+    if not args.sin_instalar:
+        info("Instalando dependencias del frontend (pnpm install --frozen-lockfile)")
+        ejecutar([*pnpm, "install", "--frozen-lockfile"], cwd=FRONTEND)
+    # --strictPort: si el puerto está ocupado Vite falla en vez de usar otro.
+    return [*pnpm, "exec", "vite", "--host", args.host,
+            "--port", str(args.front_port), "--strictPort"]
+
+
+# ------------------------------------------------------------------- main
+
+
+def detener(proceso: subprocess.Popen) -> None:
+    """Cierra el proceso y sus hijos (en Windows pnpm.cmd deja a Vite huérfano)."""
+    if proceso.poll() is not None:
+        return
+    if ES_WINDOWS:
+        subprocess.run(["taskkill", "/PID", str(proceso.pid), "/T", "/F"],
+                       capture_output=True)
+    else:
+        proceso.terminate()
     try:
-        subprocess.run([str(python_del_venv()), "manage.py", "runserver",
-                        f"{args.host}:{args.port}"], cwd=BACKEND)
+        proceso.wait(timeout=10)
+    except subprocess.TimeoutExpired:
+        proceso.kill()
+
+
+
+def leer_argumentos() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Levanta Lush Beauty en desarrollo (backend, frontend o ambos).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Ejemplos:\n"
+               "  python levantar.py\n"
+               "  python levantar.py back --makemigrations\n"
+               "  python levantar.py front --front-port 5190",
+    )
+    parser.add_argument("modo", nargs="?", choices=["back", "front", "todo"], default="todo",
+                        help="Qué levantar (por defecto: todo).")
+    parser.add_argument("--host", default=HOST)
+    parser.add_argument("--back-port", "--port", type=int, default=PUERTO_BACK,
+                        help=f"Puerto de Django (por defecto {PUERTO_BACK}).")
+    parser.add_argument("--front-port", type=int, default=PUERTO_FRONT,
+                        help=f"Puerto de Vite (por defecto {PUERTO_FRONT}).")
+
+    back = parser.add_argument_group("backend")
+    back.add_argument("--makemigrations", action="store_true",
+                      help="Genera migraciones nuevas antes de migrar.")
+    back.add_argument("--solo-migrar", action="store_true",
+                      help="Prepara el entorno y migra, sin arrancar servidores.")
+    back.add_argument("--recrear", action="store_true",
+                      help="Borra y vuelve a crear el entorno virtual.")
+    back.add_argument("--sin-uv", action="store_true",
+                      help="Fuerza venv + pip aunque uv esté instalado.")
+
+    front = parser.add_argument_group("frontend")
+    front.add_argument("--sin-instalar", action="store_true",
+                       help="No ejecuta pnpm install antes de arrancar.")
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = leer_argumentos()
+    con_back = args.modo in ("back", "todo")
+    con_front = args.modo in ("front", "todo") and not args.solo_migrar
+
+    if con_back and not args.solo_migrar:
+        exigir_puerto_libre(args.host, args.back_port, "backend", "--back-port")
+    if con_front:
+        exigir_puerto_libre(args.host, args.front_port, "frontend", "--front-port")
+
+    if con_back:
+        preparar_backend(args)
+        if args.solo_migrar:
+            info("Listo. Entorno preparado y migraciones aplicadas.")
+            return
+
+    procesos: list[subprocess.Popen] = []
+    cmd_front = preparar_frontend(args) if con_front else None
+
+    info("Arrancando (Ctrl+C para detener)")
+    if con_back:
+        print(f"   Backend:  http://{args.host}:{args.back_port}/", flush=True)
+    if con_front:
+        print(f"   Frontend: http://{args.host}:{args.front_port}/", flush=True)
+
+    try:
+        if cmd_front:
+            procesos.append(subprocess.Popen(cmd_front, cwd=FRONTEND))
+        if con_back:
+            procesos.append(subprocess.Popen(comando_backend(args), cwd=BACKEND))
+        # Espera hasta que alguno termine (o Ctrl+C).
+        while all(p.poll() is None for p in procesos):
+            try:
+                procesos[0].wait(timeout=1)
+            except subprocess.TimeoutExpired:
+                pass
     except KeyboardInterrupt:
         pass
     finally:
-        if front and front.poll() is None:
-            front.terminate()
+        for p in procesos:
+            detener(p)
 
 
 if __name__ == "__main__":
