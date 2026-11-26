@@ -10,8 +10,8 @@ from apps.identity.persistence.models import Rol, Salon, Usuario, UsuarioRol
 from shared import tenancy
 
 
-def crear_salon(nombre: str, *, moneda: str = "BOB") -> uuid.UUID:
-    salon_id = uuid.uuid4()
+def crear_salon(nombre: str, *, moneda: str = "BOB", salon_id: uuid.UUID | None = None) -> uuid.UUID:
+    salon_id = salon_id or uuid.uuid4()
     with tenancy.en_salon(salon_id):
         Salon.objects.create(id=salon_id, nombre=nombre, moneda=moneda)
     return salon_id

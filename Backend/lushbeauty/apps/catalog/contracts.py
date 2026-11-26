@@ -36,6 +36,18 @@ def cliente_existe(cliente_id) -> bool:
     return Cliente.objects.filter(id=cliente_id).exists()
 
 
+def listar_servicios():
+    return list(Servicio.objects.order_by("categoria", "nombre"))
+
+
+def listar_especialistas():
+    return list(Especialista.objects.order_by("nombre"))
+
+
+def listar_clientes():
+    return list(Cliente.objects.order_by("nombre"))
+
+
 crear_servicio = gestion.crear_servicio
 crear_especialista = gestion.crear_especialista
 crear_cliente = gestion.crear_cliente
