@@ -5,8 +5,8 @@ import type { SessionApi } from './session'
 import type { Session } from './types'
 
 /**
- * Sesión en memoria. En esta fase el rol lo elige la pantalla de ingreso (simulado);
- * con el backend (F00-T2) vendrá del servidor. No se guardan credenciales.
+ * Sesión en memoria: el rol y el token vienen del servidor (`/api/auth/login`).
+ * No se guardan credenciales ni el token en el almacenamiento del navegador.
  */
 export function SessionProvider({ children, initial = null }: { children: ReactNode; initial?: Session | null }) {
   const [session, setSession] = useState<Session | null>(initial)

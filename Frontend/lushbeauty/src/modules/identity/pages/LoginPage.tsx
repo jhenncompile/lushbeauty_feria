@@ -3,9 +3,9 @@ import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ROUTES, useDocumentTitle } from '../../../shared/layout'
 import { ART, Button, Field, Wordmark } from '../../../shared/ui'
+import { login, LoginError } from '../api/auth'
 import { homeRouteFor } from '../domain/access'
 import { useSession } from '../session'
-import type { Role } from '../types'
 
 export function LoginPage() {
   useDocumentTitle('Ingresar · Lush Beauty Smart')
@@ -14,22 +14,29 @@ export function LoginPage() {
   const [user, setUser] = useState('')
   const [secret, setSecret] = useState('')
   const [errors, setErrors] = useState<{ user?: string; secret?: string }>({})
+  const [formError, setFormError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
 
-  function enter(role: Role) {
+  async function onSubmit(event: FormEvent) {
+    event.preventDefault()
     const next = {
       user: user.trim() ? undefined : 'Ingrese su usuario.',
       secret: secret ? undefined : 'Ingrese su contraseña o PIN.',
     }
     setErrors(next)
+    setFormError(null)
     if (next.user || next.secret) return
-    signIn({ userName: user.trim(), role })
-    const wide = typeof window.matchMedia === 'function' && window.matchMedia('(min-width: 1000px)').matches
-    navigate(homeRouteFor(role, wide), { replace: true })
-  }
-
-  function onSubmit(event: FormEvent) {
-    event.preventDefault()
-    enter('administradora')
+    setBusy(true)
+    try {
+      const session = await login(user.trim(), secret)
+      signIn(session)
+      const wide = typeof window.matchMedia === 'function' && window.matchMedia('(min-width: 1000px)').matches
+      navigate(homeRouteFor(session.role, wide), { replace: true })
+    } catch (error) {
+      setFormError(error instanceof LoginError ? error.message : 'No se pudo ingresar. Intente de nuevo.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -69,19 +76,20 @@ export function LoginPage() {
             error={errors.secret}
           />
           <div className="stack">
-            <Button type="submit" block>
-              Ingresar
-            </Button>
-            <Button variant="link" onClick={() => enter('especialista')} style={{ alignSelf: 'center' }}>
-              Ingresar como especialista
+            {formError && (
+              <p role="alert" className="t-caption">
+                Error: {formError}
+              </p>
+            )}
+            <Button type="submit" block disabled={busy}>
+              {busy ? 'Ingresando…' : 'Ingresar'}
             </Button>
           </div>
           <Link className="lb-btn lb-btn--link" style={{ alignSelf: 'flex-start' }} to={ROUTES.landing}>
             Volver al inicio
           </Link>
           <p className="t-caption">
-            Si ingresa como especialista, solo verá sus propios servicios y su liquidación. Pantalla con datos
-            ilustrativos: aún no hay conexión con el servidor.
+            Si su cuenta es de especialista, solo verá sus propios servicios y su liquidación.
           </p>
         </form>
       </main>

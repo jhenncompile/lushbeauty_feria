@@ -42,10 +42,16 @@ describe('Panel financiero (web)', () => {
 describe('Ingreso en pantalla ancha', () => {
   it('la administradora entra al panel web; en pantalla angosta, a Hoy', async () => {
     vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('1000px'), media: query }))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ token: 't', usuario: { nombre: ADMIN.userName, roles: ['ADMINISTRADORA'] } })),
+      ),
+    )
     renderApp('/ingresar', null)
     await userEvent.type(screen.getByLabelText('Usuario'), ADMIN.userName)
     await userEvent.type(screen.getByLabelText('Contraseña o PIN'), 'x')
     await userEvent.click(screen.getByRole('button', { name: 'Ingresar' }))
-    expect(screen.getByRole('heading', { name: 'Panel financiero' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Panel financiero' })).toBeInTheDocument()
   })
 })
