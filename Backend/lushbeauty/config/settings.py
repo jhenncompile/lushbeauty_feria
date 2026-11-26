@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "apps.audit",
     "apps.identity",
+    "apps.catalog",
+    "apps.sales",
 ]
 
 MIDDLEWARE = [
@@ -46,6 +48,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 MIGRATION_MODULES = {
     "audit": "apps.audit.persistence.migrations",
     "identity": "apps.identity.persistence.migrations",
+    "catalog": "apps.catalog.persistence.migrations",
+    "sales": "apps.sales.persistence.migrations",
 }
 
 # PostgreSQL es obligatorio: el aislamiento por salón se apoya en RLS.
@@ -66,6 +70,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }
+
+# Descuento (fracción del precio de lista de la línea) que una especialista puede aplicar sin
+# aprobación. Valor ilustrativo del diseño; pendiente de la decisión 8 con la administradora.
+VENTAS_UMBRAL_DESCUENTO_SIN_APROBACION = os.environ.get("VENTAS_UMBRAL_DESCUENTO", "0.10")
 
 # Vigencia del token de sesión, en segundos.
 AUTH_TOKEN_MAX_AGE = int(os.environ.get("AUTH_TOKEN_MAX_AGE", 8 * 3600))

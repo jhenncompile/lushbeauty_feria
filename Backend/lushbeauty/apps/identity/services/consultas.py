@@ -1,4 +1,6 @@
-from apps.identity.persistence.models import Usuario
+from decimal import Decimal
+
+from apps.identity.persistence.models import Salon, Usuario
 
 
 def listar_usuarios():
@@ -8,3 +10,8 @@ def listar_usuarios():
 
 def obtener_usuario(usuario_id):
     return Usuario.objects.filter(id=usuario_id).first()
+
+
+def descuento_maximo_del_salon() -> Decimal:
+    """Tope de descuento (fracción 0..1) del salón activo."""
+    return Salon.objects.values_list("descuento_maximo", flat=True).get()
