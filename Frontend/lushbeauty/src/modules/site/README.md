@@ -10,4 +10,6 @@
 
 **Portada animada:** `HeroScene` dibuja el perfil de marca con el scroll (`useScrollProgress` de `shared/motion` escribe `--p` 0–1; el CSS en `app.css` lo traduce a trazo, utensilios y relleno del título). `heroArt.ts` guarda el perfil vectorizado a partir del logotipo (relleno fiel + líneas centrales). En pantallas anchas la escena queda fija durante ~130vh; con «reducir movimiento» se ve completa y sin pin. `public/art/cover.svg` y `profile.svg` son la versión estática del mismo dibujo (ingreso y banner).
 
+**Hilo y cierre:** `ScrollThread` traza (≥1200 px de ancho) un hilo que nace de la punta del cabello de la portada y baja por los márgenes hasta el monograma del cierre; su cabeza va a ~62 % de la pantalla y se adapta al fondo con `mix-blend-mode: difference`. `FooterScene` dibuja el contorno de la L y la B (`MarkDraw`, de `shared/ui`) y las rellena de abajo hacia arriba al llegar al final. Con «reducir movimiento» el hilo y el monograma se ven completos.
+
 **Eventos:** no emite ni consume.

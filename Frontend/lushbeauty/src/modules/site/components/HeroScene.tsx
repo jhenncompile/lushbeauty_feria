@@ -43,7 +43,7 @@ export function HeroScene({ children }: { children: ReactNode }) {
   return (
     <section className="noir hero-pin" ref={scene}>
       <div className="hero-full hero-stick">
-        <div aria-hidden="true" className="hero-art">
+        <div aria-hidden="true" className="hero-art" data-thread="start">
           <svg className="hdraw" viewBox="40 140 1200 960" role="presentation" focusable="false">
             <defs>
               <mask id={MASK_ID} maskUnits="userSpaceOnUse" x="0" y="0" width="1254" height="1254">
