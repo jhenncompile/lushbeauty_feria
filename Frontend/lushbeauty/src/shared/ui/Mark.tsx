@@ -1,4 +1,4 @@
-import { useId, type CSSProperties, type RefObject } from 'react'
+import { useId, type CSSProperties } from 'react'
 import { MARK_DRAW_RANGES } from './markDraw'
 
 /**
@@ -50,9 +50,6 @@ const B_T = 'translate(223 700) scale(1 -1)'
 interface MarkDrawProps {
   /** Alto en px. */
   height: number
-  /** Recibe los trazos en orden (L, B): sirven para mover una «pluma» sobre ellos. */
-  linesRef?: RefObject<Array<SVGPathElement | null>>
-  penRef?: RefObject<SVGGElement | null>
 }
 
 /**
@@ -60,7 +57,7 @@ interface MarkDrawProps {
  * contorno de la L, luego el de la B (el pie de la L sigue pasando por delante), y al final el
  * relleno sube de abajo hacia arriba. Con `--p: 1` es el monograma completo.
  */
-export function MarkDraw({ height, linesRef, penRef }: MarkDrawProps) {
+export function MarkDraw({ height }: MarkDrawProps) {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '')
   const m = MONO.fine
   const cut = `lbd-cut-${uid}`
@@ -82,14 +79,10 @@ export function MarkDraw({ height, linesRef, penRef }: MarkDrawProps) {
         <path d={L_D} transform={L_T} />
       </g>
       <g className="lb-draw__lines" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-        <path className="lb-draw__line" pathLength={1} d={L_D} transform={L_T} style={range(MARK_DRAW_RANGES.l)} ref={(el) => { if (linesRef?.current) linesRef.current[0] = el }} />
+        <path className="lb-draw__line" pathLength={1} d={L_D} transform={L_T} style={range(MARK_DRAW_RANGES.l)} />
         <g mask={`url(#${cut})`}>
-          <path className="lb-draw__line" pathLength={1} d={B_D} transform={B_T} style={range(MARK_DRAW_RANGES.b)} ref={(el) => { if (linesRef?.current) linesRef.current[1] = el }} />
+          <path className="lb-draw__line" pathLength={1} d={B_D} transform={B_T} style={range(MARK_DRAW_RANGES.b)} />
         </g>
-      </g>
-      <g ref={penRef} className="lb-draw__pen">
-        <circle r="30" className="lb-draw__glow" />
-        <circle r="9" className="lb-draw__dot" />
       </g>
     </svg>
   )

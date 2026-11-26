@@ -36,38 +36,49 @@ export function useCountUp(target: number, duration?: number): number {
  * mientras la pista pasa. En pantallas angostas avanza mientras el bloque sale de la vista.
  * Sin movimiento (preferencia del sistema) queda en 1: todo visible y completo.
  */
-export function useScrollProgress<T extends HTMLElement>(onProgress?: (p: number) => void, range: 'pin' | 'enter' = 'pin') {
+export function useScrollProgress<T extends HTMLElement>(
+  onProgress?: (p: number) => void,
+  range: 'pin' | 'enter' = 'pin',
+  /** Inercia: fracción del camino al objetivo que se recorre por cuadro (1 = directo, sin suavizar). */
+  ease = 1,
+) {
   const ref = useRef<T>(null)
   useLayoutEffect(() => {
     const node = ref.current
     if (!node) return
+    const publish = (p: number) => {
+      node.style.setProperty('--p', p.toFixed(4))
+      onProgress?.(p)
+    }
     if (!motionAllowed()) {
       node.style.setProperty('--p', '1')
       onProgress?.(1)
       return
     }
-    let frame = 0
-    const update = () => {
-      frame = 0
+    const wide = () => window.matchMedia('(min-width: 1001px)').matches
+    const target = () => {
       const box = node.getBoundingClientRect()
       if (range === 'enter') {
         // De que el bloque asoma por abajo hasta cubrir la fracción `share` de su alto (más corta en pantallas angostas).
-        const share = window.matchMedia('(min-width: 1001px)').matches ? 0.9 : 0.5
-        const p = Math.min(1, Math.max(0, (window.innerHeight - box.top) / (box.height * share)))
-        node.style.setProperty('--p', p.toFixed(4))
-        onProgress?.(p)
-        return
+        return Math.min(1, Math.max(0, (window.innerHeight - box.top) / (box.height * (wide() ? 0.9 : 0.5))))
       }
-      const pinned = window.matchMedia('(min-width: 1001px)').matches
-      const span = pinned ? box.height - window.innerHeight : box.height * 0.4
-      const p = span > 0 ? Math.min(1, Math.max(0, -box.top / span)) : 1
-      node.style.setProperty('--p', p.toFixed(4))
-      onProgress?.(p)
+      const span = wide() ? box.height - window.innerHeight : box.height * 0.4
+      return span > 0 ? Math.min(1, Math.max(0, -box.top / span)) : 1
+    }
+    let frame = 0
+    let shown = target()
+    const tick = () => {
+      frame = 0
+      const goal = target()
+      const gap = goal - shown
+      shown = ease >= 1 || Math.abs(gap) < 0.0004 ? goal : shown + gap * ease
+      publish(shown)
+      if (shown !== goal) frame = requestAnimationFrame(tick)
     }
     const request = () => {
-      if (!frame) frame = requestAnimationFrame(update)
+      if (!frame) frame = requestAnimationFrame(tick)
     }
-    update()
+    publish(shown)
     window.addEventListener('scroll', request, { passive: true })
     window.addEventListener('resize', request)
     return () => {
@@ -75,6 +86,6 @@ export function useScrollProgress<T extends HTMLElement>(onProgress?: (p: number
       window.removeEventListener('resize', request)
       if (frame) cancelAnimationFrame(frame)
     }
-  }, [onProgress, range])
+  }, [onProgress, range, ease])
   return ref
 }

@@ -121,25 +121,19 @@ body { background: var(--surface); }
   stroke-dashoffset: calc(1 - clamp(0, (var(--p) - var(--s)) / (var(--e) - var(--s)), 1));
 }
 .hdraw .tool rect { fill: var(--surface); }
-.hdraw .pen { opacity: 0; pointer-events: none; }
-.hdraw .pen__dot { fill: var(--ink); }
-.hdraw .pen__glow { fill: var(--ink); opacity: 0.16; }
 
 /* título: contorno fijo y relleno que el trazo va repasando de izquierda a derecha */
 .ink-row { position: relative; display: block; width: fit-content; white-space: nowrap; --k: clamp(0, (var(--p) - var(--s)) / (var(--e) - var(--s)), 1); }
 .ink-base { color: transparent; -webkit-text-stroke: 1px var(--tone); opacity: 0.6; }
 .ink-fill { position: absolute; inset: 0; color: var(--tone); clip-path: inset(-0.15em calc((1 - var(--k)) * 100%) -0.15em -0.05em); }
-.ink-pen { position: absolute; top: 6%; bottom: 6%; left: calc(var(--k) * 100%); width: 2px; background: var(--ink); box-shadow: 0 0 18px 2px var(--ink); opacity: min(calc(var(--k) * 40), calc((1 - var(--k)) * 40), 1); pointer-events: none; }
+.ink-pen { position: absolute; top: 6%; bottom: 6%; left: calc(var(--k) * 100%); width: 2px; background: var(--ink); opacity: min(calc(var(--k) * 40), calc((1 - var(--k)) * 40), 1); pointer-events: none; }
 @media (max-width: 1000px) { .has-motion .site .hero-pin { height: auto; } }
 /* `overflow: hidden` crea un contenedor de scroll y rompe `position: sticky`; `clip` recorta igual sin crearlo */
 .lx.site { overflow: clip; }
 
 /* site · hilo que baja con el scroll (mezcla con el fondo: blanco sobre oscuro, negro sobre claro) */
 .site .thread { position: absolute; left: 0; top: 0; width: 100%; z-index: 2; pointer-events: none; mix-blend-mode: difference; overflow: visible; }
-.thread__line { fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1 2; stroke-dashoffset: 0; }
-.thread__pen { opacity: 0; }
-.thread__dot { fill: #fff; }
-.thread__glow { fill: #fff; opacity: 0.35; }
+.thread__brush { fill: #fff; stroke: none; shape-rendering: geometricPrecision; }
 
 /* site · cierre: monograma LB que se dibuja y se rellena */
 .foot-scene { overflow: hidden; --p: 1; }
@@ -148,9 +142,6 @@ body { background: var(--surface); }
 .foot-mark .lb-draw { width: min(46vw, 760px); height: auto; }
 .lb-draw__rise { transform: translateY(calc((1 - clamp(0, (var(--p) - var(--s)) / (var(--e) - var(--s)), 1)) * 900px)); }
 .lb-draw__line { stroke-dasharray: 1 2; stroke-dashoffset: calc(1 - clamp(0, (var(--p) - var(--s)) / (var(--e) - var(--s)), 1)); stroke-opacity: clamp(0, (var(--p) - var(--s)) * 1000, 1); }
-.lb-draw__pen { opacity: 0; pointer-events: none; }
-.lb-draw__dot { fill: var(--ink); }
-.lb-draw__glow { fill: var(--ink); opacity: 0.2; }
 @media (max-width: 1000px) {
   .foot-scene { display: flex; flex-direction: column; }
   .foot-scene > footer { order: 3; }

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { motionAllowed } from '../../../shared/motion'
+import { brushPath, sampleSpline, type Pt, type Sampled } from './brush'
 
 /** Ancho mínimo para que existan márgenes por donde bajar sin tapar el texto. */
 const MIN_WIDTH = 1200
@@ -10,12 +11,13 @@ const VIEW = { x: 40, y: 140, w: 1200, h: 960 }
 const HEAD = 0.62
 
 interface Geometry {
-  d: string
+  /** Puntos por los que pasa la cinta (la spline los suaviza). */
+  through: Pt[]
   height: number
-  /** Tabla y → longitud normalizada, creciente en ambas. */
-  ys: number[]
-  ls: number[]
 }
+
+/** La cabeza persigue al objetivo recorriendo esta fracción de la distancia por cuadro. */
+const EASE = 0.16
 
 function pageTop(el: Element) {
   return el.getBoundingClientRect().top + window.scrollY
@@ -25,7 +27,7 @@ function pageLeft(el: Element) {
 }
 
 /** Calcula el trazado sobre el diseño actual: del cabello al monograma, bajando por los márgenes. */
-function measure(root: HTMLElement): Omit<Geometry, 'ys' | 'ls'> | null {
+function measure(root: HTMLElement): Geometry | null {
   const art = root.querySelector<HTMLElement>('[data-thread="start"]')
   const end = root.querySelector<HTMLElement>('[data-thread="end"]')
   const track = root.querySelector<HTMLElement>('.hero-pin')
@@ -47,53 +49,43 @@ function measure(root: HTMLElement): Omit<Geometry, 'ys' | 'ls'> | null {
   const ex = pageLeft(end) - rootLeft
   const ey = pageTop(end) - rootTop
 
-  const gap = Math.min(44, Math.max(24, (W - 1200) / 4 + 30))
+  const gap = Math.min(52, Math.max(28, (W - 1200) / 4 + 34))
   const rightX = W - gap
   const leftX = gap
 
   const tops = Array.from(root.querySelectorAll<HTMLElement>('main > section, [data-thread="foot"]'))
     .map((s) => pageTop(s) - rootTop)
-    .filter((t) => t > sy + 260 && t < ey - 160)
+    .filter((t) => t > sy + 700 && t < ey - 500)
 
-  const f = (n: number) => n.toFixed(1)
-  let d = `M${f(sx)} ${f(sy)}`
+  // Cinta: baja pegada a un margen y cruza al otro en el aire entre secciones, en una «S» larga.
+  const through: Pt[] = [{ x: sx, y: sy }, { x: sx + (rightX - sx) * 0.7, y: sy + 120 }, { x: rightX, y: sy + 300 }]
   let side: 'r' | 'l' = 'r'
-  let x = sx
-  let y = sy
-  const run = (toX: number, toY: number, bend: number) => {
-    const dy = toY - y
-    d += `C${f(x + bend)} ${f(y + dy / 3)} ${f(toX - bend)} ${f(y + (2 * dy) / 3)} ${f(toX)} ${f(toY)}`
-    x = toX
-    y = toY
-  }
-  // Primer tramo: del cabello al margen derecho.
-  run(rightX, sy + 240, 90)
-  // Cruces de lado cada dos fronteras de sección, justo antes de ellas (en el aire de relleno).
+  const last = () => through[through.length - 1]
   // Número par de cruces: se llega al monograma desde el margen derecho, sin pasar por el titular del cierre.
   const crossings = tops.filter((_, i) => i % 2 === 1)
   if (crossings.length % 2 === 1) crossings.shift()
   crossings.forEach((t) => {
-    run(x, t - 150, side === 'r' ? -10 : 10)
+    const from = Math.max(last().y + 140, t - 360)
+    if (from > t - 120) return
+    through.push({ x: last().x, y: from })
     side = side === 'r' ? 'l' : 'r'
-    run(side === 'r' ? rightX : leftX, t - 40, 0)
+    through.push({ x: side === 'r' ? rightX : leftX, y: Math.min(t - 40, from + 330) })
   })
-  // Aproximación final al monograma.
-  run(x, Math.max(y + 80, ey - 200), side === 'r' ? -12 : 12)
-  run(ex, ey, side === 'r' ? -120 : 120)
-  return { d, height: root.scrollHeight }
+  through.push({ x: last().x, y: Math.max(last().y + 140, ey - 330) })
+  through.push({ x: ex, y: ey })
+  return { through, height: root.scrollHeight }
 }
 
 /**
  * Hilo que nace de la punta del cabello de la portada y baja con la persona por los márgenes hasta
- * el monograma del cierre. Se dibuja hasta la altura de lectura (`HEAD` de la pantalla) y se adapta
+ * el monograma del cierre, como una pincelada de grosor variable igual que la silueta. La cabeza va
+ * a la altura de lectura (`HEAD` de la pantalla) con inercia y acaba en punta; el color se adapta
  * al fondo con `mix-blend-mode: difference`. Solo en pantallas anchas; sin movimiento, queda completo.
  */
 export function ScrollThread() {
   const svg = useRef<SVGSVGElement>(null)
-  const path = useRef<SVGPathElement>(null)
-  const pen = useRef<SVGGElement>(null)
-  const [geo, setGeo] = useState<Pick<Geometry, 'd' | 'height'> | null>(null)
-  const table = useRef<{ ys: number[]; ls: number[]; total: number } | null>(null)
+  const brush = useRef<SVGPathElement>(null)
+  const [geo, setGeo] = useState<Geometry | null>(null)
 
   // Medir el diseño y volver a medir cuando cambie el tamaño del contenido.
   useLayoutEffect(() => {
@@ -102,8 +94,7 @@ export function ScrollThread() {
     let frame = 0
     const run = () => {
       frame = 0
-      if (root.clientWidth < MIN_WIDTH) return setGeo(null)
-      setGeo(measure(root))
+      setGeo(root.clientWidth < MIN_WIDTH ? null : measure(root))
     }
     const request = () => {
       if (!frame) frame = requestAnimationFrame(run)
@@ -119,64 +110,53 @@ export function ScrollThread() {
     }
   }, [])
 
-  // Tabla y → longitud y avance con el scroll.
+  // La cabeza del hilo sigue la altura de lectura, con inercia; solo se dibuja lo que está a la vista.
   useLayoutEffect(() => {
-    const el = path.current
+    const el = brush.current
     const root = svg.current?.parentElement
-    if (!el || !root || !geo || typeof el.getTotalLength !== 'function') return
-    const total = el.getTotalLength()
+    if (!el || !root || !geo) return
+    const curve: Sampled = sampleSpline(geo.through, 7)
+    // y → longitud: la cinta baja siempre, se fuerza la monotonía para poder buscar.
     const ys: number[] = []
-    const ls: number[] = []
-    const N = 480
     let top = -Infinity
-    for (let i = 0; i <= N; i++) {
-      const pt = el.getPointAtLength((total * i) / N)
-      top = Math.max(top, pt.y) // el trazado es casi monótono en y: se fuerza para buscar
-      ys.push(top)
-      ls.push(i / N)
-    }
-    table.current = { ys, ls, total }
-
+    for (const pt of curve.pts) ys.push((top = Math.max(top, pt.y)))
     const lengthAt = (y: number) => {
+      if (y <= ys[0]) return 0
+      if (y >= ys[ys.length - 1]) return curve.total
       let lo = 0
       let hi = ys.length - 1
-      if (y <= ys[0]) return 0
-      if (y >= ys[hi]) return 1
       while (hi - lo > 1) {
         const mid = (lo + hi) >> 1
         if (ys[mid] <= y) lo = mid
         else hi = mid
       }
       const span = ys[hi] - ys[lo] || 1
-      return ls[lo] + ((y - ys[lo]) / span) * (ls[hi] - ls[lo])
+      return curve.len[lo] + ((y - ys[lo]) / span) * (curve.len[hi] - curve.len[lo])
     }
-    const apply = (frac: number) => {
-      el.style.strokeDashoffset = String(1 - frac)
-      const node = pen.current
-      if (!node) return
-      if (frac <= 0.002 || frac >= 0.999) {
-        node.style.opacity = '0'
-        return
-      }
-      const pt = el.getPointAtLength(frac * total)
-      node.setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`)
-      node.style.opacity = '1'
+    const draw = (headS: number) => {
+      const viewTop = window.scrollY - (root.getBoundingClientRect().top + window.scrollY) - 400
+      el.setAttribute('d', brushPath(curve, lengthAt(viewTop), headS))
     }
 
     if (!motionAllowed()) {
-      apply(1)
+      el.setAttribute('d', brushPath(curve, 0, curve.total + 1))
       return
     }
+    const target = () => lengthAt(window.scrollY + window.innerHeight * HEAD - (root.getBoundingClientRect().top + window.scrollY))
     let frame = 0
-    const update = () => {
+    let shown = target()
+    const tick = () => {
       frame = 0
-      const headY = window.scrollY + window.innerHeight * HEAD - (root.getBoundingClientRect().top + window.scrollY)
-      apply(lengthAt(headY))
+      const goal = target()
+      const gap = goal - shown
+      shown = Math.abs(gap) < 0.4 ? goal : shown + gap * EASE
+      draw(shown)
+      if (shown !== goal) frame = requestAnimationFrame(tick)
     }
     const request = () => {
-      if (!frame) frame = requestAnimationFrame(update)
+      if (!frame) frame = requestAnimationFrame(tick)
     }
-    update()
+    draw(shown)
     window.addEventListener('scroll', request, { passive: true })
     window.addEventListener('resize', request)
     return () => {
@@ -188,11 +168,7 @@ export function ScrollThread() {
 
   return (
     <svg ref={svg} className="thread" aria-hidden="true" focusable="false" style={{ height: geo?.height ?? 0, display: geo ? 'block' : 'none' }}>
-      {geo && <path ref={path} className="thread__line" d={geo.d} pathLength={1} />}
-      <g ref={pen} className="thread__pen">
-        <circle r="16" className="thread__glow" />
-        <circle r="5" className="thread__dot" />
-      </g>
+      {geo && <path ref={brush} className="thread__brush" />}
     </svg>
   )
 }

@@ -21,7 +21,7 @@ describe('HeroScene', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Título' })).toBeInTheDocument()
   })
 
-  it('con movimiento, --p sigue el scroll: 0 al inicio y 1 al final de la pista', () => {
+  it('con movimiento, --p sigue el scroll con inercia: parte de 0 y converge al objetivo', () => {
     stubMotion(true)
     vi.stubGlobal('innerHeight', 1000)
     const rect = (top: number) => ({ top, height: 3000 }) as DOMRect
@@ -32,13 +32,23 @@ describe('HeroScene', () => {
     expect(scene.style.getPropertyValue('--p')).toBe('0.0000')
     spy.mockReturnValue(rect(-1000))
     window.dispatchEvent(new Event('scroll'))
-    return new Promise<void>((done) =>
-      requestAnimationFrame(() => {
-        expect(scene.style.getPropertyValue('--p')).toBe('0.5000')
-        spy.mockRestore()
-        done()
-      }),
-    )
+    // Con inercia el valor converge al objetivo en pocos cuadros, sin pasarse.
+    const seen: number[] = []
+    return new Promise<void>((done) => {
+      const step = (n: number) =>
+        requestAnimationFrame(() => {
+          seen.push(Number(scene.style.getPropertyValue('--p')))
+          if (n > 0) return step(n - 1)
+          expect(seen[0]).toBeGreaterThan(0)
+          expect(seen[0]).toBeLessThan(0.5)
+          expect(seen.every((v, i) => i === 0 || v >= seen[i - 1])).toBe(true)
+          expect(Math.max(...seen)).toBeLessThanOrEqual(0.5)
+          expect(scene.style.getPropertyValue('--p')).toBe('0.5000')
+          spy.mockRestore()
+          done()
+        })
+      step(60)
+    })
   })
 
   it('el texto de lectores no se duplica: las líneas visuales van ocultas', () => {
