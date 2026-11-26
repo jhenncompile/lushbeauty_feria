@@ -1,0 +1,55 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci_admin
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      DJANGO_DEBUG: "true"
+      POSTGRES_HOST: localhost
+      POSTGRES_USER: lushbeauty
+      POSTGRES_PASSWORD: ci_app
+    defaults:
+      run:
+        working-directory: Backend/lushbeauty
+    steps:
+      - uses: actions/checkout@v4
+      - name: Crear rol de la app (sin superusuario)
+        run: |
+          PGPASSWORD=ci_admin psql -h localhost -U postgres \
+            -c "CREATE ROLE lushbeauty LOGIN PASSWORD 'ci_app' NOSUPERUSER NOBYPASSRLS CREATEDB" \
+            -c "CREATE DATABASE lushbeauty OWNER lushbeauty"
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen
+      - run: uv run python manage.py check
+      - run: uv run python manage.py makemigrations --check --dry-run
+      - run: uv run python manage.py test
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend/lushbeauty
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: Frontend/lushbeauty/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
