@@ -16,7 +16,7 @@ export function ImportarCargarPage() {
     >
       <div>
         <p className="eyebrow">Paso 1 de 3 · Mapear columnas</p>
-        <h1 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Planilla de agosto</h1>
+        <h2 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Planilla de agosto</h2>
       </div>
       <div className="panel">
         <p className="t-title">{FILE.name}</p>

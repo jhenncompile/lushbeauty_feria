@@ -7,7 +7,7 @@ export function GuardPage() {
   return (
     <MobileScreen title="Lush Guard" backTo={ROUTES.home}>
       <div>
-        <h1 className="t-headline">{pending === 1 ? '1 alerta por revisar' : `${pending} alertas por revisar`}</h1>
+        <h2 className="t-headline">{pending === 1 ? '1 alerta por revisar' : `${pending} alertas por revisar`}</h2>
         <p className="t-body muted" style={{ marginTop: 'var(--space-2)' }}>
           Las alertas siguen reglas configuradas. Una alerta no indica una conducta indebida.
         </p>

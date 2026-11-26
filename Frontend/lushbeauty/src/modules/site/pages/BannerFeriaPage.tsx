@@ -9,7 +9,7 @@ import { ART } from '../../../shared/ui'
  */
 export function BannerFeriaPage() {
   return (
-    <div className="lx banner">
+    <main className="lx banner">
       <div className="banner__piece">
         <p className="eyebrow">Roll-up · 85 × 200 cm · vertical</p>
         <div className="bn banner__rollup">
@@ -81,6 +81,6 @@ export function BannerFeriaPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

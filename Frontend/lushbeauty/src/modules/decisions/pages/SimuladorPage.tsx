@@ -13,7 +13,7 @@ export function SimuladorPage() {
     >
       <div>
         <p className="eyebrow">Escenario hipotético</p>
-        <h1 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Descuento en Manicura gel</h1>
+        <h2 className="t-headline" style={{ marginTop: 'var(--space-2)' }}>Descuento en Manicura gel</h2>
       </div>
       <Scenario />
       <p className="t-caption">
