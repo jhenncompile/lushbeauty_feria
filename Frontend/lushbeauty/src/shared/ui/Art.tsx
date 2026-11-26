@@ -1,6 +1,6 @@
 import { cx } from './cx'
 
-import { ART } from './art'
+import { ART } from './artPaths'
 
 interface BackdropProps {
   /** Opacidad de la lámina; el diseño usa .28–.55 según el contraste que necesite el texto encima. */
