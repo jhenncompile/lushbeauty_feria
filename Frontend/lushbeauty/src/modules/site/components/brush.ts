@@ -104,3 +104,64 @@ export function brushPath(path: Sampled, from: number, headS: number, o: BrushOp
   }
   return `M${left.join('L')}L${right.reverse().join('L')}Z`
 }
+
+/**
+ * Puntos de un rulo (lazo) que baja: ciclode prolato. Empieza en `at`, avanza hacia abajo y se
+ * abre `dir` (+1 derecha, −1 izquierda) hasta `2·radius`; termina otra vez en la vertical de `at`,
+ * `≈ 2π·pitch` más abajo. Con `radius > pitch` el trazo se cruza a sí mismo: eso es el lazo.
+ */
+export function loopPoints(at: Pt, radius: number, dir: 1 | -1, pitch = radius * 0.62, count = 18): Pt[] {
+  const out: Pt[] = []
+  for (let i = 0; i <= count; i++) {
+    const t = (i / count) * Math.PI * 2
+    out.push({ x: at.x + dir * radius * (1 - Math.cos(t)), y: at.y + pitch * t - radius * Math.sin(t) })
+  }
+  return out
+}
+
+export interface Box {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+export interface RingOptions {
+  /** Vueltas (>1 = sobrepasa el inicio). */
+  turns?: number
+  /** Inclinación del eje en grados. */
+  tilt?: number
+  /** Holgura alrededor de la caja (px). */
+  padX?: number
+  padY?: number
+  /** Semilla del temblor de la mano (determinista). */
+  seed?: number
+}
+
+/** Aro dibujado a mano alrededor de `box`: superelipse inclinada, con temblor suave y sobrepaso al cerrar. */
+export function ringPoints(box: Box, o: RingOptions = {}): Pt[] {
+  const { turns = 1.12, tilt = -3, padX = 26, padY = 10, seed = 1 } = o
+  const cx = box.x + box.w / 2
+  const cy = box.y + box.h / 2
+  const rx = box.w / 2 + padX
+  const ry = box.h / 2 + padY
+  const rot = (tilt * Math.PI) / 180
+  const a0 = -Math.PI * 0.83
+  const n = 64
+  const out: Pt[] = []
+  for (let i = 0; i <= n; i++) {
+    const u = i / n
+    const a = a0 + u * turns * Math.PI * 2
+    // La mano abre el aro un poco al terminar (radio creciente) y tiembla de forma suave.
+    const k = 1.04 + 0.055 * u + 0.02 * Math.sin(2.3 * a + seed) + 0.012 * Math.sin(5.1 * a + seed * 2)
+    // Superelipse (exponente 4): un óvalo «lleno» que contiene las esquinas de la caja sin crecer en alto.
+    const sup = (v: number) => Math.sign(v) * Math.pow(Math.abs(v), 2 / 4)
+    const ex = rx * k * sup(Math.cos(a))
+    const ey = ry * k * sup(Math.sin(a))
+    out.push({ x: cx + ex * Math.cos(rot) - ey * Math.sin(rot), y: cy + ex * Math.sin(rot) + ey * Math.cos(rot) })
+  }
+  return out
+}
+
+/** Perfil de pincel de los aros: más corto y fino que el del hilo. */
+export const RING_BRUSH: BrushOptions = { max: 3.4, tail: 90, end: 120, head: 60 }

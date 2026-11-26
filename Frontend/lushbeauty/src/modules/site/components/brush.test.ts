@@ -38,3 +38,43 @@ describe('pincelada del hilo', () => {
     expect(S.len[indexAt(S.len, 500)]).toBeGreaterThanOrEqual(500)
   })
 })
+
+import { loopPoints, ringPoints, RING_BRUSH } from './brush'
+
+describe('rulos y aros', () => {
+  it('el rulo termina en la vertical de inicio, más abajo, y se cruza a sí mismo', () => {
+    const pts = loopPoints({ x: 100, y: 0 }, 36, 1)
+    expect(pts[0]).toEqual({ x: 100, y: 0 })
+    const end = pts[pts.length - 1]
+    expect(Math.abs(end.x - 100)).toBeLessThan(0.001)
+    expect(end.y).toBeGreaterThan(100)
+    expect(pts.every((p) => Number.isFinite(p.x) && Number.isFinite(p.y))).toBe(true)
+    // «y» retrocede en algún punto: hay lazo.
+    expect(pts.some((p, i) => i > 0 && p.y < pts[i - 1].y)).toBe(true)
+    expect(Math.max(...pts.map((p) => p.x))).toBeGreaterThan(160)
+  })
+
+  it('el rulo hacia la izquierda es el espejo del de la derecha', () => {
+    const a = loopPoints({ x: 100, y: 0 }, 30, 1)
+    const b = loopPoints({ x: 100, y: 0 }, 30, -1)
+    a.forEach((p, i) => {
+      expect(b[i].x - 100).toBeCloseTo(-(p.x - 100), 6)
+      expect(b[i].y).toBeCloseTo(p.y, 6)
+    })
+  })
+
+  it('el aro rodea la caja con holgura, es determinista y sobrepasa el inicio', () => {
+    const box = { x: 200, y: 100, w: 180, h: 50 }
+    const a = ringPoints(box, { seed: 3 })
+    const b = ringPoints(box, { seed: 3 })
+    expect(a).toEqual(b)
+    // Ningún punto cae dentro de la caja: el aro no toca el texto.
+    const gap = (p: { x: number; y: number }) => Math.hypot(Math.max(box.x - p.x, 0, p.x - (box.x + box.w)), Math.max(box.y - p.y, 0, p.y - (box.y + box.h)))
+    expect(a.every((p) => gap(p) >= 2.5)).toBe(true)
+    expect(Math.hypot(a[a.length - 1].x - a[0].x, a[a.length - 1].y - a[0].y)).toBeGreaterThan(2)
+    const ring = sampleSpline(a, 6)
+    expect(brushWidth(0, ring.total, ring.total, RING_BRUSH)).toBe(0)
+    expect(brushWidth(ring.total, ring.total, ring.total, RING_BRUSH)).toBe(0)
+    expect(brushWidth(ring.total / 2, ring.total, ring.total, RING_BRUSH)).toBeGreaterThan(1.5)
+  })
+})
