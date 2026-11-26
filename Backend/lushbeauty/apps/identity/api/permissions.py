@@ -10,7 +10,8 @@ class TienePermiso(BasePermission):
     message = "No tienes permiso para esta operación."
 
     def has_permission(self, request, view):
-        requerido = getattr(view, "permiso_requerido", None)
+        por_metodo = getattr(view, "permisos_por_metodo", {})
+        requerido = por_metodo.get(request.method, getattr(view, "permiso_requerido", None))
         if requerido is None:
             return True
         if requerido in permisos_de(request.user):

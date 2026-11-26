@@ -9,7 +9,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | Sem | Feature | Estado | Prioridad |
 |---|---|---|---|
 | 1-2 | [F00 foundation](F00-foundation.md) | Hecho; falta ver la CI en GitHub | Protegida |
-| 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | UI parcial (T5/T6 maqueta) | Protegida |
+| 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5/T6 sin conectar | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | UI parcial (T4 lectura) | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | UI parcial (T5/T6 maqueta) | Protegida |
 | 2 | [F04 cierre-caja](F04-cierre-caja.md) | UI parcial (T4 maqueta) | Protegida |

@@ -9,3 +9,6 @@ Un módulo que quiera historial automático en una tabla suya llama a `sql_activ
 **Tablas propias:** `auditoria` (con RLS; `UPDATE`, `DELETE` y `TRUNCATE` están prohibidos por trigger).
 
 **Eventos:** no emite ni consume ninguno todavía.
+
+**Aviso:** `valor_anterior`/`valor_nuevo` guardan los importes como `jsonb` (exactos en la base), pero Python los
+lee como `float`. Sirven para mostrar el historial; no los uses para calcular dinero.

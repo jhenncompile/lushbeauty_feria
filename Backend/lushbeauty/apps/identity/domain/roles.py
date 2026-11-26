@@ -20,6 +20,8 @@ PERMISOS: dict[str, tuple[str, str]] = {
     "CAJA_CERRAR": ("cashier", "Aprobar el cierre de caja"),
     "DECISION_APROBAR": ("recommendations", "Aprobar una decisión del DSS"),
     "REPORTES_VER": ("analytics", "Ver reportes agregados"),
+    "DESCUENTO_APROBAR": ("sales", "Aprobar descuentos sobre el umbral"),
+    "VENTA_ANULAR": ("sales", "Anular una venta con ajuste auditado"),
 }
 
 PERMISOS_POR_ROL: dict[str, frozenset[str]] = {
