@@ -63,3 +63,16 @@ body { background: var(--surface); }
 
 /* marca de la barra: objetivo táctil ≥ 24 px (WCAG 2.5.8) */
 .lb-nav__brand { display: inline-flex; align-items: center; min-height: var(--touch-min); }
+
+/* site · escala tipográfica de la landing: se lee de lejos, a diferencia de las pantallas de trabajo */
+.site .eyebrow, .site .lb-stat__label, .site .lb-row__index, .site .chapter__num { font-size: 13px; line-height: 20px; }
+.site .t-body, .site .line__label, .site .chapter__desc { font-size: 18px; line-height: 30px; }
+.site .lb-row__desc { font-size: 17px; line-height: 28px; }
+.site .body-lg { font-size: 20px; line-height: 32px; }
+.site .t-caption, .site .lb-stat__note, .site .lb-row__duration, .site .chapter__tag { font-size: 14px; line-height: 22px; }
+.site .t-headline { font-size: 36px; }
+.site .lb-stat__delta { font-size: 15px; line-height: 22px; }
+.site .tag { min-height: 28px; font-size: 12px; }
+.site .lb-nav__link, .site .lb-nav__actions { font-size: 13px; line-height: 18px; }
+.site .lb-btn { font-size: 13px; line-height: 18px; }
+.site .measure { max-width: 56ch; }

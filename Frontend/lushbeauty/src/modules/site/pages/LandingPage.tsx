@@ -12,7 +12,7 @@ export function LandingPage() {
   useDocumentTitle('Lush Beauty Smart · Caja y nómina para salones')
   const page = useReveal<HTMLDivElement>()
   return (
-    <div className="lx web" ref={page} style={{ position: 'relative' }}>
+    <div className="lx web site" ref={page} style={{ position: 'relative' }}>
         <header className="lb-nav noir" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 3, background: 'transparent', borderBottomColor: 'rgba(255,255,255,.16)' }}>
           <nav className="lb-nav__links" aria-label="Principal">
             <a className="lb-nav__link" href="#sistema">Sistema</a>
