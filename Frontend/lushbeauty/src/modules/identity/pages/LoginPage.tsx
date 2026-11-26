@@ -36,9 +36,8 @@ export function LoginPage() {
     <div className="lx web login">
       <section className="lb-on-inverse rel login__brand">
         <div className="login__orbit" aria-hidden="true">
-          <img src={ART.profile} alt="" style={{ width: '100%', height: '100%' }} />
+          <img src={ART.cover} alt="" style={{ width: '100%', height: '100%' }} />
         </div>
-        <span />
         <div className="above rise d2">
           <Wordmark variant="stacked" tone="inverse" size={28} descriptor="Salón de belleza" />
         </div>

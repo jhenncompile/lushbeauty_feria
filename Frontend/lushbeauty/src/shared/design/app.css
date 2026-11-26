@@ -10,11 +10,11 @@ body { background: var(--surface); }
 .login { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); min-height: 100dvh; }
 /* Como en el diseño: marca arriba-centro, descriptor abajo; el perfil va abajo a la derecha, mirando hacia la marca */
 .login__brand { position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: var(--space-5); padding: var(--space-9) var(--space-7); min-height: 480px; overflow: hidden; }
-.login__orbit { position: absolute; z-index: -1; opacity: .65; right: -14%; bottom: -12%; width: 78%; aspect-ratio: 1; }
+.login__orbit { position: absolute; z-index: -1; opacity: .7; right: -12%; bottom: 6%; width: 96%; aspect-ratio: 1.25; }
 @media (max-width: 840px) {
   .login__brand { justify-content: center; padding: var(--space-9) var(--space-5); min-height: 0; }
   .login__brand > .t-caption { display: none; }
-  .login__orbit { right: -22%; bottom: -18%; width: 340px; opacity: .45; }
+  .login__orbit { right: -30%; bottom: -14%; width: 460px; opacity: .5; }
 }
 .login__main { display: flex; flex-direction: column; justify-content: center; padding: var(--space-7) var(--space-5); }
 .login__form { max-width: 420px; width: 100%; margin: 0 auto; }
@@ -57,7 +57,7 @@ body { background: var(--surface); }
 .banner__brand { margin: 0; font: 400 13px/18px var(--font-sans); letter-spacing: .16em; opacity: .9; }
 .banner__descriptor { margin: 4px 0 0; font: 500 6px/10px var(--font-sans); letter-spacing: .24em; text-transform: uppercase; opacity: .6; }
 .banner__art { position: absolute; pointer-events: none; }
-.banner__art--rollup { left: -26px; top: 190px; width: 487px; height: 390px; }
+.banner__art--rollup { left: -92px; top: 180px; width: 560px; height: 448px; }
 .banner__art--wide { left: 552px; top: -18px; width: 544px; height: 435px; }
 .banner__message { position: absolute; left: 30px; right: 30px; top: 680px; }
 .banner__wide .banner__message { left: 64px; right: auto; top: 120px; width: 420px; }
