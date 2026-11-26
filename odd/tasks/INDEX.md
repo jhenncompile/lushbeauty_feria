@@ -8,7 +8,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 
 | Sem | Feature | Estado | Prioridad |
 |---|---|---|---|
-| 1-2 | [F00 foundation](F00-foundation.md) | Backend T2/T3/T4 hecho; falta login real (T5) y CI visible | Protegida |
+| 1-2 | [F00 foundation](F00-foundation.md) | Hecho; falta ver la CI en GitHub | Protegida |
 | 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | UI parcial (T5/T6 maqueta) | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | UI parcial (T4 lectura) | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | UI parcial (T5/T6 maqueta) | Protegida |
