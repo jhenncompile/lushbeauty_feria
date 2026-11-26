@@ -18,7 +18,7 @@ export function GuardadoPage() {
     <MobileScreen
       header={
         <section className="lb-on-inverse rel saved__hero">
-          <Backdrop opacity={0.4} />
+          <Backdrop opacity={0.16} />
           <svg className="above" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
             <circle cx="20" cy="20" r="19" fill="none" stroke="currentColor" strokeWidth="1" />
             <path className="tick" d="M11 21 L18 28 L30 13" />
