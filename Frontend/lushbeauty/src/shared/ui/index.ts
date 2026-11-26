@@ -1,6 +1,7 @@
 export { ART } from './artPaths'
 export { Backdrop, Profile } from './Art'
 export { Button } from './Button'
+export { ConfirmDialog, Dialog, NoticeDialog } from './Dialog'
 export { Choice } from './Choice'
 export { Field } from './Field'
 export { Mark } from './Mark'

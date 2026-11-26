@@ -1,12 +1,14 @@
+import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { formatBs } from '../../../shared/money'
 import { MobileScreen, ROUTES } from '../../../shared/layout'
-import { Button, Tag } from '../../../shared/ui'
+import { Button, NoticeDialog, Tag } from '../../../shared/ui'
 import { totals } from '../domain/payroll'
 import { useSettlement } from '../settlement'
 
 export function AprobadaPage() {
   const settlement = useSettlement()
+  const [resent, setResent] = useState<string>()
   if (settlement.status !== 'aprobada') return <Navigate to={ROUTES.payroll} replace />
   const sum = totals(settlement.statements)
   return (
@@ -57,11 +59,17 @@ export function AprobadaPage() {
             key={notice.statementId}
             variant="link"
             style={{ alignSelf: 'flex-start' }}
-            onClick={() => settlement.retryNotice(notice.statementId)}
+            onClick={() => {
+              settlement.retryNotice(notice.statementId)
+              setResent(notice.name)
+            }}
           >
             Reintentar aviso a {notice.name}
           </Button>
         ))}
+      <NoticeDialog open={resent !== undefined} eyebrow="Listo" title="Aviso reenviado" onClose={() => setResent(undefined)}>
+        <p>Se volvió a enviar el aviso a {resent}. La liquidación no cambia.</p>
+      </NoticeDialog>
     </MobileScreen>
   )
 }

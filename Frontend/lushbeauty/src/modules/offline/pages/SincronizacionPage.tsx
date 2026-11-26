@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { formatBs } from '../../../shared/money'
 import { MobileScreen, ROUTES } from '../../../shared/layout'
-import { Button, Tag } from '../../../shared/ui'
+import { Button, NoticeDialog, Tag } from '../../../shared/ui'
 import { useSession } from '../../identity'
 import { homeRouteFor } from '../../identity'
 import { useOfflineQueue } from '../queue'
@@ -15,12 +15,12 @@ const TAG = {
 export function SincronizacionPage() {
   const { session } = useSession()
   const offline = useOfflineQueue()
-  const [message, setMessage] = useState<string>()
+  const [result, setResult] = useState<'offline' | 'sent'>()
   const back = session ? homeRouteFor(session.role) : ROUTES.login
   const pending = offline.queue.filter((item) => item.status === 'pendiente').length
 
   function retry() {
-    setMessage(offline.retry() === 'offline' ? 'Sigue sin conexión. Sus registros están a salvo en este teléfono.' : 'Registros enviados.')
+    setResult(offline.retry() === 'offline' ? 'offline' : 'sent')
   }
 
   return (
@@ -32,11 +32,18 @@ export function SincronizacionPage() {
           <Button block onClick={retry} disabled={pending === 0}>
             Reintentar envío
           </Button>
-          {message ? (
-            <p className="t-caption" role="status" style={{ textAlign: 'center' }}>
-              {message}
+          <NoticeDialog
+            open={result !== undefined}
+            eyebrow={result === 'offline' ? 'Sin conexión' : 'Listo'}
+            title={result === 'offline' ? 'Todavía no se pudo enviar' : 'Registros enviados'}
+            onClose={() => setResult(undefined)}
+          >
+            <p>
+              {result === 'offline'
+                ? 'Sigue sin conexión. Sus registros están a salvo en este teléfono.'
+                : 'Los registros pendientes llegaron al servidor.'}
             </p>
-          ) : null}
+          </NoticeDialog>
         </>
       }
     >

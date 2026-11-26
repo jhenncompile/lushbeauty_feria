@@ -5,15 +5,14 @@ import { Button, Stat, Steps, Tag } from '../../../shared/ui'
 import { netPay, totals } from '../domain/payroll'
 import { STEP_INDEX, STEP_NAMES } from '../steps'
 import { useSettlement } from '../settlement'
+import { useApproveFlow } from '../components/useApproveFlow'
 
 export function LiquidacionPage() {
   const settlement = useSettlement()
   const navigate = useNavigate()
   const sum = totals(settlement.statements)
 
-  function approve() {
-    if (settlement.approve()) navigate(ROUTES.payrollApproved)
-  }
+  const flow = useApproveFlow({ onApproved: () => navigate(ROUTES.payrollApproved) })
 
   const approved = settlement.status === 'aprobada'
   return (
@@ -32,7 +31,7 @@ export function LiquidacionPage() {
           </>
         ) : (
           <>
-            <Button block onClick={approve} disabled={!settlement.canApprove}>
+            <Button block onClick={flow.request} disabled={!settlement.canApprove}>
               Aprobar liquidación
             </Button>
             <p className="t-caption" style={{ textAlign: 'center' }}>
@@ -79,6 +78,7 @@ export function LiquidacionPage() {
         Comisión de 35&thinsp;% sobre el precio de lista, según la regla vigente al registrar cada venta. Valor
         ilustrativo.
       </p>
+      {flow.dialogs}
     </MobileScreen>
   )
 }

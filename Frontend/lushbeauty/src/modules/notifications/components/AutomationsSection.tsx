@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Button, Tag } from '../../../shared/ui'
+import { Button, NoticeDialog, Tag } from '../../../shared/ui'
 import { AUTOMATIONS } from '../fixtures'
 
 /** Avisos automáticos (n8n): nunca reemplazan el registro contable; los fallos se reintentan un número limitado de veces. */
 export function AutomationsSection() {
   const [retried, setRetried] = useState(false)
+  const [notice, setNotice] = useState(false)
   return (
     <section className="stack--lg stack" aria-label="Avisos con n8n">
       <div className="stack" style={{ gap: 'var(--space-2)' }}>
@@ -32,8 +33,22 @@ export function AutomationsSection() {
           : 'Error: no se pudo enviar el aviso a Katherine porque no tiene correo registrado. Agregue el correo y reintente.'}
       </p>
       <div className="row">
-        <Button variant="secondary" onClick={() => setRetried(true)}>Reintentar aviso a Katherine</Button>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setRetried(true)
+            setNotice(true)
+          }}
+        >
+          Reintentar aviso a Katherine
+        </Button>
       </div>
+      <NoticeDialog open={notice} eyebrow="Reintento" title="Aviso aún sin enviar" onClose={() => setNotice(false)}>
+        <p>
+          Se registró el reintento (simulado: aún no hay servidor ni n8n). Katherine no tiene correo registrado:
+          agréguelo para que el aviso pueda enviarse.
+        </p>
+      </NoticeDialog>
     </section>
   )
 }

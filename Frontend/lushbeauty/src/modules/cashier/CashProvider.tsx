@@ -32,6 +32,10 @@ export function CashProvider({ children }: { children: ReactNode }) {
     justificationError: attempted && justificationMissing ? 'Explique la diferencia para cerrar la caja.' : undefined,
     canClose: online && !closed,
     closed,
+    validate: () => {
+      setAttempted(true)
+      return online && !closed && !countedInvalid && !justificationMissing
+    },
     close: () => {
       setAttempted(true)
       if (!online || closed || countedInvalid || justificationMissing) return false

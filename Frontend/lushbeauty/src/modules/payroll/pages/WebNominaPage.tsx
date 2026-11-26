@@ -4,10 +4,12 @@ import { Button, Panel, Stat, Steps, Tag } from '../../../shared/ui'
 import { getPolicy } from '../../catalog'
 import { commissionOnCharged, commissionOnList, netPay, totals } from '../domain/payroll'
 import { useSettlement } from '../settlement'
+import { useApproveFlow } from '../components/useApproveFlow'
 import { STEP_INDEX, STEP_NAMES } from '../steps'
 
 export function WebNominaPage() {
   const settlement = useSettlement()
+  const flow = useApproveFlow({ notify: true })
   const policy = getPolicy()
   const sum = totals(settlement.statements)
   const detail = settlement.statements.find((item) => item.lines)
@@ -25,7 +27,7 @@ export function WebNominaPage() {
         {approved ? (
           <Tag tone="ok">Liquidación aprobada</Tag>
         ) : (
-          <Button onClick={() => settlement.approve()} disabled={!settlement.canApprove}>
+          <Button onClick={flow.request} disabled={!settlement.canApprove}>
             Aprobar liquidación
           </Button>
         )}
@@ -124,6 +126,7 @@ export function WebNominaPage() {
           </Panel>
         </aside>
       </div>
+      {flow.dialogs}
     </WebScreen>
   )
 }

@@ -197,3 +197,12 @@ El README define una sola PWA y excluye una app nativa. El equipo decidió imple
 - **Monograma LB** en `Wordmark` (`variant="mark" | "stacked"`).
 - **Movimiento con animejs** (`shared/motion`): entrada escalonada de bloques (`useEnter`, ya en `MobileScreen` y `WebScreen`), aparición al scroll (`useReveal`, `.reveal`) y cifras que cuentan hasta su valor exacto (`CountBs`). Todo se apaga con `prefers-reduced-motion`; sin JS quedan los keyframes de `lush.css`.
 - El banner de feria (`/feria`) es una propuesta de impresión: datos del stand y QR son marcadores `[…]` hasta que el equipo los defina.
+
+## Diálogos (modales)
+
+`Dialog`, `ConfirmDialog` y `NoticeDialog` (`shared/ui`): fondo velado, panel blanco sin radio, título liviano; en celular se abren como hoja inferior con botones a lo ancho.
+
+- **Confirmar** (`ConfirmDialog`) antes de toda acción que no se deshace: cerrar caja, aprobar liquidación, anular una venta. Resume qué se va a registrar y el foco empieza en «Volver», la opción segura. Si es destructiva, el botón va en rojo.
+- **Informar el resultado** (`NoticeDialog`) cuando la acción no cambia de pantalla: reintentos de envío o de avisos, ejemplos de la landing.
+- **No** usar modal para errores de validación de un campo: van en el propio campo. Los estados permanentes (conexión, cola, avisos fallidos) siguen en la pantalla.
+- Accesibilidad: `role="dialog"`, `aria-modal`, título como `aria-labelledby`, Esc y clic fuera cierran, Tab no sale del diálogo y al cerrar el foco vuelve al botón que lo abrió.

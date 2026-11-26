@@ -17,7 +17,9 @@ describe('Sincronización · cola de envío', () => {
   it('reintentar sin conexión no pierde nada y lo dice', async () => {
     renderApp('/sincronizacion', ADMIN, { online: false, pending: 3 })
     await userEvent.click(screen.getByRole('button', { name: 'Reintentar envío' }))
-    expect(screen.getByText('Sigue sin conexión. Sus registros están a salvo en este teléfono.')).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Todavía no se pudo enviar' })).toHaveTextContent(
+      'Sigue sin conexión. Sus registros están a salvo en este teléfono.',
+    )
     expect(screen.getAllByText('Pendiente')).toHaveLength(3)
   })
 
