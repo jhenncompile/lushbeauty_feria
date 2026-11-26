@@ -91,10 +91,45 @@ body { background: var(--surface); }
 .site .measure { max-width: 56ch; }
 
 /* site · ilustración de la portada: a la derecha en escritorio; arriba del título en tablet y celular */
-.site .hero-art { right: -2%; top: 50%; width: min(680px, 66vw); aspect-ratio: 1.25; margin-top: -272px; }
+.site .hero-art { right: 1%; top: 50%; width: min(620px, 46vw); aspect-ratio: 1.25; margin-top: calc(min(620px, 46vw) / -2.5); }
 @media (max-width: 1000px) {
   .site .hero-full { justify-content: flex-start; min-height: 0; padding-top: 96px; }
   .site .hero-art { position: relative !important; right: auto; top: auto; z-index: 0 !important; width: min(560px, 100%); margin: 0 auto 16px; }
 }
 /* ingreso en celular: solo la marca; la escena queda para pantallas anchas */
 @media (max-width: 840px) { .login__orbit { display: none; } }
+
+/* site · portada con scroll: `--p` (0–1) lo escribe useScrollProgress; sin movimiento vale 1 (todo completo) */
+.site .hero-pin { --p: 1; }
+.has-motion .site .hero-pin { --p: 0; }
+@media (min-width: 1001px) {
+  .has-motion .site .hero-pin { height: calc(100svh + 130vh); }
+  .has-motion .site .hero-stick { position: sticky; top: 0; height: 100svh; min-height: 720px; }
+}
+.site .hero-art { position: absolute; z-index: -1; color: var(--ink); }
+.site .hero-art svg { width: 100%; height: 100%; overflow: visible; transform: translateY(calc((0.5 - var(--p)) * 28px)) scale(calc(1 + var(--p) * 0.035)); transform-origin: 50% 50%; }
+.hdraw .guide { fill: var(--ink); opacity: 0.1; }
+.hdraw .profile { fill: var(--ink); }
+.hdraw .stroke {
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: calc(1 - clamp(0, (var(--p) - var(--s)) / (var(--e) - var(--s)), 1));
+  stroke-opacity: clamp(0, (var(--p) - var(--s)) * 1000, 1);
+}
+.hdraw .tool { opacity: clamp(0, (var(--p) - var(--s)) * 14, 1); }
+.hdraw .tool path, .hdraw .tool circle, .hdraw .tool ellipse {
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: calc(1 - clamp(0, (var(--p) - var(--s)) / (var(--e) - var(--s)), 1));
+}
+.hdraw .tool rect { fill: var(--surface); }
+.hdraw .pen { opacity: 0; pointer-events: none; }
+.hdraw .pen__dot { fill: var(--ink); }
+.hdraw .pen__glow { fill: var(--ink); opacity: 0.16; }
+
+/* título: contorno fijo y relleno que el trazo va repasando de izquierda a derecha */
+.ink-row { position: relative; display: block; width: fit-content; white-space: nowrap; --k: clamp(0, (var(--p) - var(--s)) / (var(--e) - var(--s)), 1); }
+.ink-base { color: transparent; -webkit-text-stroke: 1px var(--tone); opacity: 0.6; }
+.ink-fill { position: absolute; inset: 0; color: var(--tone); clip-path: inset(-0.15em calc((1 - var(--k)) * 100%) -0.15em -0.05em); }
+.ink-pen { position: absolute; top: 6%; bottom: 6%; left: calc(var(--k) * 100%); width: 2px; background: var(--ink); box-shadow: 0 0 18px 2px var(--ink); opacity: min(calc(var(--k) * 40), calc((1 - var(--k)) * 40), 1); pointer-events: none; }
+@media (max-width: 1000px) { .has-motion .site .hero-pin { height: auto; } }
+/* `overflow: hidden` crea un contenedor de scroll y rompe `position: sticky`; `clip` recorta igual sin crearlo */
+.lx.site { overflow: clip; }
