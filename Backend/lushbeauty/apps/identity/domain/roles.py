@@ -22,6 +22,7 @@ PERMISOS: dict[str, tuple[str, str]] = {
     "REPORTES_VER": ("analytics", "Ver reportes agregados"),
     "DESCUENTO_APROBAR": ("sales", "Aprobar descuentos sobre el umbral"),
     "VENTA_ANULAR": ("sales", "Anular una venta con ajuste auditado"),
+    "AUDITORIA_VER": ("audit", "Consultar el historial de acciones por usuario"),
 }
 
 PERMISOS_POR_ROL: dict[str, frozenset[str]] = {

@@ -1,7 +1,10 @@
+import uuid
+
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.audit.contracts import historial
 from apps.identity.api.permissions import TienePermiso
 from apps.identity.api.serializers import LoginSerializer, usuario_publico
 from apps.identity.services import consultas, sesion
@@ -59,3 +62,27 @@ class UsuarioDetalleView(APIView):
         if usuario is None:
             return Response({"detail": "No encontrado."}, status=404)
         return Response(_perfil(usuario))
+
+
+class HistorialView(APIView):
+    """Historial de acciones del salón, con el nombre del actor ('Sistema' si no hubo usuario)."""
+
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = "AUDITORIA_VER"
+
+    def get(self, request):
+        try:
+            usuario_id = uuid.UUID(request.query_params["usuario_id"]) if "usuario_id" in request.query_params else None
+            limite = int(request.query_params.get("limite", 100))
+        except ValueError:
+            return Response({"detail": "usuario_id o limite inválido."}, status=400)
+        entradas = historial(usuario_id=usuario_id, accion=request.query_params.get("accion"), limite=limite)
+        nombres = consultas.nombres_de_usuarios(e.usuario_id for e in entradas if e.usuario_id)
+        return Response([{
+            "id": str(e.id), "ocurrido_en": e.ocurrido_en.isoformat(),
+            "usuario_id": str(e.usuario_id) if e.usuario_id else None,
+            "usuario": nombres.get(e.usuario_id, "Sistema"),
+            "accion": e.accion, "entidad": e.entidad,
+            "entidad_id": str(e.entidad_id) if e.entidad_id else None,
+            "valor_anterior": e.valor_anterior, "valor_nuevo": e.valor_nuevo, "direccion_ip": e.direccion_ip,
+        } for e in entradas])

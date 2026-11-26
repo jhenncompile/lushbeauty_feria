@@ -7,6 +7,6 @@ Otros módulos fijan el salón activo con `shared.tenancy`, nunca leen tablas de
 
 **Tablas propias:** `salon`, `usuario`, `usuario_rol`, `rol`, `permiso`, `rol_permiso`. Con RLS: `salon`, `usuario`, `usuario_rol`.
 
-**API:** `POST /api/auth/login`, `GET /api/auth/me`, `GET /api/identity/usuarios`, `GET /api/identity/usuarios/<id>`.
+**API:** `POST /api/auth/login`, `GET /api/auth/me`, `GET /api/identity/usuarios`, `GET /api/identity/usuarios/<id>`, `GET /api/identity/historial` (permiso `AUDITORIA_VER`; lee la bitácora por el contrato de `audit` y le pone el nombre del actor).
 
 **Eventos:** no emite ni consume ninguno todavía.
