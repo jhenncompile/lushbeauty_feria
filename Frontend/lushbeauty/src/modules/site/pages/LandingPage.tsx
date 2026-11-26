@@ -58,7 +58,7 @@ export function LandingPage() {
 
       <section className="wrap" style={{ paddingBlock: 'clamp(96px, 14vw, 200px)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 'var(--space-7)' }}>
         <div className="reveal"><Wordmark variant="mark" size={64} /></div>
-        <h2 className="display-xl reveal" style={{ maxWidth: '16ch' }}>Belleza en la silla. Exactitud en la caja.</h2>
+        <h2 className="display-xl reveal" style={{ maxWidth: '16ch' }}>Belleza en la silla. <span data-ring>Exactitud</span> en la caja.</h2>
         <p className="body-lg muted measure reveal">
           Una casa de belleza se mide por el detalle. Lush Beauty Smart lleva esa disciplina a cada cifra: cada
           servicio, cada comisión y cada cierre, explicados.
@@ -103,7 +103,7 @@ export function LandingPage() {
         <div className="stack--lg stack">
           <div className="stack">
             <p className="eyebrow reveal">El sistema</p>
-            <h2 className="display-xl reveal measure">Siete módulos, una sola caja</h2>
+            <h2 className="display-xl reveal measure">Siete módulos, una sola <span data-ring>caja</span></h2>
           </div>
           <div style={{ borderTop: '1px solid var(--ink)' }}>
             {CHAPTERS.map((chapter, index) => (
@@ -189,7 +189,7 @@ export function LandingPage() {
         <div className="wrap cols" style={{ alignItems: 'center' }}>
           <div className="stack above">
             <p className="eyebrow reveal">Decision Studio</p>
-            <h2 className="display-lg reveal">La inteligencia artificial sugiere. La administradora decide.</h2>
+            <h2 className="display-lg reveal">La inteligencia artificial sugiere. La administradora <span data-ring>decide</span>.</h2>
             <p className="t-body muted measure reveal">
               Compare descuentos, precios y comisiones con escenarios hipotéticos. Cada recomendación explica sus
               supuestos y nada cambia sin su aprobación.
@@ -225,7 +225,7 @@ export function LandingPage() {
 
       <section id="preguntas" className="wrap" style={{ paddingBottom: 'var(--space-10)' }}>
         <div className="cols cols--12">
-          <div className="stack"><p className="eyebrow">Preguntas</p><h2 className="display-lg">Antes de ingresar</h2></div>
+          <div className="stack"><p className="eyebrow">Preguntas</p><h2 className="display-lg">Antes de <span data-ring>ingresar</span></h2></div>
           <div className="faq">
             {FAQ.map((item) => (
               <details key={item.question}>
@@ -241,7 +241,7 @@ export function LandingPage() {
 
       <FooterScene>
         <div className="wrap above stack--lg stack" style={{ paddingBlock: 'var(--space-10)', alignItems: 'flex-start' }}>
-          <h2 className="display-xl reveal" style={{ maxWidth: '14ch' }}>Cierre la semana con las cuentas claras.</h2>
+          <h2 className="display-xl reveal" style={{ maxWidth: '14ch' }}>Cierre la semana con las cuentas <span data-ring>claras</span>.</h2>
           <Link className="lb-btn lb-btn--primary reveal" to={ROUTES.login}>Ingresar</Link>
         </div>
         <footer className="wrap above" style={{ background: 'var(--surface)', paddingBlock: 'var(--space-7)', borderTop: '1px solid var(--hairline)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 'var(--space-5)', alignItems: 'flex-end' }}>

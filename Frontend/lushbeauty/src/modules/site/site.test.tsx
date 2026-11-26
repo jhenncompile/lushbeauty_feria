@@ -32,4 +32,13 @@ describe('Sitio público', () => {
     await userEvent.click(screen.getByRole('link', { name: 'Volver al inicio' }))
     expect(screen.getByRole('heading', { level: 1, name: /El arte del detalle/ })).toBeInTheDocument()
   })
+
+  it('los aros decorativos no alteran el texto accesible de los títulos', () => {
+    const { container } = renderApp('/inicio', null)
+    const marked = container.querySelectorAll('h2 [data-ring]')
+    expect(marked.length).toBeGreaterThanOrEqual(4)
+    expect(screen.getByRole('heading', { level: 2, name: 'Belleza en la silla. Exactitud en la caja.' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: 'Antes de ingresar' })).toBeInTheDocument()
+    expect(container.querySelector('svg.thread')).toHaveAttribute('aria-hidden', 'true')
+  })
 })
