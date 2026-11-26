@@ -8,6 +8,10 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  server: {
+    // En desarrollo el navegador habla con /api y Vite lo reenvía al backend.
+    proxy: { '/api': process.env.VITE_API_TARGET ?? 'http://127.0.0.1:8010' },
+  },
   build: {
     rollupOptions: {
       output: {
