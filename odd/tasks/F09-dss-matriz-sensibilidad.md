@@ -14,8 +14,8 @@ Comparar alternativas con criterios ponderados y ver si el ranking cambia al var
 DSS-03, DSS-04 · DSS-CP03 · Ficha DEC-02
 
 ## Tareas
-- [ ] **F09-T1 [BE]** Matriz con puntuación ponderada normalizada. *RED:* pesos ≠ 100 %. *Acept.:* DSS-CP03, bloquea la evaluación o normaliza solo con confirmación visible.
-- [ ] **F09-T2 [BE]** Reglas de exclusión previas al ranking. *RED:* alternativa que supera el descuento máximo aprobado. *Acept.:* se descarta antes de puntuar.
+- [ ] **F09-T1 [BE]** Matriz con puntuación ponderada normalizada. *RED:* pesos ≠ 100 %. *Acept.:* DSS-CP03, bloquea la evaluación o normaliza solo con confirmación visible. **Esquema DB:** los pesos viven en `decision` (por defecto 40/25/20/15 %, deben sumar exactamente 1); normalizar ocurre antes de guardar. Puntajes por escenario de 1 a 5.
+- [ ] **F09-T2 [BE]** Reglas de exclusión previas al ranking. *RED:* alternativa que supera el descuento máximo aprobado. *Acept.:* se descarta antes de puntuar (la vista ya expone `elegible = tasa_descuento ≤ salon.descuento_maximo`).
 - [ ] **F09-T3 [BE]** Sensibilidad automática a pesos y a demanda. *RED:* subir contribución de 40 % a 75 %. *Acept.:* el sistema detecta si cambia la preferida y lo explica.
 - [ ] **F09-T4 [WEB]** Editor de criterios/pesos, ranking y gráfico de sensibilidad. *Acept.:* la sensibilidad es visible, no oculta; los valores cualitativos se justifican.
 

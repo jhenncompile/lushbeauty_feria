@@ -14,10 +14,10 @@ Cerrar el ciclo de decisión completo: recomendación explicable, aprobación hu
 DSS-05, DSS-06, DSS-07 · DSS-CP05, DSS-CP06, DSS-CP07 · Fichas DEC-01, DEC-03 · Anexo Q
 
 ## Tareas
-- [ ] **F10-T1 [BE]** Recomendación con problema, alternativas y criterios, procedencia, operaciones, supuestos y límites, alternativa sugerida. *RED:* falta alguno de los seis elementos. *Acept.:* no se emite la recomendación.
+- [ ] **F10-T1 [BE]** Recomendación con problema, alternativas y criterios, procedencia, operaciones, supuestos y límites, alternativa sugerida. *RED:* falta alguno de los seis elementos. *Acept.:* no se emite la recomendación. **Esquema DB (hueco):** `decision.recomendacion` es texto libre; los seis elementos no tienen columnas. Armar la recomendación en el servicio y guardarla serializada, o añadir un `jsonb` (decisión 14).
 - [ ] **F10-T2 [BE]** Caso de datos insuficientes. *RED:* costos o precios ausentes. *Acept.:* «evidencia insuficiente» y qué dato falta.
-- [ ] **F10-T3 [BE]** Aprobación humana y permisos. *RED:* DSS-CP06, un usuario sin rol de administración intenta aprobar. *Acept.:* se rechaza; nada se aplica sin aprobación.
-- [ ] **F10-T4 [BE]** `decision_outcomes`: guardar motivo, responsable, supuestos, esperado, fecha de revisión y observado. *RED:* DSS-CP07, editar el escenario original. *Acept.:* el historial es inmutable.
+- [ ] **F10-T3 [BE]** Aprobación humana y permisos. *RED:* DSS-CP06, un usuario sin rol de administración intenta aprobar. *Acept.:* se rechaza; nada se aplica sin aprobación. **Esquema DB:** aprobar exige `DECISION_APROBAR`, escenario elegido y `fecha_revision`. Aprobar no cambia precios ni comisiones: eso sería otra acción humana.
+- [ ] **F10-T4 [BE]** *(reducida: sin tabla propia)* `decision_outcomes` = columnas de `decision` (`valor_esperado`, `fecha_revision`, `valor_observado`, `comentario_revision`, estado REVISADA): guardar motivo, responsable, supuestos, esperado, fecha de revisión y observado. *RED:* DSS-CP07, editar el escenario original. *Acept.:* el historial es inmutable. **Esquema DB (hueco):** el trigger congela los escenarios, pero la fila `decision` (pesos, supuestos) se puede editar tras aprobar. Propuesta: trigger análogo a `fn_liquidacion_inmutable` que solo permita registrar el resultado observado.
 - [ ] **F10-T5 [WEB]** Pantalla de recomendación con advertencias y botón «Aprobar» (rol administradora). *Acept.:* se ve qué es supuesto y qué es observado.
 - [ ] **F10-T6 [WEB]** Pantalla de seguimiento de decisiones y registro del resultado observado. *Acept.:* la coincidencia temporal no se presenta como causalidad.
 - [ ] **F10-T7 [TRANS]** Datos sintéticos para el caso de la feria (DEC-01/02/03). *Acept.:* el recorrido completo corre en el entorno demo.

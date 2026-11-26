@@ -1,0 +1,141 @@
+\babel@toc {spanish}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Introducción}{1}{section.1}%
+\contentsline {section}{\numberline {2}Planteamiento del Problema}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Descripción del problema}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Delimitación}{6}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Formulación del problema}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Sistematización del problema}{7}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Objetivos de la Investigación}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Objetivo general}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Objetivos específicos}{9}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Criterios de aceptación globales}{11}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Justificación}{12}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Justificación teórica}{12}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Justificación práctica}{12}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Justificación metodológica}{12}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Justificación social}{13}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Justificación tecnológica}{13}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Justificación de innovación}{13}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Marco Teórico}{15}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Antecedentes de la investigación}{15}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Estudios sobre errores en hojas de cálculo}{15}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Sistemas web para la gestión de salones de belleza}{15}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}Vacío identificado}{16}{subsubsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.2}Bases teóricas}{16}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Sistemas de información y procesamiento de transacciones}{16}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Ingeniería de requisitos y técnicas de obtención}{17}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}Calidad del producto y calidad en uso}{17}{subsubsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {5.2.4}Errores en hojas de cálculo y control de cálculos}{18}{subsubsection.5.2.4}%
+\contentsline {subsubsection}{\numberline {5.2.5}Arquitectura multi-inquilino}{19}{subsubsection.5.2.5}%
+\contentsline {subsubsection}{\numberline {5.2.6}Diseño móvil primero y aplicaciones web progresivas}{19}{subsubsection.5.2.6}%
+\contentsline {subsubsection}{\numberline {5.2.7}Modelos de éxito y aceptación de sistemas de información}{20}{subsubsection.5.2.7}%
+\contentsline {subsubsection}{\numberline {5.2.8}Inteligencia artificial generativa con herramientas restringidas}{20}{subsubsection.5.2.8}%
+\contentsline {subsubsection}{\numberline {5.2.9}Detección de anomalías y machine learning}{21}{subsubsection.5.2.9}%
+\contentsline {subsubsection}{\numberline {5.2.10}Automatización mediante n8n}{21}{subsubsection.5.2.10}%
+\contentsline {subsubsection}{\numberline {5.2.11}Sistemas de soporte para decisiones (DSS)}{21}{subsubsection.5.2.11}%
+\contentsline {subsubsection}{\numberline {5.2.12}Análisis de escenarios What-If y sensibilidad}{22}{subsubsection.5.2.12}%
+\contentsline {subsubsection}{\numberline {5.2.13}Análisis multicriterio y recomendaciones prescriptivas}{22}{subsubsection.5.2.13}%
+\contentsline {subsubsection}{\numberline {5.2.14}Evaluación de artefactos y calidad de la explicación}{22}{subsubsection.5.2.14}%
+\contentsline {subsection}{\numberline {5.3}Definición de términos clave}{22}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Relación entre los fundamentos teóricos y los requisitos del sistema}{24}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Benchmarking de Sistemas Similares}{27}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Comparación por problema y enfoque}{29}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Propuesta de valor}{30}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Diferenciación como sistema de soporte para decisiones}{30}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Propuesta funcional: Lush Beauty Smart}{31}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Usuarios y roles}{31}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Módulo de caja y nómina}{31}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}Política de cálculo y conservación de evidencia}{31}{subsubsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.3}Centro de inteligencia financiera}{32}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Importador inteligente de planillas}{32}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Lush Insight: asistente financiero explicable}{32}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Lush Guard: alertas y control de calidad}{33}{subsection.7.6}%
+\contentsline {subsection}{\numberline {7.7}Experiencia móvil y operación sin conexión}{33}{subsection.7.7}%
+\contentsline {subsection}{\numberline {7.8}Flujos n8n propuestos}{34}{subsection.7.8}%
+\contentsline {subsection}{\numberline {7.9}Priorización del alcance}{34}{subsection.7.9}%
+\contentsline {section}{\numberline {8}Lush Decision Studio: Modelo de Soporte para Decisiones}{36}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Tipos de decisiones y responsables}{36}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Lush Decision Studio y sus cinco capacidades principales}{37}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}Análisis de contribución por servicio}{37}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}Simulación What-If}{37}{subsubsection.8.2.2}%
+\contentsline {subsubsection}{\numberline {8.2.3}Comparación multicriterio}{37}{subsubsection.8.2.3}%
+\contentsline {subsubsection}{\numberline {8.2.4}Recomendaciones explicables}{37}{subsubsection.8.2.4}%
+\contentsline {subsubsection}{\numberline {8.2.5}Historial y evaluación de decisiones}{38}{subsubsection.8.2.5}%
+\contentsline {subsection}{\numberline {8.3}Variables de decisión, restricciones y ecuaciones}{38}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Caso trabajado: comparación de descuentos en un servicio}{39}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Matriz de alternativas, criterios y sensibilidad}{40}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Motor prescriptivo y protocolo de explicación}{41}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}Proyección de caja y análisis de riesgo}{42}{subsection.8.7}%
+\contentsline {subsection}{\numberline {8.8}Optimización de capacidad como funcionalidad experimental}{42}{subsection.8.8}%
+\contentsline {subsection}{\numberline {8.9}Registro y aprendizaje de las decisiones}{42}{subsection.8.9}%
+\contentsline {subsection}{\numberline {8.10}Requisitos funcionales adicionales del DSS}{43}{subsection.8.10}%
+\contentsline {section}{\numberline {9}Diseño y Arquitectura de Software}{45}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Principios de arquitectura}{45}{subsection.9.1}%
+\contentsline {subsubsection}{\numberline {9.1.1}Incorporación de la capa de modelos DSS}{46}{subsubsection.9.1.1}%
+\contentsline {subsection}{\numberline {9.2}Componentes y responsabilidades}{46}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Modelo conceptual de datos}{47}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Reglas de negocio críticas}{48}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Sincronización offline e idempotencia}{48}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Diseño de Lush Insight}{49}{subsection.9.6}%
+\contentsline {subsection}{\numberline {9.7}Arquitectura de eventos y n8n}{49}{subsection.9.7}%
+\contentsline {subsection}{\numberline {9.8}Seguridad, privacidad y observabilidad}{50}{subsection.9.8}%
+\contentsline {subsection}{\numberline {9.9}Estrategia de despliegue y mantenimiento}{50}{subsection.9.9}%
+\contentsline {section}{\numberline {10}Hipótesis}{51}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Hipótesis para el soporte a decisiones}{51}{subsection.10.1}%
+\contentsline {section}{\numberline {11}Operacionalización de la Hipótesis}{53}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Variables e indicadores del soporte para decisiones}{53}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Precauciones de interpretación}{54}{subsection.11.2}%
+\contentsline {section}{\numberline {12}Marco Metodológico}{55}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Tipo y diseño de investigación}{55}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Población y muestra}{56}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Técnicas e instrumentos}{56}{subsection.12.3}%
+\contentsline {subsubsection}{\numberline {12.3.1}Instrumentos y procedimiento ampliados}{57}{subsubsection.12.3.1}%
+\contentsline {subsubsection}{\numberline {12.3.2}Evaluación experimental de decisiones}{58}{subsubsection.12.3.2}%
+\contentsline {subsubsection}{\numberline {12.3.3}Evaluación específica de IA y automatización}{58}{subsubsection.12.3.3}%
+\contentsline {subsubsection}{\numberline {12.3.4}Indicadores y metas de prueba}{59}{subsubsection.12.3.4}%
+\contentsline {subsection}{\numberline {12.4}Metodología de desarrollo del producto}{59}{subsection.12.4}%
+\contentsline {subsection}{\numberline {12.5}Procedimiento de análisis}{60}{subsection.12.5}%
+\contentsline {subsection}{\numberline {12.6}Limitaciones del estudio}{60}{subsection.12.6}%
+\contentsline {section}{\numberline {13}Cronograma de Actividades, Demostración y Riesgos}{62}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Cronograma general — Diagrama de Gantt}{62}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Plan técnico complementario de ocho semanas}{64}{subsection.13.2}%
+\contentsline {subsubsection}{\numberline {13.2.1}Hitos y condiciones de salida}{64}{subsubsection.13.2.1}%
+\contentsline {subsection}{\numberline {13.3}Guion de demostración ante el jurado}{65}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Riesgos y mitigaciones}{65}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Estrategia de recorte y definición de terminado}{66}{subsection.13.5}%
+\contentsline {section}{\numberline {14}Conclusiones y Recomendaciones}{67}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Conclusiones}{67}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Recomendaciones}{67}{subsection.14.2}%
+\contentsline {section}{\numberline {15}Referencias}{68}{section.15}%
+\contentsline {section}{\numberline {16}Anexos}{72}{section.16}%
+\contentsline {section}{Anexo A. Cuestionario de requerimientos}{73}{section*.7}%
+\contentsline {subsection}{I. Datos generales}{73}{section*.8}%
+\contentsline {subsection}{II. Registro de servicios y caja}{73}{section*.9}%
+\contentsline {subsection}{III. Comisiones y liquidación}{74}{section*.10}%
+\contentsline {subsection}{IV. Propinas}{74}{section*.11}%
+\contentsline {subsection}{V. Clientes}{75}{section*.12}%
+\contentsline {subsection}{VI. Catálogo y precios}{75}{section*.13}%
+\contentsline {subsection}{VII. Reportes, importación y exportación}{75}{section*.14}%
+\contentsline {subsection}{VIII. Uso, conectividad y seguridad}{76}{section*.15}%
+\contentsline {subsection}{IX. Priorización de necesidades}{76}{section*.16}%
+\contentsline {subsection}{X. Observaciones}{76}{section*.17}%
+\contentsline {section}{Anexo B. Cuestionario de usabilidad (SUS, versión en español)}{77}{section*.18}%
+\contentsline {section}{Anexo C. Fichas de observación y de conciliación}{79}{section*.19}%
+\contentsline {subsection}{C.1 Ficha de observación cronometrada}{79}{section*.20}%
+\contentsline {subsection}{C.2 Ficha de conciliación de cálculos}{79}{section*.21}%
+\contentsline {section}{Anexo D. Guía de entrevista semiestructurada}{80}{section*.22}%
+\contentsline {section}{Anexo E. Formato de consentimiento informado}{81}{section*.23}%
+\contentsline {section}{Anexo F. Planilla de ejemplo anonimizada}{82}{section*.24}%
+\contentsline {section}{Anexo G. Ejemplo de cuestionario de requerimientos respondido}{83}{section*.25}%
+\contentsline {section}{Anexo H. Matriz inicial de requisitos funcionales}{85}{section*.26}%
+\contentsline {section}{Anexo I. Historias de usuario para el backlog inicial}{86}{section*.27}%
+\contentsline {section}{Anexo J. Casos de prueba de aceptación}{88}{section*.28}%
+\contentsline {section}{Anexo K. Diseño inicial de API y eventos}{89}{section*.29}%
+\contentsline {section}{Anexo L. Diseño operativo de los flujos n8n}{90}{section*.30}%
+\contentsline {section}{Anexo M. Instrumentos adicionales para el piloto}{91}{section*.31}%
+\contentsline {section}{Anexo N. Lista de preparación para la feria}{92}{section*.32}%
+\contentsline {section}{Anexo O. Fichas de decisión para el caso de feria}{93}{section*.33}%
+\contentsline {section}{Anexo P. Casos de prueba de soporte para decisiones}{94}{section*.34}%
+\contentsline {section}{Anexo Q. Instrumento de evaluación de decisiones}{95}{section*.35}%

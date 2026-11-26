@@ -15,8 +15,8 @@ RF-08 · HU (aviso de cierre, HU-08, en F13) · cap. 10 (K: endpoints de caja)
 
 ## Tareas
 - [ ] **F04-T1 [BE]** `GET /caja/resumen/?desde=&hasta=` consolida cobros por método y descuentos. *RED:* el resumen no coincide con la suma de pagos. *Acept.:* solo cuenta importes confirmados.
-- [ ] **F04-T2 [BE]** `POST /caja/cierres/` registra declarado, diferencia y justificación. *RED:* diferencia ≠ 0 sin justificación. *Acept.:* se rechaza.
-- [ ] **F04-T3 [BE]** Aprobar el cierre emite `caja.cierre_aprobado` al outbox (el publicador queda en F13). *Acept.:* el evento se persiste en la misma transacción.
+- [ ] **F04-T2 [BE]** `POST /caja/cierres/` registra declarado, diferencia y justificación **por método de pago** (una fila por salón, fecha y método; hasta 4 por día). *RED:* diferencia ≠ 0 sin justificación. *Acept.:* se rechaza. **Esquema DB:** se guarda `esperado` (snapshot) y `declarado`; la diferencia se calcula. La BD solo exige justificación al **aprobar**; el servicio la exige ya al registrar. Aprobar requiere `CAJA_CERRAR`.
+- [ ] **F04-T3 [BE]** Aprobar el cierre emite `caja.cierre_aprobado` al outbox (el publicador queda en F13). *Acept.:* el evento se persiste en la misma transacción. **Aclarar:** el nombre del evento es `caja.cierre_aprobado` aquí y `cierre_caja.aprobado` en F13; unificar. Con un cierre por método, la clave única del outbox `(salon, tipo, entidad_id)` emitiría hasta 4 eventos al día: definir si se emite por fila o al completar el día (decisión 9).
 - [ ] **F04-T4 [WEB]** Pantalla de cierre diario: esperado, declarado, diferencia, justificar y aprobar. *Acept.:* flujo completo. **UI parcial (`feat/f04-ui-cierre-caja`):** móvil y web con esperado, efectivo contado, diferencia con palabra, justificación obligatoria y cierre que requiere conexión. Falta la aprobación del cierre y el historial real de cierres.
 
 ## Dependencias
