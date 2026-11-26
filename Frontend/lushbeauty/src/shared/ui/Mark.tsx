@@ -1,4 +1,5 @@
-import { useId } from 'react'
+import { useId, type CSSProperties, type RefObject } from 'react'
+import { MARK_DRAW_RANGES } from './markDraw'
 
 /**
  * Monograma LB: letras Jost; el pie de la L pasa por delante de la B y la corta con un filete de aire.
@@ -37,6 +38,59 @@ export function Mark({ height = 56 }: { height?: number }) {
     >
       <defs dangerouslySetInnerHTML={{ __html: defs }} />
       <g dangerouslySetInnerHTML={{ __html: body }} />
+    </svg>
+  )
+}
+
+const L_D = 'M84 700V0H428V52H139V700Z'
+const L_T = 'translate(-84 700) scale(1 -1)'
+const B_D = /d="(M127 376H[^"]+)"/.exec(MONO.fine.body)?.[1] ?? ''
+const B_T = 'translate(223 700) scale(1 -1)'
+
+interface MarkDrawProps {
+  /** Alto en px. */
+  height: number
+  /** Recibe los trazos en orden (L, B): sirven para mover una «pluma» sobre ellos. */
+  linesRef?: RefObject<Array<SVGPathElement | null>>
+  penRef?: RefObject<SVGGElement | null>
+}
+
+/**
+ * Monograma LB que se dibuja y se rellena según `--p` (0–1) heredado de un ancestro: primero el
+ * contorno de la L, luego el de la B (el pie de la L sigue pasando por delante), y al final el
+ * relleno sube de abajo hacia arriba. Con `--p: 1` es el monograma completo.
+ */
+export function MarkDraw({ height, linesRef, penRef }: MarkDrawProps) {
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '')
+  const m = MONO.fine
+  const cut = `lbd-cut-${uid}`
+  const rise = `lbd-rise-${uid}`
+  const range = (r: readonly [number, number]) => ({ '--s': r[0], '--e': r[1] }) as CSSProperties
+  return (
+    <svg className="lb-mark lb-draw" viewBox={`0 0 ${m.w} ${m.h}`} height={height} width={(height * m.w) / m.h} aria-hidden="true" focusable="false" style={{ overflow: 'visible' }}>
+      <defs>
+        <mask id={cut} maskUnits="userSpaceOnUse" x="-100" y="-100" width="902" height="900">
+          <rect x="-100" y="-100" width="902" height="900" fill="#fff" />
+          <path d={L_D} transform={L_T} fill="#000" stroke="#000" strokeWidth="30" strokeLinejoin="miter" />
+        </mask>
+        <mask id={rise} maskUnits="userSpaceOnUse" x="-100" y="-100" width="902" height="900">
+          <rect className="lb-draw__rise" x="-100" y="-100" width="902" height="900" fill="#fff" style={range(MARK_DRAW_RANGES.fill)} />
+        </mask>
+      </defs>
+      <g mask={`url(#${rise})`} fill="currentColor">
+        <g mask={`url(#${cut})`}><path d={B_D} transform={B_T} /></g>
+        <path d={L_D} transform={L_T} />
+      </g>
+      <g className="lb-draw__lines" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <path className="lb-draw__line" pathLength={1} d={L_D} transform={L_T} style={range(MARK_DRAW_RANGES.l)} ref={(el) => { if (linesRef?.current) linesRef.current[0] = el }} />
+        <g mask={`url(#${cut})`}>
+          <path className="lb-draw__line" pathLength={1} d={B_D} transform={B_T} style={range(MARK_DRAW_RANGES.b)} ref={(el) => { if (linesRef?.current) linesRef.current[1] = el }} />
+        </g>
+      </g>
+      <g ref={penRef} className="lb-draw__pen">
+        <circle r="30" className="lb-draw__glow" />
+        <circle r="9" className="lb-draw__dot" />
+      </g>
     </svg>
   )
 }

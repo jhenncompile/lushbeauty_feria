@@ -3,7 +3,9 @@ import { ROUTES, useDocumentTitle } from '../../../shared/layout'
 import { useReveal } from '../../../shared/motion'
 import { ART, Backdrop, ServiceRow, Stat, Wordmark } from '../../../shared/ui'
 import { DecisionDemo } from '../components/DecisionDemo'
+import { FooterScene } from '../components/FooterScene'
 import { HeroScene, InkLine } from '../components/HeroScene'
+import { ScrollThread } from '../components/ScrollThread'
 import { CHAPTERS, FAQ, SERVICES, STEPS } from '../fixtures'
 
 const SERVICE_NAMES = ['Manicura', 'Pedicura', 'Depilación', 'Cejas', 'Pestañas', 'Lush Little Princess']
@@ -237,14 +239,12 @@ export function LandingPage() {
 
       </main>
 
-      <section className="noir rel" style={{ overflow: 'hidden' }}>
-        <Backdrop opacity={0.35} />
-        <div className="mark-bg" aria-hidden="true" style={{ right: '-4%', top: '-6%', color: '#1c1c1c' }}><Wordmark variant="mark" size={620} /></div>
+      <FooterScene>
         <div className="wrap above stack--lg stack" style={{ paddingBlock: 'var(--space-10)', alignItems: 'flex-start' }}>
           <h2 className="display-xl reveal" style={{ maxWidth: '14ch' }}>Cierre la semana con las cuentas claras.</h2>
           <Link className="lb-btn lb-btn--primary reveal" to={ROUTES.login}>Ingresar</Link>
         </div>
-        <footer className="wrap above" style={{ paddingBlock: 'var(--space-7)', borderTop: '1px solid var(--hairline)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 'var(--space-5)', alignItems: 'flex-end' }}>
+        <footer className="wrap above" style={{ background: 'var(--surface)', paddingBlock: 'var(--space-7)', borderTop: '1px solid var(--hairline)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 'var(--space-5)', alignItems: 'flex-end' }}>
           <div className="stack" style={{ gap: 'var(--space-3)' }}>
             <Wordmark size={16} />
             <p className="t-caption">Lush Beauty Smart · Santa Cruz de la Sierra, Bolivia</p>
@@ -255,7 +255,8 @@ export function LandingPage() {
             Proyecto académico · Universidad Autónoma Gabriel René Moreno · Economía para la gestión · Semestre 2 – 2026
           </p>
         </footer>
-      </section>
+      </FooterScene>
+      <ScrollThread />
     </div>
   )
 }
