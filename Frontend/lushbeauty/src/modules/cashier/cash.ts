@@ -14,6 +14,8 @@ export interface CashApi {
   /** El cierre final se registra en línea. */
   canClose: boolean
   closed: boolean
+  /** Marca los errores visibles y dice si el cierre es posible, sin cerrar (para confirmar antes). */
+  validate: () => boolean
   close: () => boolean
 }
 

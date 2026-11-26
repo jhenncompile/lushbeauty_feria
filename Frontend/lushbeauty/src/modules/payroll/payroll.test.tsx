@@ -16,6 +16,8 @@ describe('Liquidación semanal (móvil)', () => {
   it('aprobar lleva a la pantalla de aprobada con total y avisos', async () => {
     renderApp('/nomina')
     await userEvent.click(screen.getByRole('button', { name: 'Aprobar liquidación' }))
+    expect(screen.getByRole('dialog', { name: '¿Aprobar la liquidación?' })).toHaveTextContent('No se puede deshacer')
+    await userEvent.click(screen.getByRole('button', { name: 'Sí, aprobar' }))
     expect(screen.getByRole('heading', { name: 'Liquidación aprobada' })).toBeInTheDocument()
     expect(screen.getByText('Bs 817')).toBeInTheDocument()
     expect(screen.getByText(/Error: no se pudo enviar el aviso/)).toBeInTheDocument()
@@ -24,10 +26,21 @@ describe('Liquidación semanal (móvil)', () => {
   it('un aviso fallido se reintenta sin afectar la liquidación', async () => {
     renderApp('/nomina')
     await userEvent.click(screen.getByRole('button', { name: 'Aprobar liquidación' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Sí, aprobar' }))
     await userEvent.click(screen.getByRole('button', { name: 'Reintentar aviso a Katherine' }))
+    expect(screen.getByRole('dialog', { name: 'Aviso reenviado' })).toHaveTextContent('Katherine')
+    await userEvent.click(screen.getByRole('button', { name: 'Entendido' }))
     expect(screen.queryByText(/Error: no se pudo enviar/)).not.toBeInTheDocument()
     expect(screen.getAllByText('Enviado')).toHaveLength(3)
     expect(screen.getByRole('heading', { name: 'Liquidación aprobada' })).toBeInTheDocument()
+  })
+
+  it('«Volver» en la confirmación no aprueba', async () => {
+    renderApp('/nomina')
+    await userEvent.click(screen.getByRole('button', { name: 'Aprobar liquidación' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Volver' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Aprobar liquidación' })).toBeEnabled()
   })
 
   it('sin conexión no deja aprobar y lo explica', () => {
@@ -102,6 +115,9 @@ describe('Nómina (web)', () => {
   it('aprobar cambia el estado y retira el botón', async () => {
     renderApp('/web/nomina')
     await userEvent.click(screen.getByRole('button', { name: 'Aprobar liquidación' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Sí, aprobar' }))
+    expect(screen.getByRole('dialog', { name: 'Comprobantes emitidos' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Entendido' }))
     expect(screen.getByText('Liquidación aprobada')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Aprobar liquidación' })).not.toBeInTheDocument()
   })

@@ -2,9 +2,11 @@ import { formatBs } from '../../../shared/money'
 import { ADMIN_TABS, MobileScreen, ROUTES } from '../../../shared/layout'
 import { Button, Field, Stat, Tag } from '../../../shared/ui'
 import { useCashClose } from '../cash'
+import { useCloseCashFlow } from '../components/useCloseCashFlow'
 
 export function CierreCajaPage() {
   const cash = useCashClose()
+  const flow = useCloseCashFlow()
   const result = cash.reconciliation
   const status = result?.cashStatus
   return (
@@ -18,7 +20,7 @@ export function CierreCajaPage() {
           <Tag tone="ok">Caja cerrada</Tag>
         ) : (
           <>
-            <Button block onClick={() => cash.close()} disabled={!cash.canClose}>
+            <Button block onClick={flow.request} disabled={!cash.canClose}>
               Cerrar caja
             </Button>
             <p className="t-caption" style={{ textAlign: 'center' }}>
@@ -95,6 +97,7 @@ export function CierreCajaPage() {
         error={cash.justificationError}
       />
       <p className="t-caption">QR y transferencia se toman iguales a lo esperado en esta maqueta.</p>
+      {flow.dialogs}
     </MobileScreen>
   )
 }

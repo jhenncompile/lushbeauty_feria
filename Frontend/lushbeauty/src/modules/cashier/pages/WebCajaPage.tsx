@@ -2,11 +2,13 @@ import { formatBs } from '../../../shared/money'
 import { WebScreen } from '../../../shared/layout'
 import { Button, Field, Stat, Tag } from '../../../shared/ui'
 import { useCashClose } from '../cash'
+import { useCloseCashFlow } from '../components/useCloseCashFlow'
 import { LAST_CLOSES } from '../fixtures'
 import { DiffText } from './DiffText'
 
 export function WebCajaPage() {
   const cash = useCashClose()
+  const flow = useCloseCashFlow()
   const result = cash.reconciliation
   return (
     <WebScreen>
@@ -80,7 +82,7 @@ export function WebCajaPage() {
             {cash.closed ? (
               <Tag tone="ok">Caja cerrada</Tag>
             ) : (
-              <Button onClick={() => cash.close()} disabled={!cash.canClose}>
+              <Button onClick={flow.request} disabled={!cash.canClose}>
                 Cerrar caja
               </Button>
             )}
@@ -124,6 +126,7 @@ export function WebCajaPage() {
           </section>
         </aside>
       </div>
+      {flow.dialogs}
     </WebScreen>
   )
 }
