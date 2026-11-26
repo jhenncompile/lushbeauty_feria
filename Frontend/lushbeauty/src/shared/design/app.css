@@ -57,7 +57,7 @@ body { background: var(--surface); }
 .banner__brand { margin: 0; font: 400 13px/18px var(--font-sans); letter-spacing: .16em; opacity: .9; }
 .banner__descriptor { margin: 4px 0 0; font: 500 6px/10px var(--font-sans); letter-spacing: .24em; text-transform: uppercase; opacity: .6; }
 .banner__art { position: absolute; pointer-events: none; }
-.banner__art--rollup { left: -92px; top: 180px; width: 560px; height: 448px; }
+.banner__art--rollup { left: -118px; top: 140px; width: 560px; height: 448px; }
 .banner__art--wide { left: 552px; top: -18px; width: 544px; height: 435px; }
 .banner__message { position: absolute; left: 30px; right: 30px; top: 680px; }
 .banner__wide .banner__message { left: 64px; right: auto; top: 120px; width: 420px; }
