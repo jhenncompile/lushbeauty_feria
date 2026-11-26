@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { ROUTES, useDocumentTitle } from '../../../shared/layout'
 import { useReveal } from '../../../shared/motion'
-import { ART, Backdrop, Profile, ServiceRow, Stat, Wordmark } from '../../../shared/ui'
+import { ART, Backdrop, ServiceRow, Stat, Wordmark } from '../../../shared/ui'
 import { DecisionDemo } from '../components/DecisionDemo'
+import { HeroScene, InkLine } from '../components/HeroScene'
 import { CHAPTERS, FAQ, SERVICES, STEPS } from '../fixtures'
 
 const SERVICE_NAMES = ['Manicura', 'Pedicura', 'Depilación', 'Cejas', 'Pestañas', 'Lush Little Princess']
@@ -24,13 +25,14 @@ export function LandingPage() {
           <div className="lb-nav__actions"><Link className="lb-nav__link" to={ROUTES.login}>Ingresar</Link></div>
         </header>
       <main>
-      <section className="noir hero-full">
-        <Profile src={ART.cover} className="hero-art" opacity={0.9} />
+      <HeroScene>
         <div className="wrap above" style={{ paddingBottom: 'var(--space-8)' }}>
           <p className="eyebrow rise d1">Lush Beauty Smart · Caja y nómina</p>
-          <h1 style={{ margin: 'var(--space-5) 0 0' }}>
-            <span className="display-2xl rise d2" style={{ display: 'block', maxWidth: '11ch' }}>El arte del detalle,</span>
-            <span className="display-2xl rise d3" style={{ display: 'block', color: 'var(--ink-muted)', maxWidth: '14ch' }}>con las cuentas claras.</span>
+          <h1 aria-label="El arte del detalle, con las cuentas claras." style={{ margin: 'var(--space-5) 0 0' }}>
+            <InkLine start={0.28} end={0.4} tone="var(--ink)">El arte del</InkLine>
+            <InkLine start={0.38} end={0.5} tone="var(--ink)">detalle,</InkLine>
+            <InkLine start={0.48} end={0.64} tone="var(--ink-muted)">con las cuentas</InkLine>
+            <InkLine start={0.62} end={0.76} tone="var(--ink-muted)">claras.</InkLine>
           </h1>
           <div className="row rise d5" style={{ marginTop: 'var(--space-7)' }}>
             <Link className="lb-btn lb-btn--primary" to={ROUTES.login}>Ingresar</Link>
@@ -42,7 +44,7 @@ export function LandingPage() {
           <span className="t-caption">Belleza en la silla. Exactitud en la caja.</span>
           <span className="t-caption" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)' }}><span className="live" aria-hidden="true" />Desplácese</span>
         </div>
-      </section>
+      </HeroScene>
 
       <section className="marquee" aria-hidden="true">
         <div className="marquee__track" aria-hidden="true">
