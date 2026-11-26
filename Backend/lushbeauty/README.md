@@ -7,7 +7,7 @@ apps/<modulo>/{domain,services,api,persistence,events,tests}  contracts.py  READ
 shared/                         contexto de salón (tenancy) y middleware, sin lógica de negocio
 ```
 
-Módulos hoy: `identity`, `audit`.
+Módulos hoy: `identity`, `audit`, `catalog`, `sales`.
 
 ## Aislamiento por salón
 Dos capas: `SalonScopedManager` (ORM) y RLS en PostgreSQL (`app.salon_id`). El rol de la base que usa la app
