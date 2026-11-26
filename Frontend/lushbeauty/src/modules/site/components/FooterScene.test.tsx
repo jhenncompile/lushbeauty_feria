@@ -20,6 +20,7 @@ describe('Cierre con monograma', () => {
     vi.stubGlobal('innerHeight', 1000)
     const spy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ top: 1000 - 450, height: 1000 } as DOMRect)
     const { container } = render(<MemoryRouter><FooterScene><p>x</p></FooterScene></MemoryRouter>)
+    // Al montar toma el valor real sin animar desde 0.
     expect(container.querySelector<HTMLElement>('.foot-scene')?.style.getPropertyValue('--p')).toBe('0.5000')
     spy.mockRestore()
   })
@@ -30,6 +31,6 @@ describe('ScrollThread', () => {
     const { container } = render(<div><ScrollThread /></div>)
     const svg = container.querySelector('svg.thread')
     expect(svg).toHaveAttribute('aria-hidden', 'true')
-    expect(container.querySelector('.thread__line')).toBeNull()
+    expect(container.querySelector('.thread__brush')).toBeNull()
   })
 })
