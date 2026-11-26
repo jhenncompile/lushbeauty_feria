@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ROUTES, useDocumentTitle } from '../../../shared/layout'
-import { ART, Backdrop, Button, Field, Wordmark } from '../../../shared/ui'
+import { ART, Button, Field, Wordmark } from '../../../shared/ui'
 import { homeRouteFor } from '../domain/access'
 import { useSession } from '../session'
 import type { Role } from '../types'
@@ -35,7 +35,6 @@ export function LoginPage() {
   return (
     <div className="lx web login">
       <section className="lb-on-inverse rel login__brand">
-        <Backdrop />
         <div className="login__orbit" aria-hidden="true">
           <img src={ART.profile} alt="" style={{ width: '100%', height: '100%' }} />
         </div>

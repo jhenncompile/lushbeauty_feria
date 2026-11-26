@@ -12,7 +12,7 @@ export function WebPanelPage() {
   return (
     <WebScreen>
       <div className="masthead noir" style={{ marginInline: 'calc(var(--space-7) * -1)', paddingInline: 'var(--space-7)' }}>
-        <img className="masthead__plate" src={ART.waves} alt="" aria-hidden="true" />
+        <img className="masthead__plate" src={ART.pattern} alt="" aria-hidden="true" />
         <div className="masthead__in">
           <p className="eyebrow">{PERIOD}</p>
           <h1 className="display-xl">Panel financiero</h1>
