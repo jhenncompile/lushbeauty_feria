@@ -115,10 +115,12 @@ describe('Ventas (web)', () => {
   it('anular exige motivo y conserva la fila como Anulada', async () => {
     renderAt('/web/ventas')
     await userEvent.click(screen.getByRole('button', { name: 'Anular servicio de Bs 112' }))
+    expect(screen.getByRole('dialog', { name: /¿Anular/ })).toHaveTextContent('La venta no se borra')
     await userEvent.click(screen.getByRole('button', { name: 'Confirmar anulación' }))
     expect(screen.getByText('Error: Escriba el motivo de la anulación.')).toBeInTheDocument()
     await userEvent.type(screen.getByLabelText('Motivo de la anulación'), 'Cobro duplicado')
     await userEvent.click(screen.getByRole('button', { name: 'Confirmar anulación' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(screen.getByText('Anulada · ajuste registrado')).toBeInTheDocument()
     expect(screen.getAllByText('Manicura gel').length).toBeGreaterThan(0)
   })

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { formatBs } from '../../../shared/money'
 import { ROUTES, WebScreen } from '../../../shared/layout'
-import { Button, Field, Panel, Tag } from '../../../shared/ui'
+import { Button, Dialog, Field, Tag } from '../../../shared/ui'
 import { getPolicy } from '../../catalog'
 import { calculateSale, formatPercent } from '../domain/sale'
 import { WEB_SALES } from '../fixtures'
@@ -33,6 +33,11 @@ export function WebVentasPage() {
     setSelectedId(id)
     setCancelling(false)
     setReason('')
+    setReasonError(undefined)
+  }
+
+  function closeCancel() {
+    setCancelling(false)
     setReasonError(undefined)
   }
 
@@ -159,25 +164,39 @@ export function WebVentasPage() {
           </p>
           {selected.status === 'anulada' ? (
             <Tag>Anulada · ajuste registrado</Tag>
-          ) : cancelling ? (
-            <Panel>
-              <Field
-                label="Motivo de la anulación"
-                value={reason}
-                onChange={(event) => setReason(event.target.value)}
-                error={reasonError}
-              />
-              <Button variant="danger" onClick={confirmCancel}>
-                Confirmar anulación
-              </Button>
-              <Button variant="link" onClick={() => setCancelling(false)}>
-                No anular
-              </Button>
-            </Panel>
           ) : (
-            <Button variant="danger" onClick={() => setCancelling(true)}>
-              Anular servicio de {formatBs(calc.chargedCents, { decimals: calc.chargedCents % 100 ? 2 : 0 })}
-            </Button>
+            <>
+              <Button variant="danger" onClick={() => setCancelling(true)}>
+                Anular servicio de {formatBs(calc.chargedCents, { decimals: calc.chargedCents % 100 ? 2 : 0 })}
+              </Button>
+              <Dialog
+                open={cancelling}
+                eyebrow="Confirmar"
+                title={`¿Anular ${selected.serviceName} de ${selected.specialistName}?`}
+                onClose={closeCancel}
+                actions={
+                  <>
+                    <Button variant="link" onClick={closeCancel}>
+                      No anular
+                    </Button>
+                    <Button variant="danger" onClick={confirmCancel}>
+                      Confirmar anulación
+                    </Button>
+                  </>
+                }
+              >
+                <p>
+                  La venta no se borra: queda como <strong>Anulada</strong> y se registra un ajuste por{' '}
+                  {formatBs(calc.chargedCents)}.
+                </p>
+                <Field
+                  label="Motivo de la anulación"
+                  value={reason}
+                  onChange={(event) => setReason(event.target.value)}
+                  error={reasonError}
+                />
+              </Dialog>
+            </>
           )}
         </aside>
       </div>
