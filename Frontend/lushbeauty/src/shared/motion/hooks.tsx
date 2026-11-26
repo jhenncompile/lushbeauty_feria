@@ -36,7 +36,7 @@ export function useCountUp(target: number, duration?: number): number {
  * mientras la pista pasa. En pantallas angostas avanza mientras el bloque sale de la vista.
  * Sin movimiento (preferencia del sistema) queda en 1: todo visible y completo.
  */
-export function useScrollProgress<T extends HTMLElement>(onProgress?: (p: number) => void) {
+export function useScrollProgress<T extends HTMLElement>(onProgress?: (p: number) => void, range: 'pin' | 'enter' = 'pin') {
   const ref = useRef<T>(null)
   useLayoutEffect(() => {
     const node = ref.current
@@ -50,6 +50,14 @@ export function useScrollProgress<T extends HTMLElement>(onProgress?: (p: number
     const update = () => {
       frame = 0
       const box = node.getBoundingClientRect()
+      if (range === 'enter') {
+        // De que el bloque asoma por abajo hasta cubrir la fracción `share` de su alto (más corta en pantallas angostas).
+        const share = window.matchMedia('(min-width: 1001px)').matches ? 0.9 : 0.5
+        const p = Math.min(1, Math.max(0, (window.innerHeight - box.top) / (box.height * share)))
+        node.style.setProperty('--p', p.toFixed(4))
+        onProgress?.(p)
+        return
+      }
       const pinned = window.matchMedia('(min-width: 1001px)').matches
       const span = pinned ? box.height - window.innerHeight : box.height * 0.4
       const p = span > 0 ? Math.min(1, Math.max(0, -box.top / span)) : 1
@@ -67,6 +75,6 @@ export function useScrollProgress<T extends HTMLElement>(onProgress?: (p: number
       window.removeEventListener('resize', request)
       if (frame) cancelAnimationFrame(frame)
     }
-  }, [onProgress])
+  }, [onProgress, range])
   return ref
 }
