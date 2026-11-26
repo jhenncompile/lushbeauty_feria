@@ -34,9 +34,19 @@ Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10
 
 **Mobile Flutter (réplica de las vistas de especialista, decisión «ambas»)**: implementadas con datos sintéticos en `Mobile/lushbeauty`: ingreso, Hoy, registrar/descuento/guardado, sincronización, Mi liquidación y cierre de caja. Ver `Mobile/lushbeauty/DESIGN.md`.
 
-**Backend**: F00-T2/T3/T4 · F01-T1..T4 · F02-T1..T3 · F03-T1..T4 · F04-T1..T3 · F05-T1/T2 · F06-T1..T5 · F07-T1/T2 · F08-T1..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T1/T2/T3/T5.
+**Backend**: F00-T2/T3/T4/T7 · F01-T1..T4, T7 · F02-T1..T3 · F03-T1..T4 · F04-T1..T3 · F05-T1/T2 · F06-T1..T5 · F07-T1/T2 · F08-T1..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T1/T2/T3/T5.
 
 **Transversal**: F00-T1/T6 · F03-T7 · F05-T6 · F06-T7 · F10-T7 · F11-T6 · F13-T4 · F14-T1..T6.
+
+## Revisión contra el esquema de BD (`db/LushBeauty_feria_postgresql.sql`)
+
+El esquema ya implementa varias reglas en la base (RLS, auditoría por trigger, inmutabilidad de líneas y liquidaciones, RN-04, idempotencia, outbox único). Efecto en el backlog:
+
+- **Reducidas:** F00-T4 (auditoría: queda la inyección de contexto y las acciones que el trigger no ve), F03-T1 (la propina es columna de la línea), F06-T4 (el modelo existe), F08-T1 (sin vigencia ni fuente), F10-T4 (sin tabla propia), F12-T1 (reglas fijas) y F12-T3 (dos estados).
+- **Añadidas:** F00-T7 (migración base e historial por usuario) y F01-T7 (CRUD de catálogo, clientes y especialistas, que nadie construía).
+- **Con restricciones nuevas en el criterio de aceptación:** F00-T2/T3, F01-T1..T4, F02-T1/T2, F03-T2..T3, F04-T2/T3, F05-T1/T2, F06-T2/T3/T5, F08-T2/T4, F09-T1/T2, F10-T1/T3, F13-T1/T2, F14-T1/T3.
+- **Cambia la implementación:** (a) la fórmula de la liquidación incluye el sueldo fijo; (b) el cierre de caja es por método; (c) los alias de F06 salen de filas aceptadas; (d) un escenario no existe sin su `decision`; (e) los procesos sin petición (outbox) deben fijar `app.salon_id`; (f) la excepción de un trigger hace rollback, así que auditoría de intentos y alertas se escriben en otra transacción.
+- **Resuelve a medias decisiones abiertas:** la 2 (la base se elige por regla), la 1 (propuesta `round(x, 2)`), la 3 (el costo es nullable, pero sin vigencia). Las 4, 5 y 6 siguen abiertas; el esquema trae pesos por defecto 40/25/20/15, que son de ejemplo.
 
 ## Cobertura de requisitos
 
@@ -86,3 +96,14 @@ DSS-08 (proyección de caja) · DSS-09 (optimización de capacidad) · DSS-10 (p
 4. Pesos de la matriz multicriterio → F09.
 5. Fecha real de la feria, para revisar el plan de 8 semanas → todo el calendario.
 6. Día de corte semanal y política de propinas → F03.
+7. **Esquema único vs. módulos** (nueva). `db/…sql` tiene unas 60 claves foráneas compuestas entre tablas de lo que serían módulos distintos (p. ej. `linea_venta` → `servicio`, `especialista`, `regla_comision`, `liquidacion`), y la tabla `decision` es compartida por F08, F09 y F10. `AGENTS.md` regla 2 prohíbe FK entre módulos. Hay que decidir: relajar la regla (misma BD, FK dentro de ella, módulos que hablan por servicios) o rediseñar el esquema. Afecta F00-T7 y a toda la estructura de `persistence/`.
+8. Umbral de descuento sin aprobación y registro de quién lo aprueba (el esquema solo tiene el tope de 50 %) → F01-T2.
+9. Eventos de cierre de caja: por método o al completar el día; nombre único del evento → F04-T3, F13.
+10. Dónde guardar la causa de un conflicto de sincronización → F05-T2.
+11. ¿Aliases aprendidos de filas aceptadas entran en el MVP? (hoy están fuera) → F06-T2.
+12. Pago de las ventas importadas sin método de pago en la planilla → F06-T5.
+13. Costos de materiales con vigencia y fuente: ¿tabla nueva o solo costo actual + snapshot? → F08-T1.
+14. Estructura de la recomendación (texto serializado o `jsonb`) → F10-T1.
+15. Estados de alerta: ¿bastan PENDIENTE/REVISADA? → F12-T3.
+
+**Cambios propuestos al esquema (no aplicados):** `regla_comision.motivo` y restricción `EXCLUDE` de solapamiento; `tipo_alerta` con conflicto de sincronización; trigger de inmutabilidad en `decision`; `descuento` con aprobador; `jsonb` para la recomendación.

@@ -14,9 +14,9 @@ Alertas explicables basadas en reglas que ayudan a revisar anomalías sin acusar
 RF-17 · HU-07 · RN-07 · `GET /api/v1/alertas/`
 
 ## Tareas
-- [ ] **F12-T1 [BE]** Motor de reglas configurable. *RED:* descuento superior al umbral. *Acept.:* genera alerta con regla, valor y umbral.
+- [ ] **F12-T1 [BE]** *(reducida)* Reglas fijas en código, una por `tipo_alerta` (6 tipos: DESCUENTO_EXCEDIDO, PAGO_DESCUADRADO, DIFERENCIA_CAJA, SIN_CATALOGO, EDICION_TARDIA, CLAVE_REPETIDA); el esquema no tiene tabla de reglas, solo `salon.descuento_maximo`. Regla, valor y umbral van en `alerta.detalle`. *RED:* descuento superior al umbral. *Acept.:* genera alerta con regla, valor y umbral.
 - [ ] **F12-T2 [BE]** Alertas sin efecto contable. *RED:* una alerta intenta modificar una venta. *Acept.:* RN-07, solo se marca revisión.
-- [ ] **F12-T3 [BE]** Estados (pendiente, en revisión, resuelta) y permisos. *Acept.:* HU-07, se puede marcar como revisada.
+- [ ] **F12-T3 [BE]** Estados (pendiente, en revisión, resuelta) y permisos. *Acept.:* HU-07, se puede marcar como revisada. **Esquema DB (reducida):** solo hay PENDIENTE y REVISADA; «en revisión» y «resuelta» requerirían un cambio al esquema (decisión 15). Las alertas se escriben en una transacción aparte: si la operación que las causó hace rollback (p. ej. un trigger rechaza), la alerta se perdería.
 - [ ] **F12-T4 [WEB]** Bandeja de alertas. *Acept.:* la copia no usa lenguaje de culpa («conducta indebida»).
 - [ ] **F12-T5 [BE]** *(opcional)* Notebook experimental de Isolation Forest con casos etiquetados. *Acept.:* queda marcado «prueba de concepto».
 

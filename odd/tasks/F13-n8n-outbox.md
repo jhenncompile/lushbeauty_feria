@@ -14,8 +14,8 @@ Tres avisos automáticos (cierre, liquidación, alerta) que nunca duplican ni al
 RF-18 · HU-08 · CP-08, CP-10 · RN-08 · Anexos K y L
 
 ## Tareas
-- [ ] **F13-T1 [BE]** `EventoOutbox` escrito en la misma transacción que la aprobación. *RED:* aprobar sin evento persistido. *Acept.:* siempre existe el evento.
-- [ ] **F13-T2 [BE]** Publicador con firma, `event_id` único y reintentos limitados. *RED:* CP-08, emitir dos veces `cierre_caja.aprobado`. *Acept.:* un solo aviso lógico.
+- [ ] **F13-T1 [BE]** `EventoOutbox` escrito en la misma transacción que la aprobación. *RED:* aprobar sin evento persistido. *Acept.:* siempre existe el evento. **Esquema DB:** `evento_outbox` (estado, intentos, último error, índice parcial de pendientes) ya existe y no se audita.
+- [ ] **F13-T2 [BE]** Publicador con firma, `event_id` único y reintentos limitados. *RED:* CP-08, emitir dos veces `cierre_caja.aprobado`. *Acept.:* un solo aviso lógico (la restricción `UNIQUE (salon, tipo, entidad_id)` ya lo garantiza; `event_id` = `id`). El publicador es un proceso sin petición: fija `app.salon_id` por salón (RLS) y toma lotes con `FOR UPDATE SKIP LOCKED`.
 - [ ] **F13-T3 [BE]** Enlace temporal autorizado para el PDF individual. *RED:* el enlace vence o lo usa otra persona. *Acept.:* se rechaza; no se envían importes personales en el evento.
 - [ ] **F13-T4 [TRANS]** Flujos n8n E1, E2 y E3 exportados al repo, secretos fuera. *Acept.:* HU-08, el flujo registra éxito o fallo y permite reintentar.
 - [ ] **F13-T5 [BE]** Fallo de correo. *RED:* CP-10, error al enviar el PDF. *Acept.:* la nómina persiste y la notificación se reintenta.

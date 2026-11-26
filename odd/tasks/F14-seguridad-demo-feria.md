@@ -14,9 +14,9 @@ Un sistema que se puede demostrar con seguridad y sin sorpresas ante el jurado.
 RF-19, RF-20 · RN-06, RN-08 · CP-06 · Anexo N · cap. 14 (guion, riesgos, definición de terminado)
 
 ## Tareas
-- [ ] **F14-T1 [TRANS]** Suite de seguridad: cruce de salones, especialista vs nómina ajena, enlaces vencidos, logs sin datos sensibles. *Acept.:* pasa en CI.
+- [ ] **F14-T1 [TRANS]** Suite de seguridad: cruce de salones, especialista vs nómina ajena, enlaces vencidos, logs sin datos sensibles. *Acept.:* pasa en CI. Incluir: la RLS con un rol sin privilegios, los triggers (RN-02, RN-04, RN-05, DSS-CP07) probados directo contra la BD, y que una especialista no lee la nómina de otra (la RLS no lo cubre).
 - [ ] **F14-T2 [TRANS]** Datos ficticios y cuenta demo sin acceso a datos reales de nómina. *Acept.:* la base real nunca se usa en la demo.
-- [ ] **F14-T3 [TRANS]** Respaldo y restauración en un entorno de prueba. *Acept.:* se prueba la restauración, no solo el respaldo.
+- [ ] **F14-T3 [TRANS]** Respaldo y restauración en un entorno de prueba. *Acept.:* se prueba la restauración, no solo el respaldo; tras restaurar siguen activos triggers, RLS y vistas.
 - [ ] **F14-T4 [TRANS]** Ejecución completa de CP-01..10 y DSS-CP01..07 con evidencia. *Acept.:* informe con aprobado/fallido y causas.
 - [ ] **F14-T5 [TRANS]** Guion de 5 minutos (Excel → importar → venta offline → dashboard → What-If → matriz → Insight → aprobación), video de contingencia, teléfono con PWA y cola verificada. *Acept.:* ensayo completo cronometrado.
 - [ ] **F14-T6 [TRANS]** Definición de terminado por función: UI usable, validaciones, pruebas, permisos y documentación. *Acept.:* checklist firmado por feature.
