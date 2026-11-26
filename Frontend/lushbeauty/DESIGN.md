@@ -192,7 +192,7 @@ El README define una sola PWA y excluye una app nativa. El equipo decidió imple
 - **Láminas** de línea fina del salón (`public/art/`), siempre decorativas (`alt=""`) y detrás del contenido (`.above`):
   - `pattern.svg`: artículos del salón (tijeras, secador, peine, esmalte, pincel, labial, pestañas, espejo) dispersos en línea fina; fondo a sangre con `Backdrop`.
   - `profile.svg`: perfil femenino de línea continua (cuello, hombros y tres mechones), trazo de 4 px sobre 709, con `Profile`; no gira, se dibuja al cargar (sin animación con `prefers-reduced-motion`). Va en la portada de la landing, el ingreso (centrado sobre el logo) y el banner de feria. Una sola vez por pantalla.
-  - `cover.svg`: portada de la landing; el mismo perfil con los artículos del salón (pestañas, peine, espejo, tijeras, secador, pincel, esmalte, labial) dispersos en arco abierto detrás de la cabeza, a distancias distintas. Se usa con `<Profile src={ART.cover} />`.
+  - `cover.svg`: portada de la landing; el mismo perfil con los artículos del salón (pestañas, peine, espejo, tijeras, secador, pincel, esmalte, labial) esparcidos alrededor del perfil (arriba, a los costados y abajo) con tamaños y giros distintos, sin formar un arco. Se usa con `<Profile src={ART.cover} />`.
   - `tools.svg`: tijeras, pincel, esmalte, peine y pestañas; tarjeta del catálogo en la landing.
 - **Monograma LB** en `Wordmark` (`variant="mark" | "stacked"`).
 - **Movimiento con animejs** (`shared/motion`): entrada escalonada de bloques (`useEnter`, ya en `MobileScreen` y `WebScreen`), aparición al scroll (`useReveal`, `.reveal`) y cifras que cuentan hasta su valor exacto (`CountBs`). Todo se apaga con `prefers-reduced-motion`; sin JS quedan los keyframes de `lush.css`.
