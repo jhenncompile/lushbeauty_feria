@@ -12,9 +12,9 @@ export function BannerFeriaPage() {
       <div className="banner__piece">
         <p className="eyebrow">Roll-up · 85 × 200 cm · vertical</p>
         <div className="bn banner__rollup">
-          <img className="fill-img" src={ART.contour} alt="" aria-hidden="true" style={{ opacity: 0.5 }} />
+          <img className="fill-img" src={ART.waves} alt="" aria-hidden="true" style={{ opacity: 0.5 }} />
           <div aria-hidden="true" style={{ position: 'absolute', left: '50%', top: '44%', width: 560, height: 560, margin: '-280px 0 0 -280px', zIndex: -1, opacity: 0.75 }}>
-            <img className="spin" src={ART.orbit} alt="" style={{ width: '100%', height: '100%' }} />
+            <img src={ART.profile} alt="" style={{ width: '100%', height: '100%' }} />
           </div>
           <div className="above"><Wordmark size={22} tone="inverse" /></div>
           <div className="above banner__block">
@@ -35,7 +35,7 @@ export function BannerFeriaPage() {
       <div className="banner__piece">
         <p className="eyebrow">Banner horizontal · 300 × 100 cm · fondo de stand</p>
         <div className="bn banner__wide">
-          <img className="fill-img" src={ART.contour} alt="" aria-hidden="true" style={{ opacity: 0.55 }} />
+          <img className="fill-img" src={ART.waves} alt="" aria-hidden="true" style={{ opacity: 0.55 }} />
           <div className="above" style={{ background: '#0a0a0a', padding: '28px 0' }}>
             <p className="eyebrow">Lush Beauty Smart</p>
             <h2 className="banner__title" style={{ fontSize: 76, lineHeight: 0.98, letterSpacing: '-.025em', marginTop: 14 }}>

@@ -1,2 +1,9 @@
-/** Láminas de línea fina de la casa (vectoriales, en /art). Decorativas: siempre ocultas a lectores de pantalla. */
-export const ART = { contour: '/art/contour.svg', orbit: '/art/orbit.svg' } as const
+/** Láminas de línea fina del salón (vectoriales, en /art). Decorativas: siempre ocultas a lectores de pantalla. */
+export const ART = {
+  /** Mechones de cabello que caen ondulando; fondo a sangre. */
+  waves: '/art/waves.svg',
+  /** Perfil femenino a un solo trazo; se dibuja al cargar. */
+  profile: '/art/profile.svg',
+  /** Herramientas del salón: tijeras, pincel, esmalte, peine y pestañas. */
+  tools: '/art/tools.svg',
+} as const

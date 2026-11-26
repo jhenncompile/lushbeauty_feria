@@ -37,7 +37,7 @@ export function LoginPage() {
       <section className="lb-on-inverse rel login__brand">
         <Backdrop />
         <div className="login__orbit" aria-hidden="true">
-          <img className="spin" src={ART.orbit} alt="" style={{ width: '100%', height: '100%' }} />
+          <img src={ART.profile} alt="" style={{ width: '100%', height: '100%' }} />
         </div>
         <span />
         <div className="above rise d2">

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ROUTES, useDocumentTitle } from '../../../shared/layout'
 import { useReveal } from '../../../shared/motion'
-import { ART, Backdrop, Orbit, ServiceRow, Stat, Wordmark } from '../../../shared/ui'
+import { ART, Backdrop, Profile, ServiceRow, Stat, Wordmark } from '../../../shared/ui'
 import { DecisionDemo } from '../components/DecisionDemo'
 import { CHAPTERS, FAQ, SERVICES, STEPS } from '../fixtures'
 
@@ -25,8 +25,7 @@ export function LandingPage() {
         </header>
       <main>
       <section className="noir hero-full">
-        <Backdrop />
-        <Orbit style={{ right: '-6%', top: '50%', width: 'min(760px, 78vw)', aspectRatio: '1', marginTop: -380 }} opacity={0.7} />
+        <Profile style={{ right: '-2%', top: '50%', width: 'min(760px, 78vw)', aspectRatio: '1', marginTop: -380 }} opacity={0.8} />
         <div className="wrap above" style={{ paddingBottom: 'var(--space-8)' }}>
           <p className="eyebrow rise d1">Lush Beauty Smart · Caja y nómina</p>
           <h1 style={{ margin: 'var(--space-5) 0 0' }}>
@@ -119,7 +118,7 @@ export function LandingPage() {
         <div className="wrap cols cols--12" style={{ alignItems: 'stretch' }}>
           <div className="stack">
             <div className="plate plate--light" style={{ minHeight: 560, flex: 1 }}>
-              <img className="spin" src={ART.orbit} alt="" aria-hidden="true" style={{ padding: 'var(--space-6)', filter: 'invert(1)' }} />
+              <img src={ART.tools} alt="" aria-hidden="true" style={{ objectFit: 'contain', padding: 'var(--space-6)', filter: 'invert(1)', animation: 'none' }} />
             </div>
           </div>
           <div className="stack--lg stack" style={{ justifyContent: 'center' }}>
@@ -183,7 +182,6 @@ export function LandingPage() {
       </section>
 
       <section id="decisiones" className="noir rel" style={{ paddingBlock: 'var(--space-10)' }}>
-        <Orbit style={{ left: '-12%', top: '50%', width: 'min(820px, 80vw)', aspectRatio: '1', marginTop: -410 }} opacity={0.35} />
         <div className="wrap cols" style={{ alignItems: 'center' }}>
           <div className="stack above">
             <p className="eyebrow reveal">Decision Studio</p>
