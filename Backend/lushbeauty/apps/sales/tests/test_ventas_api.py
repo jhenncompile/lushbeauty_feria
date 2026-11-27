@@ -169,12 +169,15 @@ class AnulacionTests(VentasTestCase):
         self.assertEqual(self.anular(venta_id).status_code, 200)
         self.assertEqual(self.anular(venta_id).status_code, 409)
 
-    def test_una_venta_ya_liquidada_no_se_anula(self):
+    def test_una_venta_ya_liquidada_se_anula_y_su_linea_conserva_la_liquidacion(self):
+        """F03-T3: la anulación ya no se bloquea; `payroll` la descuenta con un AJUSTE en la siguiente semana."""
         venta_id = self.crear()
+        liquidacion = uuid.uuid4()
         with tenancy.en_salon(self.salon_a):
-            LineaVenta.objects.filter(venta_id=venta_id).update(liquidacion_id=uuid.uuid4())
-        r = self.anular(venta_id)
-        self.assertEqual((r.status_code, r.json()["codigo"]), (409, "venta_liquidada"))
+            LineaVenta.objects.filter(venta_id=venta_id).update(liquidacion_id=liquidacion)
+        self.assertEqual(self.anular(venta_id).status_code, 200)
+        with tenancy.en_salon(self.salon_a):
+            self.assertEqual(set(LineaVenta.objects.filter(venta_id=venta_id).values_list("liquidacion_id", flat=True)), {liquidacion})
 
     def test_anular_venta_de_otro_salon_da_404(self):
         venta_id = self.crear()

@@ -1,6 +1,6 @@
 # F13 · n8n-outbox
 
-**Plataformas:** BE · TRANS  **Semana:** 7  **Estado:** T1 (cierre) y T2 hechos; falta liquidación (F03) y los flujos n8n
+**Plataformas:** BE · TRANS  **Semana:** 7  **Estado:** T1 y T2 hechos (cierre y liquidación); faltan flujos n8n, enlace temporal y vista
 
 ## Resultado esperado
 Tres avisos automáticos (cierre, liquidación, alerta) que nunca duplican ni alteran la contabilidad.
@@ -14,7 +14,7 @@ Tres avisos automáticos (cierre, liquidación, alerta) que nunca duplican ni al
 RF-18 · HU-08 · CP-08, CP-10 · RN-08 · Anexos K y L
 
 ## Tareas
-- [~] **F13-T1 [BE]** `EventoOutbox` escrito en la misma transacción que la aprobación. *RED:* aprobar sin evento persistido. *Acept.:* siempre existe el evento. **Esquema DB:** `evento_outbox` (estado, intentos, último error, índice parcial de pendientes) ya existe y no se audita. **Parcial** (`feat/f13-outbox-base`): módulo `notifications` con `publicar_evento`, que exige estar dentro de la transacción de la operación y es idempotente; el evento se deshace si la operación falla. **Falta cablearlo** a la aprobación de cierre de caja y de liquidación (decisión 9 y F03). **Hecho para cierre de caja** (`feat/f04-t3-evento-cierre`): `aprobar_cierre` escribe `cierre_caja.aprobado` en la misma transacción (probado: si el evento falla, no se aprueba). **Falta:** cablear la aprobación de liquidación cuando exista F03-T3.
+- [x] **F13-T1 [BE]** `EventoOutbox` escrito en la misma transacción que la aprobación. *RED:* aprobar sin evento persistido. *Acept.:* siempre existe el evento. **Esquema DB:** `evento_outbox` (estado, intentos, último error, índice parcial de pendientes) ya existe y no se audita. **Parcial** (`feat/f13-outbox-base`): módulo `notifications` con `publicar_evento`, que exige estar dentro de la transacción de la operación y es idempotente; el evento se deshace si la operación falla. **Falta cablearlo** a la aprobación de cierre de caja y de liquidación (decisión 9 y F03). **Hecho** para cierre de caja (`cierre_caja.aprobado`, uno por método) y para liquidación (`liquidacion.aprobada`): el evento se escribe en la misma transacción que la aprobación y, si falla, no se aprueba (probado en ambos).
 - [x] **F13-T2 [BE]** Publicador con firma, `event_id` único y reintentos limitados. *RED:* CP-08, emitir dos veces `cierre_caja.aprobado`. *Acept.:* un solo aviso lógico (la restricción `UNIQUE (salon, tipo, entidad_id)` ya lo garantiza; `event_id` = `id`). El publicador es un proceso sin petición: fija `app.salon_id` por salón (RLS) y toma lotes con `FOR UPDATE SKIP LOCKED`. **Hecho:** `publicar_outbox` con firma HMAC, `event_id` = `id`, lotes con `SKIP LOCKED`, `app.salon_id` por salón y reintentos limitados (5) hasta `FALLIDO`; CP-08 pasa. **Auditoría 2026-11-26:** Existe: Publicador firmado con HMAC, lotes con `SKIP LOCKED`, reintentos limitados y CP-08 probado. Falta: Probarlo contra una instancia real de n8n. Bloquea: T4.
 - [ ] **F13-T3 [BE]** Enlace temporal autorizado para el PDF individual. *RED:* el enlace vence o lo usa otra persona. *Acept.:* se rechaza; no se envían importes personales en el evento. **Auditoría 2026-11-26:** Existe: Nada. Falta: Enlace temporal autorizado para el PDF, sin importes personales en el evento. Bloquea: F03-T4.
 - [ ] **F13-T4 [TRANS]** Flujos n8n E1, E2 y E3 exportados al repo, secretos fuera. *Acept.:* HU-08, el flujo registra éxito o fallo y permite reintentar. **Auditoría 2026-11-26:** Existe: Nada. Falta: Flujos E1, E2 y E3 exportados, con la verificación de firma y la deduplicación por `event_id`. Bloquea: Instancia de n8n.
@@ -30,4 +30,4 @@ Backend (`feat/f13-outbox-base`): `manage.py test` 202 pruebas OK en el contened
 Auditoría 2026-11-26: estado contrastado con el código; suite de backend 202 pruebas OK. La UI web solo consume `POST /api/auth/login`; Flutter no llama a la red.
 
 ## Siguiente paso
-F13-T4 (flujos n8n, empezando por E1 de cierre) y, con F03-T3, el evento de liquidación.
+F13-T4 (flujos n8n E1/E2, con verificación de firma y deduplicación por `event_id`) y F13-T3 (enlace temporal) cuando exista el PDF de F03-T4.

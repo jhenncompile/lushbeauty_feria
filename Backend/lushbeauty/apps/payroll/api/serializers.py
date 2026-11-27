@@ -18,6 +18,10 @@ class GenerarEntrada(serializers.Serializer):
     fecha = serializers.DateField()
 
 
+class PagoEntrada(serializers.Serializer):
+    comprobante_url = serializers.URLField(max_length=300, required=False, allow_blank=True, allow_null=True)
+
+
 class FiltroListado(serializers.Serializer):
     especialista_id = serializers.UUIDField(required=False)
     desde = serializers.DateField(required=False)
@@ -26,7 +30,7 @@ class FiltroListado(serializers.Serializer):
 
 def movimiento_salida(m) -> dict:
     return {"id": str(m.id), "tipo": m.tipo, "monto": str(m.monto), "motivo": m.motivo, "fecha": m.fecha.isoformat(),
-            "especialista_id": str(m.especialista_id)}
+            "especialista_id": str(m.especialista_id), "ajuste_de_linea_id": str(m.ajuste_de_linea_id) if m.ajuste_de_linea_id else None}
 
 
 def liquidacion_salida(l) -> dict:
@@ -35,6 +39,7 @@ def liquidacion_salida(l) -> dict:
         "periodo_inicio": l.periodo_inicio.isoformat(), "periodo_fin": l.periodo_fin.isoformat(),
         "sueldo_fijo": str(l.sueldo_fijo), "total_comision": str(l.total_comision), "total_propina": str(l.total_propina),
         "total_movimientos": str(l.total_movimientos), "neto": str(l.neto), "excedente": str(l.excedente),
+        "aprobada_en": l.aprobada_en.isoformat() if l.aprobada_en else None, "comprobante_url": l.comprobante_url,
     }
 
 

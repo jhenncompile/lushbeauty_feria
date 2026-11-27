@@ -7,4 +7,6 @@ urlpatterns = [
     path("nomina/liquidaciones/", views.LiquidacionesView.as_view()),
     path("nomina/liquidaciones/generar/", views.GenerarView.as_view()),
     path("nomina/liquidaciones/<uuid:liquidacion_id>/", views.LiquidacionDetalleView.as_view()),
+    path("nomina/liquidaciones/<uuid:liquidacion_id>/aprobar/", views.AprobarView.as_view()),
+    path("nomina/liquidaciones/<uuid:liquidacion_id>/pagar/", views.PagarView.as_view()),
 ]

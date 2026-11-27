@@ -1,8 +1,8 @@
 # payroll
 
-**Responsabilidad:** deducciones y liquidación semanal por especialista (F03). Hoy: deducciones (T1) y borrador de liquidación (T2). La aprobación, el PDF y la vista propia llegan con F03-T3, T4 y T6.
+**Responsabilidad:** deducciones y liquidación semanal por especialista (F03). Hoy: deducciones (T1), borrador (T2) y aprobación, pago y ajustes (T3). El PDF y la vista propia llegan con F03-T4 y T6.
 
-**Contrato público** (`contracts.py`): `registrar_deduccion`, `generar_borrador`, `listar`, `periodo_de`, `NominaRechazada`.
+**Contrato público** (`contracts.py`): `registrar_deduccion`, `generar_borrador`, `aprobar`, `marcar_pagada`, `listar`, `periodo_de`, `NominaRechazada`.
 Lee ventas por `sales.lineas_para_liquidar`, el sueldo fijo por `catalog.obtener_especialista` y el día de corte por `identity.dia_corte_del_salon`; no consulta tablas ajenas.
 
 **Tablas propias:** `liquidacion` y `movimiento_nomina` (RLS por salón, auditoría automática). Referencias por ID, sin ForeignKey.
@@ -17,9 +17,13 @@ Lee ventas por `sales.lineas_para_liquidar`, el sueldo fijo por `catalog.obtener
 - Solo cuentan líneas de ventas CONFIRMADAS del día de servicio dentro de la semana. Las líneas anteriores a F02 (sin snapshot) aportan 0 y se avisan en `lineas_sin_comision`.
 - Defensas en la base (RN-05): la liquidación aprobada solo admite pasar a `PAGADA` y adjuntar el comprobante; nada entra a una aprobada; ni liquidaciones ni movimientos se borran; el neto debe cuadrar con la fórmula.
 
-**API** (permiso `LIQUIDACION_APROBAR`, hoy solo la administradora): `POST /api/v1/nomina/deducciones/`, `POST /api/v1/nomina/liquidaciones/generar/` (`especialista_id`, `fecha`),
-`GET /api/v1/nomina/liquidaciones/?especialista_id=&desde=&hasta=`, `GET /api/v1/nomina/liquidaciones/<id>/` (con detalle por línea y movimiento mientras sea borrador).
+**Aprobar y congelar (RN-05):** `POST …/<id>/aprobar/` recalcula con lo último, liga a la liquidación las líneas de venta (`liquidacion_id`) y los movimientos del período, la marca `APROBADA` (con quién y cuándo), deja `APROBAR` en la bitácora y el evento `liquidacion.aprobada` en el outbox, **todo en una transacción**: si el evento falla, no se aprueba nada. El evento lleva solo el id y el período, sin importes ni la especialista. `POST …/<id>/pagar/` pasa `APROBADA` → `PAGADA` y guarda el `comprobante_url` (es lo único que admite una aprobada). El detalle de una aprobada sale de lo que quedó ligado a ella.
 
-**Eventos:** no emite ni consume ninguno todavía; el evento de liquidación aprobada (E2) llega con F03-T3.
+**Venta anulada después de liquidarse (decisión del usuario):** anular **no se bloquea**. La liquidación aprobada no cambia; la primera liquidación de una semana posterior descuenta `−(comisión + propina)` de la línea como un movimiento `AJUSTE`, con el motivo de la anulación, una sola vez por línea (`ajuste_de_linea_id` único). Supuesto sin validar: el ajuste descuenta la comisión y la propina de esa línea, no el sueldo fijo.
 
-**Pendiente:** aprobar y congelar (T3), marcar pagada, ajuste por venta ya liquidada, PDF/XLSX (T4), vista «Mi liquidación» de la especialista con `LIQUIDACION_VER_PROPIA` (T6), generar para todas las especialistas de una vez.
+**API** (permiso `LIQUIDACION_APROBAR`, hoy solo la administradora): `POST /api/v1/nomina/deducciones/`, `POST /api/v1/nomina/liquidaciones/generar/` (`especialista_id`, `fecha`), `POST …/liquidaciones/<id>/aprobar/`, `POST …/liquidaciones/<id>/pagar/`,
+`GET /api/v1/nomina/liquidaciones/?especialista_id=&desde=&hasta=`, `GET /api/v1/nomina/liquidaciones/<id>/` (con detalle por línea y movimiento).
+
+**Eventos que emite:** `liquidacion.aprobada` (entidad = id de la liquidación; payload `periodo_inicio`, `periodo_fin`).
+
+**Pendiente:** PDF/XLSX (T4), vista «Mi liquidación» de la especialista con `LIQUIDACION_VER_PROPIA` (T6), generar para todas las especialistas de una vez.

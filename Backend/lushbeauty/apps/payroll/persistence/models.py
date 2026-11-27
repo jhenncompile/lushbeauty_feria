@@ -71,12 +71,16 @@ class MovimientoNomina(models.Model):
     motivo = models.CharField(max_length=250)
     fecha = models.DateField()
     registrado_por = models.UUIDField(null=True, blank=True)
+    # Línea de venta anulada que este AJUSTE descuenta (por ID, sin ForeignKey). Única: un ajuste por línea.
+    ajuste_de_linea_id = models.UUIDField(null=True, blank=True)
 
     objects = SalonScopedManager()
 
     class Meta:
         db_table = "movimiento_nomina"
         constraints = [
+            models.UniqueConstraint(fields=["ajuste_de_linea_id"], condition=Q(ajuste_de_linea_id__isnull=False),
+                                    name="uq_movimiento_ajuste_linea"),
             models.CheckConstraint(condition=~Q(monto=0), name="ck_movimiento_nomina_01"),
             models.CheckConstraint(condition=Q(tipo="AJUSTE") | Q(monto__lt=0), name="ck_movimiento_nomina_02"),
         ]
