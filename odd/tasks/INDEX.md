@@ -12,7 +12,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5/T6 sin conectar | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | Backend T1–T3 hecho; UI T4 solo lectura | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | UI parcial (T5/T6 maqueta) | Protegida |
-| 2 | [F04 cierre-caja](F04-cierre-caja.md) | UI parcial (T4 maqueta) | Protegida |
+| 2 | [F04 cierre-caja](F04-cierre-caja.md) | Backend T1/T2 hecho (T3 espera a F13); UI T4 maqueta | Protegida |
 | 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | UI parcial (T5 maqueta) | Alta |
 | 3 | [F06 importador-excel](F06-importador-excel.md) | UI parcial (T6 maqueta) | Alta |
 | 3-4 | [F07 dashboard-financiero](F07-dashboard-financiero.md) | UI parcial (T3 maqueta) | Alta |
