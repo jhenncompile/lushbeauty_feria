@@ -98,44 +98,52 @@
 \contentsline {subsection}{\numberline {12.4}Metodología de desarrollo del producto}{59}{subsection.12.4}%
 \contentsline {subsection}{\numberline {12.5}Procedimiento de análisis}{60}{subsection.12.5}%
 \contentsline {subsection}{\numberline {12.6}Limitaciones del estudio}{60}{subsection.12.6}%
-\contentsline {section}{\numberline {13}Cronograma de Actividades, Demostración y Riesgos}{62}{section.13}%
-\contentsline {subsection}{\numberline {13.1}Cronograma general — Diagrama de Gantt}{62}{subsection.13.1}%
-\contentsline {subsection}{\numberline {13.2}Plan técnico complementario de ocho semanas}{64}{subsection.13.2}%
-\contentsline {subsubsection}{\numberline {13.2.1}Hitos y condiciones de salida}{64}{subsubsection.13.2.1}%
-\contentsline {subsection}{\numberline {13.3}Guion de demostración ante el jurado}{65}{subsection.13.3}%
-\contentsline {subsection}{\numberline {13.4}Riesgos y mitigaciones}{65}{subsection.13.4}%
-\contentsline {subsection}{\numberline {13.5}Estrategia de recorte y definición de terminado}{66}{subsection.13.5}%
-\contentsline {section}{\numberline {14}Conclusiones y Recomendaciones}{67}{section.14}%
-\contentsline {subsection}{\numberline {14.1}Conclusiones}{67}{subsection.14.1}%
-\contentsline {subsection}{\numberline {14.2}Recomendaciones}{67}{subsection.14.2}%
-\contentsline {section}{\numberline {15}Referencias}{68}{section.15}%
-\contentsline {section}{\numberline {16}Anexos}{72}{section.16}%
-\contentsline {section}{Anexo A. Cuestionario de requerimientos}{73}{section*.7}%
-\contentsline {subsection}{I. Datos generales}{73}{section*.8}%
-\contentsline {subsection}{II. Registro de servicios y caja}{73}{section*.9}%
-\contentsline {subsection}{III. Comisiones y liquidación}{74}{section*.10}%
-\contentsline {subsection}{IV. Propinas}{74}{section*.11}%
-\contentsline {subsection}{V. Clientes}{75}{section*.12}%
-\contentsline {subsection}{VI. Catálogo y precios}{75}{section*.13}%
-\contentsline {subsection}{VII. Reportes, importación y exportación}{75}{section*.14}%
-\contentsline {subsection}{VIII. Uso, conectividad y seguridad}{76}{section*.15}%
-\contentsline {subsection}{IX. Priorización de necesidades}{76}{section*.16}%
-\contentsline {subsection}{X. Observaciones}{76}{section*.17}%
-\contentsline {section}{Anexo B. Cuestionario de usabilidad (SUS, versión en español)}{77}{section*.18}%
-\contentsline {section}{Anexo C. Fichas de observación y de conciliación}{79}{section*.19}%
-\contentsline {subsection}{C.1 Ficha de observación cronometrada}{79}{section*.20}%
-\contentsline {subsection}{C.2 Ficha de conciliación de cálculos}{79}{section*.21}%
-\contentsline {section}{Anexo D. Guía de entrevista semiestructurada}{80}{section*.22}%
-\contentsline {section}{Anexo E. Formato de consentimiento informado}{81}{section*.23}%
-\contentsline {section}{Anexo F. Planilla de ejemplo anonimizada}{82}{section*.24}%
-\contentsline {section}{Anexo G. Ejemplo de cuestionario de requerimientos respondido}{83}{section*.25}%
-\contentsline {section}{Anexo H. Matriz inicial de requisitos funcionales}{85}{section*.26}%
-\contentsline {section}{Anexo I. Historias de usuario para el backlog inicial}{86}{section*.27}%
-\contentsline {section}{Anexo J. Casos de prueba de aceptación}{88}{section*.28}%
-\contentsline {section}{Anexo K. Diseño inicial de API y eventos}{89}{section*.29}%
-\contentsline {section}{Anexo L. Diseño operativo de los flujos n8n}{90}{section*.30}%
-\contentsline {section}{Anexo M. Instrumentos adicionales para el piloto}{91}{section*.31}%
-\contentsline {section}{Anexo N. Lista de preparación para la feria}{92}{section*.32}%
-\contentsline {section}{Anexo O. Fichas de decisión para el caso de feria}{93}{section*.33}%
-\contentsline {section}{Anexo P. Casos de prueba de soporte para decisiones}{94}{section*.34}%
-\contentsline {section}{Anexo Q. Instrumento de evaluación de decisiones}{95}{section*.35}%
+\contentsline {section}{\numberline {13}Implementación y Resultados Técnicos}{62}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Alcance construido}{62}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Verificación ejecutada}{63}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Ciclo operativo demostrable}{64}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Estado por funcionalidad}{64}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Decisiones abiertas con valor provisional}{65}{subsection.13.5}%
+\contentsline {subsection}{\numberline {13.6}Limitaciones del avance}{65}{subsection.13.6}%
+\contentsline {section}{\numberline {14}Cronograma de Actividades, Demostración y Riesgos}{66}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Cronograma general — Diagrama de Gantt}{66}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Plan técnico complementario de ocho semanas}{68}{subsection.14.2}%
+\contentsline {subsubsection}{\numberline {14.2.1}Hitos y condiciones de salida}{68}{subsubsection.14.2.1}%
+\contentsline {subsection}{\numberline {14.3}Guion de demostración ante el jurado}{69}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Riesgos y mitigaciones}{69}{subsection.14.4}%
+\contentsline {subsection}{\numberline {14.5}Estrategia de recorte y definición de terminado}{70}{subsection.14.5}%
+\contentsline {section}{\numberline {15}Conclusiones y Recomendaciones}{71}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Conclusiones}{71}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}Limitaciones}{72}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Recomendaciones}{73}{subsection.15.3}%
+\contentsline {section}{\numberline {16}Referencias}{74}{section.16}%
+\contentsline {section}{\numberline {17}Anexos}{78}{section.17}%
+\contentsline {section}{Anexo A. Cuestionario de requerimientos}{79}{section*.7}%
+\contentsline {subsection}{I. Datos generales}{79}{section*.8}%
+\contentsline {subsection}{II. Registro de servicios y caja}{79}{section*.9}%
+\contentsline {subsection}{III. Comisiones y liquidación}{80}{section*.10}%
+\contentsline {subsection}{IV. Propinas}{80}{section*.11}%
+\contentsline {subsection}{V. Clientes}{81}{section*.12}%
+\contentsline {subsection}{VI. Catálogo y precios}{81}{section*.13}%
+\contentsline {subsection}{VII. Reportes, importación y exportación}{81}{section*.14}%
+\contentsline {subsection}{VIII. Uso, conectividad y seguridad}{82}{section*.15}%
+\contentsline {subsection}{IX. Priorización de necesidades}{82}{section*.16}%
+\contentsline {subsection}{X. Observaciones}{82}{section*.17}%
+\contentsline {section}{Anexo B. Cuestionario de usabilidad (SUS, versión en español)}{83}{section*.18}%
+\contentsline {section}{Anexo C. Fichas de observación y de conciliación}{85}{section*.19}%
+\contentsline {subsection}{C.1 Ficha de observación cronometrada}{85}{section*.20}%
+\contentsline {subsection}{C.2 Ficha de conciliación de cálculos}{85}{section*.21}%
+\contentsline {section}{Anexo D. Guía de entrevista semiestructurada}{86}{section*.22}%
+\contentsline {section}{Anexo E. Formato de consentimiento informado}{87}{section*.23}%
+\contentsline {section}{Anexo F. Planilla de ejemplo anonimizada}{88}{section*.24}%
+\contentsline {section}{Anexo G. Ejemplo de cuestionario de requerimientos respondido}{89}{section*.25}%
+\contentsline {section}{Anexo H. Matriz inicial de requisitos funcionales}{91}{section*.26}%
+\contentsline {section}{Anexo I. Historias de usuario para el backlog inicial}{92}{section*.27}%
+\contentsline {section}{Anexo J. Casos de prueba de aceptación}{94}{section*.28}%
+\contentsline {section}{Anexo K. Diseño inicial de API y eventos}{95}{section*.29}%
+\contentsline {section}{Anexo L. Diseño operativo de los flujos n8n}{96}{section*.30}%
+\contentsline {section}{Anexo M. Instrumentos adicionales para el piloto}{97}{section*.31}%
+\contentsline {section}{Anexo N. Lista de preparación para la feria}{98}{section*.32}%
+\contentsline {section}{Anexo O. Fichas de decisión para el caso de feria}{99}{section*.33}%
+\contentsline {section}{Anexo P. Casos de prueba de soporte para decisiones}{100}{section*.34}%
+\contentsline {section}{Anexo Q. Instrumento de evaluación de decisiones}{101}{section*.35}%

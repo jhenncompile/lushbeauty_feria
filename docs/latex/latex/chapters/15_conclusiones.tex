@@ -4,11 +4,44 @@
 
 Lush Beauty Smart DSS transforma una propuesta de digitalización de caja y nómina en un sistema de soporte para decisiones sin abandonar el caso empresarial que le da sentido. El aporte distintivo radica en conectar datos operativos con modelos de contribución, escenarios What-If, comparación multicriterio, análisis de sensibilidad, explicaciones y seguimiento. Los resultados de una simulación dependen de sus supuestos, y la aprobación final permanece en manos de la administradora.
 
+Al 26 de noviembre de 2026 el núcleo transaccional está construido y verificado (Capítulo~\ref{cap:implementacion}): el backend pasa 295 pruebas sobre PostgreSQL, la aplicación web 120 y la móvil 32. La Tabla~\ref{tab:concl_1} relaciona ese avance con los objetivos específicos (Capítulo~\ref{cap:objetivos}).
+
+\vspace{8pt}{\small\setstretch{1.0}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.43\linewidth}}
+\caption{Estado de los objetivos específicos}\label{tab:concl_1}\\
+\toprule
+\textbf{Objetivo específico} & \textbf{Estado} & \textbf{Evidencia o pendiente} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Objetivo específico} & \textbf{Estado} & \textbf{Evidencia o pendiente} \\
+\midrule\endhead
+\bottomrule\endfoot
+\bottomrule\endlastfoot
+Describir el proceso actual e identificar inconsistencias de la planilla & Documentado & Capítulo~\ref{cap:problema}; la cuantificación del impacto depende de registros reales anonimizados. \\
+Comparar sistemas similares & Cumplido & Capítulo~\ref{cap:benchmarking}. \\
+Establecer requisitos, datos y arquitectura & Cumplido & Capítulo~\ref{cap:arquitectura} y esquema de base de datos implementado. \\
+Núcleo transaccional con decimal, reglas versionadas, roles y auditoría & Cumplido en backend & Ventas, comisiones, caja y nómina con RLS y auditoría; la interfaz aún no lo consume por completo. \\
+PWA con registro sin conexión y sin duplicados & Parcial & Idempotencia por UUID probada; faltan cola local y sincronizador. \\
+Importador de Excel & Pendiente & Sin backend; esquema listo. \\
+Lush Insight & Pendiente & Sin proveedor de IA ni backend. \\
+Lush Guard & Pendiente & Reglas definidas; sin implementación. \\
+Automatización con n8n & Parcial & Eventos de cierre y liquidación en la bandeja de salida; faltan los flujos. \\
+Modelo de contribución y simulador What-If & Parcial & Falta la vigencia del costo y el simulador. \\
+Decision Studio, motor de recomendación y registro de decisiones & Pendiente & Diseñado en el Capítulo~\ref{cap:decision}; sin backend. \\
+Evaluar el efecto y la calidad de las decisiones & Pendiente & Requiere pilotaje y mediciones posteriores. \\
+\end{longtable}}
+\nota{Elaboración propia con base en el Capítulo~\ref{cap:implementacion} y en el backlog del repositorio.}
+
+Se concluye, por tanto, que la parte de caja y nómina cumple su finalidad técnica y es defendible ante el jurado como sistema funcional en el servidor. Las hipótesis sobre reducción de tiempo y de errores, y sobre la utilidad del soporte para decisiones, \textbf{no están contrastadas}: el proyecto cuenta con diseño e instrumentos para hacerlo, pero aún no con mediciones.
 
 La contribución de inteligencia artificial debe ser explicable y limitada: puede ayudar a reconocer nombres inconsistentes, recuperar información autorizada y redactar resúmenes; no puede establecer pagos ni crear cifras económicas por inferencia. Las alertas estadísticas y el machine learning deberán permanecer como experimentos hasta contar con historial suficiente y evaluación contra casos etiquetados. La automatización también estará sometida a eventos aprobados y a mecanismos de seguridad, reintento y auditoría.
 
+\subsection{Limitaciones}
+
+Las principales limitaciones son tres: la interfaz permanece mayormente en maqueta sin conectar al API; el módulo de decisiones no tiene backend, de modo que el ciclo completo de decisión exigido por los criterios de aceptación globales aún no es reproducible; y varias reglas de negocio operan con valores provisionales sin validar con la administradora. Además, no se ha medido cobertura de código, carga ni conexión intermitente.
 
 \subsection{Recomendaciones}
 
-Se recomienda validar con la administradora las reglas de comisiones y costos directos, acordar los criterios y pesos de decisión, obtener registros reales anonimizados, fijar la fecha de presentación y construir primero un ciclo completo de decisión reproducible. Los resultados de desempeño, aceptación e impacto económico se documentarán únicamente cuando existan mediciones posteriores. La meta académica es demostrar utilidad de decisión y calidad metodológica, no solo complejidad tecnológica.
+Se recomienda, en este orden: (1) conectar la interfaz a los endpoints ya existentes de ventas, caja, comisiones y nómina para eliminar las maquetas; (2) construir primero un ciclo completo de decisión reproducible (contribución, tres escenarios, matriz, sensibilidad, recomendación y aprobación humana), que es el eje protegido del proyecto; (3) validar con la administradora las reglas de comisiones, costos directos, redondeo, umbral de descuento, semana de liquidación y los criterios y pesos de decisión; (4) obtener registros reales anonimizados para la línea base; y (5) fijar la fecha de presentación. Si el tiempo no alcanza, se aplazarán la IA generativa avanzada, el aprendizaje automático y la optimización, y se mantendrá un único flujo mínimo de n8n.
 
+Los resultados de desempeño, aceptación e impacto económico se documentarán únicamente cuando existan mediciones posteriores. La meta académica es demostrar utilidad de decisión y calidad metodológica, no solo complejidad tecnológica.
