@@ -8,21 +8,21 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 
 | Sem | Feature | Estado | Prioridad |
 |---|---|---|---|
-| 1-2 | [F00 foundation](F00-foundation.md) | Hecho (incluye T7); falta ver la CI en GitHub | Protegida |
-| 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5/T6 sin conectar | Protegida |
-| 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | Backend T1–T3 hecho; UI T4 solo lectura | Protegida |
-| 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | UI parcial (T5/T6 maqueta) | Protegida |
-| 2 | [F04 cierre-caja](F04-cierre-caja.md) | Backend T1/T2 hecho (T3 espera a F13); UI T4 maqueta | Protegida |
-| 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | UI parcial (T5 maqueta) | Alta |
-| 3 | [F06 importador-excel](F06-importador-excel.md) | UI parcial (T6 maqueta) | Alta |
-| 3-4 | [F07 dashboard-financiero](F07-dashboard-financiero.md) | Backend T1/T2 hecho; UI T3 maqueta | Alta |
-| 4 | [F08 dss-contribucion-whatif](F08-dss-contribucion-whatif.md) | UI parcial (T5/T6 maqueta) | Protegida (ciclo DSS) |
-| 5 | [F09 dss-matriz-sensibilidad](F09-dss-matriz-sensibilidad.md) | UI parcial (T4 maqueta) | Protegida (ciclo DSS) |
-| 6 | [F10 dss-recomendacion-decisiones](F10-dss-recomendacion-decisiones.md) | UI parcial (T5/T6 maqueta) | Protegida (ciclo DSS) |
-| 6-7 | [F11 lush-insight](F11-lush-insight.md) | UI parcial (T5 maqueta) | Recortable |
-| 7 | [F12 lush-guard](F12-lush-guard.md) | UI parcial (T4 maqueta) | Recortable |
-| 7 | [F13 n8n-outbox](F13-n8n-outbox.md) | Outbox y publicador hechos (T1 parcial, T2); sin cablear ni flujos n8n | Recortable (un flujo mínimo) |
-| 7-8 | [F14 seguridad-demo-feria](F14-seguridad-demo-feria.md) | pendiente | Protegida |
+| 1-2 | [F00 foundation](F00-foundation.md) | Hecho salvo T1/T6 parciales (CI y PWA en Docker sin verificar); UI solo consume el login | Protegida |
+| 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5/T6 en maqueta sin conectar | Protegida |
+| 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | Backend T1–T3 hecho; T4: API lista, pantalla de lectura con fixtures | Protegida |
+| 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | Backend sin empezar (T2 bloqueada por decisión 6); UI T5/T6 maqueta | Protegida |
+| 2 | [F04 cierre-caja](F04-cierre-caja.md) | Backend T1/T2 hecho; T3 lista para cablear (decisión 9 cerrada); UI T4 maqueta | Protegida |
+| 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | T1 casi hecho (falta `PWA_OFFLINE`); T2 bloqueada por decisión 10; UI T5 maqueta | Alta |
+| 3 | [F06 importador-excel](F06-importador-excel.md) | Backend sin empezar; UI T6 maqueta; decisiones 11 y 12 abiertas | Alta |
+| 3-4 | [F07 dashboard-financiero](F07-dashboard-financiero.md) | Backend T1/T2 hecho; UI T3/T4 maqueta | Alta |
+| 4 | [F08 dss-contribucion-whatif](F08-dss-contribucion-whatif.md) | T1 parcial; sin backend DSS; UI maqueta; decisiones 3, 13 y 14 | Protegida (ciclo DSS) |
+| 5 | [F09 dss-matriz-sensibilidad](F09-dss-matriz-sensibilidad.md) | Sin backend; UI maqueta; decisión 4 | Protegida (ciclo DSS) |
+| 6 | [F10 dss-recomendacion-decisiones](F10-dss-recomendacion-decisiones.md) | Sin backend; UI maqueta; decisión 14 | Protegida (ciclo DSS) |
+| 6-7 | [F11 lush-insight](F11-lush-insight.md) | Sin backend; UI con respuestas fijas; falta proveedor de IA | Recortable |
+| 7 | [F12 lush-guard](F12-lush-guard.md) | Sin backend; UI maqueta; decisión 15 | Recortable |
+| 7 | [F13 n8n-outbox](F13-n8n-outbox.md) | T2 hecho; T1 parcial (falta cablear); sin flujos n8n | Recortable (un flujo mínimo) |
+| 7-8 | [F14 seguridad-demo-feria](F14-seguridad-demo-feria.md) | T1/T2 parciales; resto pendiente | Protegida |
 
 Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10 y un flujo de F13; se aplazan IA generativa avanzada, ML y optimización.
 
@@ -34,9 +34,13 @@ Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10
 
 **Mobile Flutter (réplica de las vistas de especialista, decisión «ambas»)**: implementadas con datos sintéticos en `Mobile/lushbeauty`: ingreso, Hoy, registrar/descuento/guardado, sincronización, Mi liquidación y cierre de caja. Ver `Mobile/lushbeauty/DESIGN.md`.
 
-**Backend**: F00-T2/T3/T4/T7 · F01-T1..T4, T7 · F02-T1..T3 · F03-T1..T4 · F04-T1..T3 · F05-T1/T2 · F06-T1..T5 · F07-T1/T2 · F08-T1..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T1/T2/T3/T5.
+**Backend hecho** (202 pruebas en la suite; módulos `identity`, `audit`, `catalog`, `commissions`, `sales`, `cashier`, `analytics`, `notifications`, `demo`): F00-T2/T3/T4/T7 · F01-T1..T4, T7 · F02-T1..T3 · F04-T1/T2 · F07-T1/T2 · F13-T2.
+**Backend parcial**: F04-T3 (falta el evento) · F05-T1 (falta `PWA_OFFLINE`) · F08-T1 (falta vigencia del costo) · F13-T1 (falta cablear a cierre y liquidación).
+**Backend pendiente**: F03-T1..T4 · F05-T2 · F06-T1..T5 · F08-T2..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T3, T5.
 
-**Transversal**: F00-T1/T6 · F03-T7 · F05-T6 · F06-T7 · F10-T7 · F11-T6 · F13-T4 · F14-T1..T6.
+**Transversal**: hecho F00-T1/T6 parciales, F14-T1/T2 parciales (RLS, triggers y `seed_demo`). Pendiente F03-T7 · F05-T6 · F06-T7 · F10-T7 · F11-T6 · F13-T4 · F14-T3..T6.
+
+**Endpoints que ya existen y la UI todavía no consume** (la web solo llama a `POST /api/auth/login`; Flutter no llama a la red): `/api/auth/me`, `/api/identity/usuarios`, `/api/identity/historial`, `/api/v1/ventas/` (+ detalle y anular), `/api/v1/servicios/`, `/api/v1/especialistas/`, `/api/v1/clientes/`, `/api/v1/comisiones/reglas/`, `/api/v1/caja/resumen/`, `/api/v1/caja/cierres/` (+ aprobar), `/api/v1/analytics/panel/`. Conectarlos es lo que convierte las maquetas de F01, F02, F04 y F07 en pantallas reales.
 
 ## Revisión contra el esquema de BD (`db/LushBeauty_feria_postgresql.sql`)
 
@@ -98,7 +102,7 @@ DSS-08 (proyección de caja) · DSS-09 (optimización de capacidad) · DSS-10 (p
 6. Día de corte semanal y política de propinas → F03.
 7. ~~**Esquema único vs. módulos**~~ **Cerrada: migraciones por módulo** (sin FK entre módulos; `db/…sql` es la referencia). Texto original: `db/…sql` tiene unas 60 claves foráneas compuestas entre tablas de lo que serían módulos distintos (p. ej. `linea_venta` → `servicio`, `especialista`, `regla_comision`, `liquidacion`), y la tabla `decision` es compartida por F08, F09 y F10. `AGENTS.md` regla 2 prohíbe FK entre módulos. Hay que decidir: relajar la regla (misma BD, FK dentro de ella, módulos que hablan por servicios) o rediseñar el esquema. Afecta F00-T7 y a toda la estructura de `persistence/`.
 8. Umbral de descuento sin aprobación y registro de quién lo aprueba (el esquema solo tiene el tope de 50 %) → F01-T2.
-9. Eventos de cierre de caja: por método o al completar el día; nombre único del evento → F04-T3, F13.
+9. ~~Eventos de cierre de caja~~ **Cerrada: un evento por método aprobado, nombre `cierre_caja.aprobado`** (entidad = id del cierre) → F04-T3, F13.
 10. Dónde guardar la causa de un conflicto de sincronización → F05-T2.
 11. ¿Aliases aprendidos de filas aceptadas entran en el MVP? (hoy están fuera) → F06-T2.
 12. Pago de las ventas importadas sin método de pago en la planilla → F06-T5.
