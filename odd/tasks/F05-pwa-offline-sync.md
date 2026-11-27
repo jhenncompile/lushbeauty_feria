@@ -1,6 +1,6 @@
 # F05 · pwa-offline-sync
 
-**Plataformas:** MOB · BE  **Semana:** 3  **Estado:** T1 casi hecho (falta aceptar `PWA_OFFLINE`); T2 bloqueada por la decisión 10; T5 en maqueta; sin cola persistente
+**Plataformas:** MOB · BE  **Semana:** 3  **Estado:** T1 hecho (backend); T2 bloqueada por la decisión 10; UI T5 en maqueta; sin cola persistente
 
 ## Resultado esperado
 Registrar servicios sin internet y sincronizarlos sin crear duplicados.
@@ -14,7 +14,7 @@ Registrar servicios sin internet y sincronizarlos sin crear duplicados.
 RF-10, RF-11 · RN-01 · HU-02 · CP-03, CP-04
 
 ## Tareas
-- [~] **F05-T1 [BE]** Endpoint idempotente: misma clave devuelve el resultado original; validación de permisos, catálogo y descuento. *RED:* CP-03, UUID idéntico dos veces. *Acept.:* una sola venta confirmada. **Esquema DB:** reusa el `UNIQUE (salon_id, uuid_cliente)` de F01-T4; origen `PWA_OFFLINE`. **Auditoría 2026-11-26:** Existe: La idempotencia por UUID ya existe (F01-T4: mismo UUID → una sola venta confirmada, también CP-03) con validación de permisos, catálogo y descuento. Falta: Aceptar `origen = PWA_OFFLINE` en el API y probarlo; confirmar que el reintento devuelve el resultado original. Bloquea: Nada.
+- [x] **F05-T1 [BE]** Endpoint idempotente: misma clave devuelve el resultado original; validación de permisos, catálogo y descuento. *RED:* CP-03, UUID idéntico dos veces. *Acept.:* una sola venta confirmada. **Esquema DB:** reusa el `UNIQUE (salon_id, uuid_cliente)` de F01-T4; origen `PWA_OFFLINE`. **Hecho** (`feat/f05-t1-origen-offline`): el API acepta `origen = PWA_OFFLINE` (rechaza `IMPORTACION` y valores desconocidos); mismas validaciones que la venta web; CP-03: el mismo UUID dos veces deja una sola venta confirmada y el reintento devuelve la original aunque cambie el cuerpo o el origen; una venta de ayer conserva su fecha y la regla de comisión de ese día. **Falta:** que el cliente (T3/T4) envíe el origen y la clave.
 - [ ] **F05-T2 [BE]** Registro de conflictos de sincronización (precio o descuento). *RED:* venta offline con precio vencido. *Acept.:* queda «requiere revisión», no se confirma sola. **Esquema DB (hueco):** existe el estado `REQUIERE_REVISION`, pero no dónde guardar la causa (precio vencido, descuento). Propuesta: nuevo valor `CONFLICTO_SINCRONIZACION` en `tipo_alerta`, con la causa en `detalle`, o una columna en `venta` (decisión 10). **Auditoría 2026-11-26:** Existe: Existe el estado `REQUIERE_REVISION` en `venta`. Falta: Detectar precio vencido o descuento fuera de política al sincronizar y guardar la causa. Bloquea: Decisión 10 (dónde guardar la causa).
 - [ ] **F05-T3 [MOB]** Cola local en IndexedDB con UUID y estado. *RED:* CP-04, cortar internet antes de registrar. *Acept.:* HU-02, registro local pendiente y luego confirmado. **Auditoría 2026-11-26:** Existe: Cola en memoria dentro de `offline/queue.ts` (se pierde al recargar). Falta: IndexedDB con UUID y estado; probar CP-04. Bloquea: Nada técnico.
 - [ ] **F05-T4 [MOB]** Sincronizador con reintentos y *backoff*. *RED:* la red falla tras persistir pero antes de la respuesta. *Acept.:* el reintento devuelve el resultado original. **Auditoría 2026-11-26:** Existe: Simulación de sincronización sin red real. Falta: Sincronizador con reintentos y *backoff* contra `POST /api/v1/ventas/`. Bloquea: F05-T1 (origen), F05-T3.
@@ -29,5 +29,7 @@ UI (parcial, `feat/f05-ui-offline-estados`): `pnpm test` 74 pruebas en verde. Si
 
 Auditoría 2026-11-26: estado contrastado con el código; suite de backend 202 pruebas OK. La UI web solo consume `POST /api/auth/login`; Flutter no llama a la red.
 
+Origen offline (`feat/f05-t1-origen-offline`): 8 pruebas nuevas en `sales/tests/test_offline.py` (origen por defecto, `PWA_OFFLINE`, rechazo de `IMPORTACION`, CP-03, reintento con cuerpo distinto, fecha de ayer, mismas validaciones, listado); suite del backend 216 pruebas OK. No verificado: con un cliente real (no existe todavía) ni con red cortada de verdad.
+
 ## Siguiente paso
-F05-T1 (aceptar `PWA_OFFLINE`); resolver la decisión 10 para T2; luego cola en IndexedDB y sincronizador.
+Resolver la decisión 10 para F05-T2; luego la cola en IndexedDB (T3) y el sincronizador con *backoff* (T4), que ya pueden enviar `origen = PWA_OFFLINE`.
