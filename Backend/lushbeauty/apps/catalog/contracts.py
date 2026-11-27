@@ -36,6 +36,19 @@ def cliente_existe(cliente_id) -> bool:
     return Cliente.objects.filter(id=cliente_id).exists()
 
 
+@dataclass(frozen=True)
+class EspecialistaDTO:
+    id: UUID
+    nombre: str
+    sueldo_fijo: Decimal
+    activo: bool
+
+
+def obtener_especialista(especialista_id) -> EspecialistaDTO | None:
+    e = Especialista.objects.filter(id=especialista_id).first()
+    return None if e is None else EspecialistaDTO(e.id, e.nombre, e.sueldo_fijo, e.activo)
+
+
 def nombres_de_especialistas(ids) -> dict:
     """{especialista_id: nombre} del salón activo."""
     return dict(Especialista.objects.filter(id__in=set(ids)).values_list("id", "nombre"))
