@@ -16,6 +16,6 @@ la segunda llamada devuelve el evento original. El `id` del evento es el `event_
 - Transporte HTTP firmado: `POST` con `X-Lush-Event-Id`, `X-Lush-Timestamp` y `X-Lush-Signature: sha256=HMAC(secreto, "<timestamp>.<cuerpo>")`. n8n debe verificar la firma y deduplicar por `event_id` (la entrega es *al menos una vez*).
 - Configuración por entorno: `N8N_WEBHOOK_URL`, `N8N_WEBHOOK_SECRET`, `OUTBOX_MAX_INTENTOS`. Sin URL o secreto el comando se niega y los eventos quedan pendientes.
 
-**Eventos:** este módulo no emite ninguno propio. Hoy **ningún módulo lo usa todavía**: falta cablear `cashier` (cierre aprobado) y `payroll` (liquidación).
+**Eventos:** este módulo no emite ninguno propio. Hoy lo usa `cashier` (`cierre_caja.aprobado`, uno por método). Falta cablear `payroll` (liquidación aprobada), que aún no existe.
 
 **Pendiente:** enlace temporal para el PDF y sin importes personales en el evento (F13-T3), flujos de n8n (T4), fallo de correo (T5) y la vista de eventos (T6).
