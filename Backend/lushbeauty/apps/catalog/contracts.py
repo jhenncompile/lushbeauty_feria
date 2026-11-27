@@ -36,6 +36,11 @@ def cliente_existe(cliente_id) -> bool:
     return Cliente.objects.filter(id=cliente_id).exists()
 
 
+def nombres_de_especialistas(ids) -> dict:
+    """{especialista_id: nombre} del salón activo."""
+    return dict(Especialista.objects.filter(id__in=set(ids)).values_list("id", "nombre"))
+
+
 def listar_servicios():
     return list(Servicio.objects.order_by("categoria", "nombre"))
 
