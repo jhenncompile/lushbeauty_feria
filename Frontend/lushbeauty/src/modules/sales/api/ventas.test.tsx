@@ -2,7 +2,8 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderApp } from '../../../test/renderApp'
-import { toCents, toSaleRow } from './ventas'
+import { toCents } from '../../../shared/money'
+import { toSaleRow } from './ventas'
 
 const VENTA = {
   id: 'v1', estado: 'CONFIRMADA', fecha_servicio: '2026-11-23T15:00:00Z',

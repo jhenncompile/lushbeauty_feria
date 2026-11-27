@@ -36,3 +36,9 @@ export function parseAmountToCents(input: string): number | null {
   const [, whole, fraction = ''] = match
   return Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
 }
+
+/** «120.00» → 12000. Sin pasar por coma flotante: el dinero se parte como texto. */
+export function toCents(amount: string): number {
+  const [whole, fraction = ''] = amount.split('.')
+  return Number(whole) * 100 + Number(fraction.padEnd(2, '0').slice(0, 2)) * (whole.startsWith('-') ? -1 : 1)
+}

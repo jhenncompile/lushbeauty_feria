@@ -3,7 +3,6 @@ import { WebScreen } from '../../../shared/layout'
 import { Button, Field, Stat, Tag } from '../../../shared/ui'
 import { useCashClose } from '../cash'
 import { useCloseCashFlow } from '../components/useCloseCashFlow'
-import { LAST_CLOSES } from '../fixtures'
 import { DiffText } from './DiffText'
 
 export function WebCajaPage() {
@@ -16,6 +15,7 @@ export function WebCajaPage() {
         <p className="eyebrow">{cash.date}</p>
         <h1 className="display-lg">Cierre de caja</h1>
       </div>
+      {cash.loadError || cash.closeError ? <p role="alert">{cash.loadError ?? cash.closeError}</p> : null}
       <div className="cols cols--21">
         <section className="stack--lg stack">
           <div className="scroll">
@@ -106,13 +106,13 @@ export function WebCajaPage() {
                     : `Sobra ${formatBs(result.cashDiffCents)} en efectivo`
               }
               tone={result.cashStatus === 'conciliado' ? 'up' : result.cashStatus === 'falta' ? 'down' : 'neutral'}
-              note="Ilustrativo"
+              note={cash.illustrative ? 'Ilustrativo' : undefined}
             />
           ) : null}
           <section>
             <p className="eyebrow">Últimos cierres</p>
             <div style={{ marginTop: 'var(--space-2)' }}>
-              {LAST_CLOSES.map((item, index) => (
+              {cash.lastCloses.map((item, index) => (
                 <div className={index === 0 ? 'line line--top' : 'line'} key={item.id}>
                   <div>
                     <p className="t-body">{item.date}</p>
@@ -122,7 +122,9 @@ export function WebCajaPage() {
                 </div>
               ))}
             </div>
-            <p className="t-caption" style={{ marginTop: 'var(--space-2)' }}>Ilustrativo</p>
+            {cash.illustrative ? (
+              <p className="t-caption" style={{ marginTop: 'var(--space-2)' }}>Ilustrativo</p>
+            ) : null}
           </section>
         </aside>
       </div>

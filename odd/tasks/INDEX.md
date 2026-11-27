@@ -12,7 +12,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5 web: listado y anulación conectados al API; T6 y alta de venta en maqueta | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | Backend T1–T3 hecho; T4: API lista, pantalla de lectura con fixtures | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | Backend T1–T4 y T6 hecho (decisión 6 adoptada como valor inicial); UI T5/T6 maqueta | Protegida |
-| 2 | [F04 cierre-caja](F04-cierre-caja.md) | Backend T1–T3 hecho; UI T4 maqueta | Protegida |
+| 2 | [F04 cierre-caja](F04-cierre-caja.md) | Backend T1–T3 hecho; UI T4 web conectada (resumen, historial y cierre); falta aprobar | Protegida |
 | 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | T1 hecho (backend); T2 bloqueada por decisión 10; UI T5 maqueta | Alta |
 | 3 | [F06 importador-excel](F06-importador-excel.md) | Backend sin empezar; UI T6 maqueta; decisiones 11 y 12 abiertas | Alta |
 | 3-4 | [F07 dashboard-financiero](F07-dashboard-financiero.md) | Backend T1/T2 hecho; UI T3/T4 maqueta | Alta |

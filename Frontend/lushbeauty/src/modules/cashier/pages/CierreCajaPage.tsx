@@ -38,6 +38,7 @@ export function CierreCajaPage() {
           Cierre de caja
         </h2>
       </div>
+      {cash.loadError || cash.closeError ? <p role="alert">{cash.loadError ?? cash.closeError}</p> : null}
       <table className="tbl">
         <thead>
           <tr>
@@ -85,7 +86,7 @@ export function CierreCajaPage() {
                 : `Sobra ${formatBs(result.cashDiffCents)} en efectivo`
           }
           tone={status === 'conciliado' ? 'up' : status === 'falta' ? 'down' : 'neutral'}
-          note="Ilustrativo"
+          note={cash.illustrative ? 'Ilustrativo' : undefined}
         />
       ) : null}
       <Field
