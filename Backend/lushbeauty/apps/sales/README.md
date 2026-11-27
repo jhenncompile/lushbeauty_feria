@@ -20,4 +20,6 @@ Las líneas anteriores a F02 tienen el snapshot en nulo (todo o nada, `ck_linea_
 un descuento sobre el umbral exige `DESCUENTO_APROBAR`; sobre el máximo del salón se rechaza;
 una especialista solo registra sus propios servicios.
 
+**Lectura para caja:** `cobros_confirmados(desde, hasta)` y `descuentos_confirmados(desde, hasta)` (agregados por día y método, solo ventas CONFIRMADAS) están en el contrato; `cashier` no toca estas tablas.
+
 **Eventos:** ninguno todavía (F13 los publicará por outbox).

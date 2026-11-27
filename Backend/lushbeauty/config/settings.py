@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "apps.identity",
     "apps.catalog",
     "apps.commissions",
+    "apps.cashier",
     "apps.sales",
     "apps.demo",
 ]
@@ -52,6 +53,7 @@ MIGRATION_MODULES = {
     "identity": "apps.identity.persistence.migrations",
     "catalog": "apps.catalog.persistence.migrations",
     "commissions": "apps.commissions.persistence.migrations",
+    "cashier": "apps.cashier.persistence.migrations",
     "sales": "apps.sales.persistence.migrations",
 }
 
