@@ -22,6 +22,11 @@ class PagoEntrada(serializers.Serializer):
     comprobante_url = serializers.URLField(max_length=300, required=False, allow_blank=True, allow_null=True)
 
 
+class FiltroPeriodo(serializers.Serializer):
+    desde = serializers.DateField(required=False)
+    hasta = serializers.DateField(required=False)
+
+
 class FiltroListado(serializers.Serializer):
     especialista_id = serializers.UUIDField(required=False)
     desde = serializers.DateField(required=False)

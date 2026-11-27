@@ -49,6 +49,11 @@ def obtener_especialista(especialista_id) -> EspecialistaDTO | None:
     return None if e is None else EspecialistaDTO(e.id, e.nombre, e.sueldo_fijo, e.activo)
 
 
+def nombres_de_servicios(ids) -> dict:
+    """{servicio_id: nombre} del salón activo."""
+    return dict(Servicio.objects.filter(id__in=set(ids)).values_list("id", "nombre"))
+
+
 def nombres_de_especialistas(ids) -> dict:
     """{especialista_id: nombre} del salón activo."""
     return dict(Especialista.objects.filter(id__in=set(ids)).values_list("id", "nombre"))

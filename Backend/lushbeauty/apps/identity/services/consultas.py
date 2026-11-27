@@ -22,6 +22,10 @@ def nombres_de_usuarios(ids) -> dict:
     return dict(Usuario.objects.filter(id__in=set(ids)).values_list("id", "nombre"))
 
 
+def nombre_del_salon() -> str:
+    return Salon.objects.values_list("nombre", flat=True).get()
+
+
 def dia_corte_del_salon() -> int:
     """Último día de la semana de liquidación del salón activo (0 = lunes … 6 = domingo)."""
     return Salon.objects.values_list("dia_corte_semana", flat=True).get()

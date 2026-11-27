@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -74,6 +75,55 @@ class MiLiquidacionDetalleView(APIView):
         if liquidacion is None:
             return _denegar(request, "LIQUIDACION_VER_PROPIA")
         return Response(ser.detalle_salida(nomina.detalle_de(liquidacion)))
+
+
+def _pdf(contenido: bytes, liquidacion) -> HttpResponse:
+    respuesta = HttpResponse(contenido, content_type="application/pdf")
+    respuesta["Content-Disposition"] = f'attachment; filename="liquidacion-{liquidacion.periodo_inicio}.pdf"'
+    respuesta["Cache-Control"] = "private, no-store"  # es un documento personal: nada de cachés compartidas
+    return respuesta
+
+
+class ComprobanteView(APIView):
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = PERMISO
+
+    def get(self, request, liquidacion_id):
+        liquidacion = nomina.obtener(liquidacion_id)
+        if liquidacion is None:
+            return Response({"detail": "No encontrada."}, status=404)
+        try:
+            return _pdf(nomina.comprobante(liquidacion), liquidacion)
+        except NominaRechazada as error:
+            return _rechazo(error)
+
+
+class MiComprobanteView(APIView):
+    """RN-08: el PDF solo lo obtiene su destinataria; cualquier otro caso es 403 y queda registrado."""
+
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = "LIQUIDACION_VER_PROPIA"
+
+    def get(self, request, liquidacion_id):
+        propia = nomina.de_la_especialista(request.user.id)
+        liquidacion = None if propia is None else nomina.liquidacion_propia(liquidacion_id, propia)
+        if liquidacion is None:
+            return _denegar(request, "LIQUIDACION_VER_PROPIA")
+        return _pdf(nomina.comprobante(liquidacion), liquidacion)
+
+
+class ExportarView(APIView):
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = PERMISO
+
+    def get(self, request):
+        filtro = ser.FiltroPeriodo(data=request.query_params)
+        filtro.is_valid(raise_exception=True)
+        contenido = nomina.exportar_xlsx(**filtro.validated_data)
+        respuesta = HttpResponse(contenido, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        respuesta["Content-Disposition"] = 'attachment; filename="liquidaciones.xlsx"'
+        respuesta["Cache-Control"] = "private, no-store"
+        return respuesta
 
 
 class AprobarView(APIView):

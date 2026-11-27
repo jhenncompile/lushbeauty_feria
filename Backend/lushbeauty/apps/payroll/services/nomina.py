@@ -16,6 +16,7 @@ from apps.identity import contracts as identidad
 from apps.payroll.domain import nomina as dominio
 from apps.notifications import contracts as notificaciones
 from apps.payroll.persistence.models import Liquidacion, MovimientoNomina
+from apps.payroll.services import documentos
 from apps.sales import contracts as ventas
 from shared import tenancy
 
@@ -202,6 +203,25 @@ def liquidacion_propia(liquidacion_id, especialista_id) -> Liquidacion | None:
     """None si no existe, es de otra especialista o sigue en borrador (el llamador no distingue los casos)."""
     l = Liquidacion.objects.filter(id=liquidacion_id, especialista_id=especialista_id).first()
     return None if l is None or l.estado == Liquidacion.Estado.BORRADOR else l
+
+
+def comprobante(liquidacion: Liquidacion) -> bytes:
+    """PDF del comprobante. Solo de una liquidación aprobada o pagada (un borrador aún puede cambiar)."""
+    if liquidacion.estado == Liquidacion.Estado.BORRADOR:
+        raise NominaRechazada("borrador", "Un borrador no tiene comprobante: apruébalo primero.", 409)
+    detalle = detalle_de(liquidacion)
+    especialista = catalogo.obtener_especialista(liquidacion.especialista_id)
+    registrar_evento("EXPORTAR", "liquidacion", entidad_id=liquidacion.id, valor_nuevo={"formato": "pdf"})
+    return documentos.comprobante_pdf(
+        salon=identidad.nombre_del_salon(), especialista=especialista.nombre if especialista else "",
+        liquidacion=liquidacion, lineas=detalle.lineas, movimientos=detalle.movimientos,
+        servicios=catalogo.nombres_de_servicios(l.servicio_id for l in detalle.lineas))
+
+
+def exportar_xlsx(*, desde: date | None = None, hasta: date | None = None) -> bytes:
+    liquidaciones = listar(desde=desde, hasta=hasta)
+    registrar_evento("EXPORTAR", "liquidacion", valor_nuevo={"formato": "xlsx", "filas": len(liquidaciones)})
+    return documentos.resumen_xlsx(liquidaciones, catalogo.nombres_de_especialistas(l.especialista_id for l in liquidaciones))
 
 
 def obtener(liquidacion_id) -> Liquidacion | None:
