@@ -11,7 +11,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 1-2 | [F00 foundation](F00-foundation.md) | Hecho salvo T1/T6 parciales (CI y PWA en Docker sin verificar); UI solo consume el login | Protegida |
 | 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5/T6 en maqueta sin conectar | Protegida |
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | Backend T1–T3 hecho; T4: API lista, pantalla de lectura con fixtures | Protegida |
-| 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | Backend T1/T2 hecho (decisión 6 adoptada como valor inicial); T3–T4 pendientes; UI T5/T6 maqueta | Protegida |
+| 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | Backend T1–T3 hecho (decisión 6 adoptada como valor inicial); T4 pendiente; UI T5/T6 maqueta | Protegida |
 | 2 | [F04 cierre-caja](F04-cierre-caja.md) | Backend T1–T3 hecho; UI T4 maqueta | Protegida |
 | 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | T1 hecho (backend); T2 bloqueada por decisión 10; UI T5 maqueta | Alta |
 | 3 | [F06 importador-excel](F06-importador-excel.md) | Backend sin empezar; UI T6 maqueta; decisiones 11 y 12 abiertas | Alta |
@@ -21,7 +21,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 6 | [F10 dss-recomendacion-decisiones](F10-dss-recomendacion-decisiones.md) | Sin backend; UI maqueta; decisión 14 | Protegida (ciclo DSS) |
 | 6-7 | [F11 lush-insight](F11-lush-insight.md) | Sin backend; UI con respuestas fijas; falta proveedor de IA | Recortable |
 | 7 | [F12 lush-guard](F12-lush-guard.md) | Sin backend; UI maqueta; decisión 15 | Recortable |
-| 7 | [F13 n8n-outbox](F13-n8n-outbox.md) | T1 (cierre) y T2 hechos; falta liquidación y flujos n8n | Recortable (un flujo mínimo) |
+| 7 | [F13 n8n-outbox](F13-n8n-outbox.md) | T1 y T2 hechos (cierre y liquidación); faltan flujos n8n | Recortable (un flujo mínimo) |
 | 7-8 | [F14 seguridad-demo-feria](F14-seguridad-demo-feria.md) | T1/T2 parciales; resto pendiente | Protegida |
 
 Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10 y un flujo de F13; se aplazan IA generativa avanzada, ML y optimización.
@@ -34,9 +34,9 @@ Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10
 
 **Mobile Flutter (réplica de las vistas de especialista, decisión «ambas»)**: implementadas con datos sintéticos en `Mobile/lushbeauty`: ingreso, Hoy, registrar/descuento/guardado, sincronización, Mi liquidación y cierre de caja. Ver `Mobile/lushbeauty/DESIGN.md`.
 
-**Backend hecho** (249 pruebas en la suite; módulos `identity`, `audit`, `catalog`, `commissions`, `sales`, `cashier`, `analytics`, `notifications`, `payroll`, `demo`): F00-T2/T3/T4/T7 · F01-T1..T4, T7 · F02-T1..T3 · F04-T1..T3 · F03-T1/T2 · F05-T1 · F07-T1/T2 · F13-T1 (cierre), T2.
-**Backend parcial**: F08-T1 (falta vigencia del costo)  · F13-T1 (falta la liquidación).
-**Backend pendiente**: F03-T3/T4 · F05-T2 · F06-T1..T5 · F08-T2..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T3, T5.
+**Backend hecho** (270 pruebas en la suite; módulos `identity`, `audit`, `catalog`, `commissions`, `sales`, `cashier`, `analytics`, `notifications`, `payroll`, `demo`): F00-T2/T3/T4/T7 · F01-T1..T4, T7 · F02-T1..T3 · F04-T1..T3 · F03-T1..T3 · F05-T1 · F07-T1/T2 · F13-T1, T2.
+**Backend parcial**: F08-T1 (falta vigencia del costo).
+**Backend pendiente**: F03-T4 · F05-T2 · F06-T1..T5 · F08-T2..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T3, T5.
 
 **Transversal**: hecho F00-T1/T6 parciales, F14-T1/T2 parciales (RLS, triggers y `seed_demo`). Pendiente F03-T7 · F05-T6 · F06-T7 · F10-T7 · F11-T6 · F13-T4 · F14-T3..T6.
 

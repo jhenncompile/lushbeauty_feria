@@ -24,6 +24,8 @@ una especialista solo registra sus propios servicios.
 
 **Lectura para caja:** `cobros_confirmados`, `descuentos_confirmados` y `resumen_de_lineas` (agregados por día, método y especialista, solo ventas CONFIRMADAS) están en el contrato; `cashier` y `analytics` no tocan estas tablas.
 
-**Lectura para nómina:** `lineas_para_liquidar(especialista_id, desde, hasta)` devuelve las líneas CONFIRMADAS del período que aún no tienen liquidación (con su comisión y propina). `payroll` no toca estas tablas.
+**Lectura y escritura para nómina:** `lineas_para_liquidar` (líneas CONFIRMADAS del período sin liquidación), `lineas_de_liquidacion`, `asignar_liquidacion` (liga las líneas al aprobar) y `lineas_anuladas_liquidadas` (para los ajustes). `payroll` no toca estas tablas.
+
+**Anular una venta ya liquidada** se permite: la línea conserva su `liquidacion_id` y `payroll` la descuenta como `AJUSTE` en una semana posterior (antes respondía 409 `venta_liquidada`).
 
 **Eventos:** ninguno todavía (F13 los publicará por outbox).
