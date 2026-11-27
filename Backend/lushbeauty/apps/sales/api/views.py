@@ -27,7 +27,7 @@ class VentasView(APIView):
         try:
             venta, creada = registrar.registrar_venta(
                 uuid_cliente=d["uuid_cliente"], cliente_id=d.get("cliente_id"),
-                fecha_servicio=d.get("fecha_servicio"), usuario=request.user,
+                fecha_servicio=d.get("fecha_servicio"), usuario=request.user, origen=d["origen"],
                 lineas=[registrar.LineaEntrada(**linea) for linea in d["lineas"]],
                 pagos=[registrar.PagoEntrada(**pago) for pago in d["pagos"]],
             )

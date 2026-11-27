@@ -24,6 +24,8 @@ class VentaEntrada(serializers.Serializer):
     uuid_cliente = serializers.UUIDField()
     cliente_id = serializers.UUIDField(required=False, allow_null=True)
     fecha_servicio = serializers.DateTimeField(required=False, allow_null=True)
+    # Quién originó la venta. `IMPORTACION` no se acepta aquí: lo fija el importador (F06).
+    origen = serializers.ChoiceField(choices=["WEB", "PWA_OFFLINE"], default="WEB")
     lineas = LineaSerializer(many=True, allow_empty=False)
     pagos = PagoSerializer(many=True, allow_empty=False)
 
