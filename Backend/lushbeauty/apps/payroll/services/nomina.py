@@ -7,15 +7,19 @@ from datetime import date, timedelta
 from decimal import Decimal
 
 from django.db import transaction
+from django.utils import timezone
 
+from apps.audit.contracts import registrar_evento
 from apps.catalog import contracts as catalogo
 from apps.identity import contracts as identidad
 from apps.payroll.domain import nomina as dominio
+from apps.notifications import contracts as notificaciones
 from apps.payroll.persistence.models import Liquidacion, MovimientoNomina
 from apps.sales import contracts as ventas
 from shared import tenancy
 
 EXCEDENTE_PREVIO = "Excedente de la liquidación anterior"
+EVENTO_LIQUIDACION_APROBADA = "liquidacion.aprobada"
 
 
 class NominaRechazada(Exception):
@@ -69,6 +73,27 @@ def _arrastrar_excedente(especialista_id, inicio: date) -> None:
         monto=-previa.excedente, motivo=EXCEDENTE_PREVIO, fecha=inicio)
 
 
+def _ajustar_ventas_anuladas(especialista_id, inicio: date) -> None:
+    """Una venta anulada después de pagarse se descuenta como AJUSTE negativo en la primera semana posterior a la
+    liquidación aprobada que la incluyó. Una sola vez por línea (clave única `ajuste_de_linea_id`)."""
+    anuladas = ventas.lineas_anuladas_liquidadas(especialista_id)
+    if not anuladas:
+        return
+    ya = set(MovimientoNomina.objects.filter(ajuste_de_linea_id__in=[a.linea_id for a in anuladas])
+             .values_list("ajuste_de_linea_id", flat=True))
+    liquidaciones = {l.id: l for l in Liquidacion.objects.filter(id__in={a.liquidacion_id for a in anuladas})}
+    for a in anuladas:
+        origen = liquidaciones.get(a.liquidacion_id)
+        monto = -((a.comision or Decimal("0.00")) + a.propina)
+        if a.linea_id in ya or origen is None or origen.periodo_fin >= inicio or monto == 0:
+            continue
+        MovimientoNomina.objects.create(
+            salon_id=tenancy.salon_actual(), especialista_id=especialista_id, tipo=MovimientoNomina.Tipo.AJUSTE,
+            monto=monto, fecha=inicio, ajuste_de_linea_id=a.linea_id,
+            motivo=f"Venta anulada tras liquidarse ({origen.periodo_inicio} a {origen.periodo_fin}): "
+                   f"{(a.motivo_anulacion or 'sin motivo')}"[:250])
+
+
 def _movimientos_del_periodo(especialista_id, inicio: date, fin: date) -> list[MovimientoNomina]:
     return list(MovimientoNomina.objects.filter(especialista_id=especialista_id, fecha__gte=inicio, fecha__lte=fin,
                                                 liquidacion_id__isnull=True).order_by("fecha", "id"))
@@ -85,6 +110,7 @@ def generar_borrador(*, especialista_id, fecha: date) -> Detalle:
         if existente is not None and existente.estado != Liquidacion.Estado.BORRADOR:
             raise NominaRechazada("ya_aprobada", "Esa semana ya está aprobada; no se recalcula.", 409)
         _arrastrar_excedente(especialista_id, inicio)
+        _ajustar_ventas_anuladas(especialista_id, inicio)
         lineas = ventas.lineas_para_liquidar(especialista_id, inicio, fin)
         movimientos = _movimientos_del_periodo(especialista_id, inicio, fin)
         totales = dominio.calcular(
@@ -103,6 +129,61 @@ def generar_borrador(*, especialista_id, fecha: date) -> Detalle:
                 setattr(existente, campo, valor)
             existente.save()
             liquidacion = existente
+    return Detalle(liquidacion, lineas, movimientos, sum(1 for l in lineas if l.comision is None))
+
+
+def aprobar(liquidacion_id, *, usuario) -> Detalle:
+    """Aprueba y congela la liquidación (RN-05): recalcula con lo último, liga las líneas y los movimientos a ella,
+    la marca APROBADA y deja el evento `liquidacion.aprobada` en el outbox, todo en una transacción.
+
+    El evento no lleva importes ni datos personales: solo el id de la liquidación y su período.
+    """
+    if "LIQUIDACION_APROBAR" not in identidad.permisos_de(usuario):
+        raise NominaRechazada("sin_permiso", "No tiene permiso para aprobar liquidaciones.", 403)
+    with transaction.atomic():
+        liquidacion = Liquidacion.objects.select_for_update().filter(id=liquidacion_id).first()
+        if liquidacion is None:
+            raise NominaRechazada("no_encontrada", "La liquidación no existe.", 404)
+        if liquidacion.estado != Liquidacion.Estado.BORRADOR:
+            raise NominaRechazada("ya_aprobada", "La liquidación ya está aprobada.", 409)
+        detalle = generar_borrador(especialista_id=liquidacion.especialista_id, fecha=liquidacion.periodo_inicio)
+        liquidacion = detalle.liquidacion
+        if detalle.lineas:
+            try:
+                ventas.asignar_liquidacion([l.linea_id for l in detalle.lineas], liquidacion.id)
+            except ValueError as error:
+                raise NominaRechazada("conflicto", str(error), 409) from error
+        MovimientoNomina.objects.filter(id__in=[m.id for m in detalle.movimientos]).update(liquidacion_id=liquidacion.id)
+        liquidacion.estado = Liquidacion.Estado.APROBADA
+        liquidacion.aprobada_por, liquidacion.aprobada_en = usuario.id, timezone.now()
+        liquidacion.save(update_fields=["estado", "aprobada_por", "aprobada_en"])  # el trigger audita antes/después
+        registrar_evento("APROBAR", "liquidacion", entidad_id=liquidacion.id, valor_nuevo={
+            "periodo_inicio": liquidacion.periodo_inicio.isoformat(), "periodo_fin": liquidacion.periodo_fin.isoformat()})
+        notificaciones.publicar_evento(EVENTO_LIQUIDACION_APROBADA, liquidacion.id, {
+            "periodo_inicio": liquidacion.periodo_inicio.isoformat(), "periodo_fin": liquidacion.periodo_fin.isoformat()})
+    return detalle_de(liquidacion)
+
+
+def marcar_pagada(liquidacion_id, *, comprobante_url: str | None = None) -> Liquidacion:
+    """APROBADA → PAGADA. Es lo único (junto con el comprobante) que admite una liquidación aprobada."""
+    with transaction.atomic():
+        liquidacion = Liquidacion.objects.select_for_update().filter(id=liquidacion_id).first()
+        if liquidacion is None:
+            raise NominaRechazada("no_encontrada", "La liquidación no existe.", 404)
+        if liquidacion.estado != Liquidacion.Estado.APROBADA:
+            raise NominaRechazada("estado", "Solo una liquidación aprobada se marca como pagada.", 409)
+        liquidacion.estado = Liquidacion.Estado.PAGADA
+        liquidacion.comprobante_url = (comprobante_url or "").strip() or None
+        liquidacion.save(update_fields=["estado", "comprobante_url"])
+    return liquidacion
+
+
+def detalle_de(liquidacion: Liquidacion) -> Detalle:
+    """Detalle de una liquidación: en borrador se reproduce del período; aprobada, de lo que quedó ligado a ella."""
+    if liquidacion.estado == Liquidacion.Estado.BORRADOR:
+        return detalle_de_borrador(liquidacion)
+    lineas = ventas.lineas_de_liquidacion(liquidacion.id)
+    movimientos = list(MovimientoNomina.objects.filter(liquidacion_id=liquidacion.id).order_by("fecha", "id"))
     return Detalle(liquidacion, lineas, movimientos, sum(1 for l in lineas if l.comision is None))
 
 

@@ -18,11 +18,8 @@ def anular_venta(venta_id, motivo: str) -> Venta:
             raise VentaRechazada("no_encontrada", "La venta no existe.", 404)
         if venta.estado == Venta.Estado.ANULADA:
             raise VentaRechazada("ya_anulada", "La venta ya está anulada.", 409)
-        if LineaVenta.objects.filter(venta=venta, liquidacion_id__isnull=False).exists():
-            # Pendiente en F03: generar un MovimientoNomina tipo AJUSTE en la liquidación abierta siguiente.
-            raise VentaRechazada(
-                "venta_liquidada", "La venta ya está en una liquidación; requiere un ajuste de nómina.", 409
-            )
+        # Una venta ya liquidada SÍ se puede anular: la línea conserva su `liquidacion_id` (la liquidación aprobada no
+        # se toca) y `payroll` descuenta el importe como un AJUSTE en la siguiente liquidación abierta (F03-T3).
         venta.estado = Venta.Estado.ANULADA
         venta.motivo_anulacion = motivo[:250]
         venta.save(update_fields=["estado", "motivo_anulacion"])  # el trigger audita antes/después

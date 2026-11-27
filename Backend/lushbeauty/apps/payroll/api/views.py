@@ -42,6 +42,32 @@ class GenerarView(APIView):
         return Response(ser.detalle_salida(detalle), status=201)
 
 
+class AprobarView(APIView):
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = PERMISO
+
+    def post(self, request, liquidacion_id):
+        try:
+            detalle = nomina.aprobar(liquidacion_id, usuario=request.user)
+        except NominaRechazada as error:
+            return _rechazo(error)
+        return Response(ser.detalle_salida(detalle))
+
+
+class PagarView(APIView):
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = PERMISO
+
+    def post(self, request, liquidacion_id):
+        datos = ser.PagoEntrada(data=request.data)
+        datos.is_valid(raise_exception=True)
+        try:
+            liquidacion = nomina.marcar_pagada(liquidacion_id, comprobante_url=datos.validated_data.get("comprobante_url"))
+        except NominaRechazada as error:
+            return _rechazo(error)
+        return Response(ser.liquidacion_salida(liquidacion))
+
+
 class LiquidacionesView(APIView):
     permission_classes = [IsAuthenticated, TienePermiso]
     permiso_requerido = PERMISO
@@ -60,6 +86,4 @@ class LiquidacionDetalleView(APIView):
         liquidacion = nomina.obtener(liquidacion_id)
         if liquidacion is None:
             return Response({"detail": "No encontrada."}, status=404)
-        if liquidacion.estado == liquidacion.Estado.BORRADOR:
-            return Response(ser.detalle_salida(nomina.detalle_de_borrador(liquidacion)))
-        return Response(ser.liquidacion_salida(liquidacion))  # el detalle de una aprobada llega con F03-T3
+        return Response(ser.detalle_salida(nomina.detalle_de(liquidacion)))
