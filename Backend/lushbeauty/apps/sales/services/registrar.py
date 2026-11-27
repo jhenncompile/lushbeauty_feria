@@ -69,8 +69,9 @@ def _calcular(lineas: list[LineaEntrada], *, permisos: frozenset[str], usuario_i
 
 
 def registrar_venta(*, uuid_cliente, cliente_id, fecha_servicio, lineas: list[LineaEntrada],
-                    pagos: list[PagoEntrada], usuario) -> tuple[Venta, bool]:
-    """Devuelve (venta, creada). Un reintento con el mismo `uuid_cliente` devuelve la original."""
+                    pagos: list[PagoEntrada], usuario, origen: str = Venta.Origen.WEB) -> tuple[Venta, bool]:
+    """Devuelve (venta, creada). Un reintento con el mismo `uuid_cliente` devuelve la original,
+    con su origen y sus datos originales (aunque el reintento declare otro origen)."""
     existente = Venta.objects.filter(uuid_cliente=uuid_cliente).first()
     if existente is not None:
         return existente, False
@@ -102,7 +103,7 @@ def registrar_venta(*, uuid_cliente, cliente_id, fecha_servicio, lineas: list[Li
             venta = Venta.objects.create(
                 salon_id=tenancy.salon_actual(), cliente_id=cliente_id, registrado_por=usuario.id,
                 uuid_cliente=uuid_cliente, fecha_servicio=fecha_servicio,
-                estado=Venta.Estado.CONFIRMADA, origen=Venta.Origen.WEB,
+                estado=Venta.Estado.CONFIRMADA, origen=origen,
             )
             for entrada, servicio, c, com in resueltas:
                 LineaVenta.objects.create(

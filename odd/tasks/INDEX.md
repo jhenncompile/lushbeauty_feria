@@ -13,7 +13,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | Backend T1–T3 hecho; T4: API lista, pantalla de lectura con fixtures | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | Backend sin empezar (T2 bloqueada por decisión 6); UI T5/T6 maqueta | Protegida |
 | 2 | [F04 cierre-caja](F04-cierre-caja.md) | Backend T1–T3 hecho; UI T4 maqueta | Protegida |
-| 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | T1 casi hecho (falta `PWA_OFFLINE`); T2 bloqueada por decisión 10; UI T5 maqueta | Alta |
+| 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | T1 hecho (backend); T2 bloqueada por decisión 10; UI T5 maqueta | Alta |
 | 3 | [F06 importador-excel](F06-importador-excel.md) | Backend sin empezar; UI T6 maqueta; decisiones 11 y 12 abiertas | Alta |
 | 3-4 | [F07 dashboard-financiero](F07-dashboard-financiero.md) | Backend T1/T2 hecho; UI T3/T4 maqueta | Alta |
 | 4 | [F08 dss-contribucion-whatif](F08-dss-contribucion-whatif.md) | T1 parcial; sin backend DSS; UI maqueta; decisiones 3, 13 y 14 | Protegida (ciclo DSS) |
@@ -34,8 +34,8 @@ Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10
 
 **Mobile Flutter (réplica de las vistas de especialista, decisión «ambas»)**: implementadas con datos sintéticos en `Mobile/lushbeauty`: ingreso, Hoy, registrar/descuento/guardado, sincronización, Mi liquidación y cierre de caja. Ver `Mobile/lushbeauty/DESIGN.md`.
 
-**Backend hecho** (202 pruebas en la suite; módulos `identity`, `audit`, `catalog`, `commissions`, `sales`, `cashier`, `analytics`, `notifications`, `demo`): F00-T2/T3/T4/T7 · F01-T1..T4, T7 · F02-T1..T3 · F04-T1..T3 · F07-T1/T2 · F13-T1 (cierre), T2.
-**Backend parcial**: F05-T1 (falta `PWA_OFFLINE`) · F08-T1 (falta vigencia del costo)  · F13-T1 (falta la liquidación).
+**Backend hecho** (202 pruebas en la suite; módulos `identity`, `audit`, `catalog`, `commissions`, `sales`, `cashier`, `analytics`, `notifications`, `demo`): F00-T2/T3/T4/T7 · F01-T1..T4, T7 · F02-T1..T3 · F04-T1..T3 · F05-T1 · F07-T1/T2 · F13-T1 (cierre), T2.
+**Backend parcial**: F08-T1 (falta vigencia del costo)  · F13-T1 (falta la liquidación).
 **Backend pendiente**: F03-T1..T4 · F05-T2 · F06-T1..T5 · F08-T2..T4 · F09-T1..T3 · F10-T1..T4 · F11-T1..T4 · F12-T1..T3, T5 · F13-T3, T5.
 
 **Transversal**: hecho F00-T1/T6 parciales, F14-T1/T2 parciales (RLS, triggers y `seed_demo`). Pendiente F03-T7 · F05-T6 · F06-T7 · F10-T7 · F11-T6 · F13-T4 · F14-T3..T6.
