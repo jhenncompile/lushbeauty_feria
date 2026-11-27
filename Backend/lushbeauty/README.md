@@ -22,4 +22,6 @@ Sin Docker: levanta un PostgreSQL, crea el rol con `docker/postgres-init.sh`, ex
 `.env.example` y corre `uv run python manage.py migrate` / `uv run python manage.py test`.
 Los tests necesitan PostgreSQL (el rol debe poder crear bases: `CREATEDB`).
 
+Dependencias de documentos: `reportlab` (PDF) y `openpyxl` (XLSX); al cambiarlas hay que reconstruir la imagen (`docker compose build api`).
+
 Los datos de prueba son siempre sintéticos. Para tener usuarios y catálogo en desarrollo: `python manage.py seed_demo` (cuentas y clave en `apps/demo/README.md`).

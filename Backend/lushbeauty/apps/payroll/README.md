@@ -1,6 +1,6 @@
 # payroll
 
-**Responsabilidad:** deducciones y liquidación semanal por especialista (F03). Hoy: deducciones (T1), borrador (T2) y aprobación, pago y ajustes (T3). La vista propia es F03-T6; el PDF llega con F03-T4.
+**Responsabilidad:** deducciones y liquidación semanal por especialista (F03). Hoy: deducciones (T1), borrador (T2), aprobación, pago y ajustes (T3), PDF y XLSX (T4) y vista propia (T6).
 
 **Contrato público** (`contracts.py`): `registrar_deduccion`, `generar_borrador`, `aprobar`, `marcar_pagada`, `listar`, `periodo_de`, `NominaRechazada`.
 Lee ventas por `sales.lineas_para_liquidar`, el sueldo fijo por `catalog.obtener_especialista` y el día de corte por `identity.dia_corte_del_salon`; no consulta tablas ajenas.
@@ -26,6 +26,8 @@ Lee ventas por `sales.lineas_para_liquidar`, el sueldo fijo por `catalog.obtener
 
 **«Mi liquidación» (F03-T6, HU-09, CP-06):** con el permiso `LIQUIDACION_VER_PROPIA`, la especialista vinculada a su usuario ve **solo las suyas y solo aprobadas o pagadas** (un borrador es de trabajo y puede cambiar): `GET /api/v1/nomina/mis-liquidaciones/` y `GET …/mis-liquidaciones/<id>/` (con detalle). Pedir una liquidación de otra persona, una inexistente o un borrador da **403 y deja `ACCESO_DENEGADO`** en la bitácora (mismo código en los tres casos para no revelar cuáles existen). Quien no es especialista (administradora, lector) o no tiene ficha vinculada también recibe 403. Las rutas de administración siguen cerradas a la especialista.
 
+**Documentos (F03-T4, RN-08):** `GET …/liquidaciones/<id>/pdf/` (administradora) y `GET …/mis-liquidaciones/<id>/pdf/` (la destinataria) devuelven el comprobante PDF de una liquidación **aprobada o pagada** (ReportLab): salón, especialista, período, estado, resumen (sueldo fijo, comisión, propinas, deducciones, excedente, neto), deducciones y servicios. Un borrador no tiene comprobante (409). Pedir el PDF de otra persona, inexistente o en borrador por la vía propia da 403 y `ACCESO_DENEGADO`. La respuesta lleva `Cache-Control: private, no-store`. `GET …/liquidaciones/exportar/?desde=&hasta=` (solo administradora) devuelve un XLSX con una fila por liquidación (importes como números; los textos que parecen fórmula se neutralizan). Cada descarga deja una entrada `EXPORTAR` en la bitácora, sin el contenido. El PDF va sin comprimir (es corto) para poder verificarlo en las pruebas. El `comprobante_url` de `pagar` sigue siendo un dato libre: el enlace temporal autorizado es F13-T3.
+
 **Eventos que emite:** `liquidacion.aprobada` (entidad = id de la liquidación; payload `periodo_inicio`, `periodo_fin`).
 
-**Pendiente:** PDF/XLSX (T4; falta elegir la librería de PDF), vista «Mi liquidación» de la especialista con `LIQUIDACION_VER_PROPIA` (T6), generar para todas las especialistas de una vez.
+**Pendiente:** enlace temporal para enviar el PDF (F13-T3), un PDF con logotipo, y generar para todas las especialistas a la vez, vista «Mi liquidación» de la especialista con `LIQUIDACION_VER_PROPIA` (T6), generar para todas las especialistas de una vez.
