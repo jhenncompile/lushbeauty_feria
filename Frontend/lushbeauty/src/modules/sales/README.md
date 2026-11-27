@@ -10,4 +10,4 @@
 
 **Eventos:** no emite ni consume todavía. Con backend emitirá la venta con su `clientUuid` (idempotencia, RN-01).
 
-**Estado:** datos sintéticos en memoria, sin servidor. Anular una venta la deja con estado «Anulada»; nada se borra.
+**Estado:** la pantalla web de ventas con sesión real lee `/api/v1/ventas/` y anula contra el servidor (`api/ventas.ts`, `useWebSales.ts`); el registro y el resto siguen con datos sintéticos en memoria. Anular una venta la deja con estado «Anulada»; nada se borra.

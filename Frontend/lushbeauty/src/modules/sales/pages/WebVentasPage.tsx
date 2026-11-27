@@ -4,8 +4,8 @@ import { ROUTES, WebScreen } from '../../../shared/layout'
 import { Button, Dialog, Field, Tag } from '../../../shared/ui'
 import { getPolicy } from '../../catalog'
 import { calculateSale, formatPercent } from '../domain/sale'
-import { WEB_SALES } from '../fixtures'
-import type { SaleRow, SaleStatus } from '../types'
+import { useWebSales } from '../useWebSales'
+import type { SaleStatus } from '../types'
 
 const STATUS_LABEL: Record<SaleStatus, { text: string; tone?: 'ok' | 'rouge' }> = {
   confirmada: { text: 'Confirmada', tone: 'ok' },
@@ -18,16 +18,15 @@ type StatusFilter = 'todos' | SaleStatus
 
 export function WebVentasPage() {
   const policy = getPolicy()
-  const [rows, setRows] = useState<SaleRow[]>(WEB_SALES)
+  const { rows, load, cancel } = useWebSales()
   const [filter, setFilter] = useState<StatusFilter>('todos')
-  const [selectedId, setSelectedId] = useState(WEB_SALES[0].id)
+  const [selectedId, setSelectedId] = useState<string>()
   const [cancelling, setCancelling] = useState(false)
   const [reason, setReason] = useState('')
   const [reasonError, setReasonError] = useState<string>()
 
   const visible = rows.filter((row) => filter === 'todos' || row.status === filter)
   const selected = rows.find((row) => row.id === selectedId) ?? rows[0]
-  const calc = calculateSale({ listCents: selected.listCents, discountCents: selected.discountCents }, policy)
 
   function select(id: string) {
     setSelectedId(id)
@@ -41,16 +40,37 @@ export function WebVentasPage() {
     setReasonError(undefined)
   }
 
-  function confirmCancel() {
+  async function confirmCancel() {
     if (!reason.trim()) {
       setReasonError('Escriba el motivo de la anulación.')
       return
     }
-    // Nada se borra: la fila se conserva con estado «Anulada» y, con backend, genera un ajuste (F01-T3).
-    setRows((current) => current.map((row) => (row.id === selected.id ? { ...row, status: 'anulada' } : row)))
+    // Nada se borra: la fila se conserva con estado «Anulada» y genera un ajuste (F01-T3).
+    const failure = await cancel(selected.id, reason.trim())
+    if (failure) {
+      setReasonError(failure)
+      return
+    }
     setCancelling(false)
     setReason('')
   }
+
+  if (load !== 'ready' || !selected) {
+    return (
+      <WebScreen>
+        <h1 className="display-lg">Ventas</h1>
+        <p role={load === 'error' ? 'alert' : 'status'}>
+          {load === 'loading'
+            ? 'Cargando ventas…'
+            : load === 'error'
+              ? 'No se pudieron cargar las ventas. Intente de nuevo.'
+              : 'Aún no hay ventas registradas.'}
+        </p>
+      </WebScreen>
+    )
+  }
+
+  const calc = calculateSale({ listCents: selected.listCents, discountCents: selected.discountCents }, policy)
 
   return (
     <WebScreen>
