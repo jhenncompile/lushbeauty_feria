@@ -1,6 +1,6 @@
 # F05 · pwa-offline-sync
 
-**Plataformas:** MOB · BE  **Semana:** 3  **Estado:** UI parcial (T5 maqueta; cola persistente y sincronizador pendientes)
+**Plataformas:** MOB · BE  **Semana:** 3  **Estado:** T1 casi hecho (falta aceptar `PWA_OFFLINE`); T2 bloqueada por la decisión 10; T5 en maqueta; sin cola persistente
 
 ## Resultado esperado
 Registrar servicios sin internet y sincronizarlos sin crear duplicados.
@@ -14,12 +14,12 @@ Registrar servicios sin internet y sincronizarlos sin crear duplicados.
 RF-10, RF-11 · RN-01 · HU-02 · CP-03, CP-04
 
 ## Tareas
-- [ ] **F05-T1 [BE]** Endpoint idempotente: misma clave devuelve el resultado original; validación de permisos, catálogo y descuento. *RED:* CP-03, UUID idéntico dos veces. *Acept.:* una sola venta confirmada. **Esquema DB:** reusa el `UNIQUE (salon_id, uuid_cliente)` de F01-T4; origen `PWA_OFFLINE`.
-- [ ] **F05-T2 [BE]** Registro de conflictos de sincronización (precio o descuento). *RED:* venta offline con precio vencido. *Acept.:* queda «requiere revisión», no se confirma sola. **Esquema DB (hueco):** existe el estado `REQUIERE_REVISION`, pero no dónde guardar la causa (precio vencido, descuento). Propuesta: nuevo valor `CONFLICTO_SINCRONIZACION` en `tipo_alerta`, con la causa en `detalle`, o una columna en `venta` (decisión 10).
-- [ ] **F05-T3 [MOB]** Cola local en IndexedDB con UUID y estado. *RED:* CP-04, cortar internet antes de registrar. *Acept.:* HU-02, registro local pendiente y luego confirmado.
-- [ ] **F05-T4 [MOB]** Sincronizador con reintentos y *backoff*. *RED:* la red falla tras persistir pero antes de la respuesta. *Acept.:* el reintento devuelve el resultado original.
-- [ ] **F05-T5 [MOB]** UI de estado: banner «no confirmada por el servidor», lista de pendientes y conflictos. *Acept.:* la usuaria sabe qué ventas faltan por confirmar. **UI parcial (`feat/f05-ui-offline-estados`):** barra de estado que enlaza a la cola, pantalla «Sincronización» (pendiente / confirmada / requiere revisión con causa y «Confirmar importe»), atajo en Hoy y aviso al guardar sin conexión. La cola vive en memoria y se pierde al recargar: falta IndexedDB (T3), sincronizador con backoff (T4) y el banner «no confirmada por el servidor» sobre cada venta.
-- [ ] **F05-T6 [TRANS]** Pruebas de campo: reinicio del teléfono, modo avión, dos intentos seguidos. *Acept.:* checklist ejecutado con evidencia.
+- [~] **F05-T1 [BE]** Endpoint idempotente: misma clave devuelve el resultado original; validación de permisos, catálogo y descuento. *RED:* CP-03, UUID idéntico dos veces. *Acept.:* una sola venta confirmada. **Esquema DB:** reusa el `UNIQUE (salon_id, uuid_cliente)` de F01-T4; origen `PWA_OFFLINE`. **Auditoría 2026-11-26:** Existe: La idempotencia por UUID ya existe (F01-T4: mismo UUID → una sola venta confirmada, también CP-03) con validación de permisos, catálogo y descuento. Falta: Aceptar `origen = PWA_OFFLINE` en el API y probarlo; confirmar que el reintento devuelve el resultado original. Bloquea: Nada.
+- [ ] **F05-T2 [BE]** Registro de conflictos de sincronización (precio o descuento). *RED:* venta offline con precio vencido. *Acept.:* queda «requiere revisión», no se confirma sola. **Esquema DB (hueco):** existe el estado `REQUIERE_REVISION`, pero no dónde guardar la causa (precio vencido, descuento). Propuesta: nuevo valor `CONFLICTO_SINCRONIZACION` en `tipo_alerta`, con la causa en `detalle`, o una columna en `venta` (decisión 10). **Auditoría 2026-11-26:** Existe: Existe el estado `REQUIERE_REVISION` en `venta`. Falta: Detectar precio vencido o descuento fuera de política al sincronizar y guardar la causa. Bloquea: Decisión 10 (dónde guardar la causa).
+- [ ] **F05-T3 [MOB]** Cola local en IndexedDB con UUID y estado. *RED:* CP-04, cortar internet antes de registrar. *Acept.:* HU-02, registro local pendiente y luego confirmado. **Auditoría 2026-11-26:** Existe: Cola en memoria dentro de `offline/queue.ts` (se pierde al recargar). Falta: IndexedDB con UUID y estado; probar CP-04. Bloquea: Nada técnico.
+- [ ] **F05-T4 [MOB]** Sincronizador con reintentos y *backoff*. *RED:* la red falla tras persistir pero antes de la respuesta. *Acept.:* el reintento devuelve el resultado original. **Auditoría 2026-11-26:** Existe: Simulación de sincronización sin red real. Falta: Sincronizador con reintentos y *backoff* contra `POST /api/v1/ventas/`. Bloquea: F05-T1 (origen), F05-T3.
+- [~] **F05-T5 [MOB]** UI de estado: banner «no confirmada por el servidor», lista de pendientes y conflictos. *Acept.:* la usuaria sabe qué ventas faltan por confirmar. **UI parcial (`feat/f05-ui-offline-estados`):** barra de estado que enlaza a la cola, pantalla «Sincronización» (pendiente / confirmada / requiere revisión con causa y «Confirmar importe»), atajo en Hoy y aviso al guardar sin conexión. La cola vive en memoria y se pierde al recargar: falta IndexedDB (T3), sincronizador con backoff (T4) y el banner «no confirmada por el servidor» sobre cada venta. **Auditoría 2026-11-26:** Existe: Barra de estado y pantalla «Sincronización» con datos simulados (web y Flutter). Falta: Banner «no confirmada por el servidor» sobre cada venta; usar la cola real. Bloquea: F05-T3/T4.
+- [ ] **F05-T6 [TRANS]** Pruebas de campo: reinicio del teléfono, modo avión, dos intentos seguidos. *Acept.:* checklist ejecutado con evidencia. **Auditoría 2026-11-26:** Existe: Nada. Falta: Checklist de campo: reinicio del teléfono, modo avión, doble intento. Bloquea: F05-T3/T4.
 
 ## Dependencias
 F01. Comparte el endpoint de ventas.
@@ -27,5 +27,7 @@ F01. Comparte el endpoint de ventas.
 ## Evidencia
 UI (parcial, `feat/f05-ui-offline-estados`): `pnpm test` 74 pruebas en verde. Sin conexión: la barra dice «Sin conexión · 3 pendientes»; guardar un servicio lo deja «Pendiente» con su importe (Bs 120,00) y la pantalla avisa que se enviará al volver la conexión; con conexión se confirma al instante; reintentar sin conexión no pierde nada; un registro en revisión espera la confirmación del importe; el mismo id no se encola dos veces. `pnpm lint` y `pnpm build` sin errores. **No verificado:** Service Worker real, persistencia entre recargas, reinicio del teléfono ni modo avión (F05-T6); el estado de conexión se simula con eventos `online`/`offline` y un conmutador solo de desarrollo. No se inspeccionó visualmente.
 
+Auditoría 2026-11-26: estado contrastado con el código; suite de backend 202 pruebas OK. La UI web solo consume `POST /api/auth/login`; Flutter no llama a la red.
+
 ## Siguiente paso
-F06-importador-excel
+F05-T1 (aceptar `PWA_OFFLINE`); resolver la decisión 10 para T2; luego cola en IndexedDB y sincronizador.
