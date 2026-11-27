@@ -9,4 +9,6 @@ Otros módulos fijan el salón activo con `shared.tenancy`, nunca leen tablas de
 
 **API:** `POST /api/auth/login`, `GET /api/auth/me`, `GET /api/identity/usuarios`, `GET /api/identity/usuarios/<id>`, `GET /api/identity/historial` (permiso `AUDITORIA_VER`; lee la bitácora por el contrato de `audit` y le pone el nombre del actor).
 
+**Día de corte:** `salon.dia_corte_semana` (0 = lunes … 6 = domingo, por defecto 6) define la semana de liquidación; se lee por `dia_corte_del_salon()` (decisión 6, valor inicial).
+
 **Eventos:** no emite ni consume ninguno todavía.
