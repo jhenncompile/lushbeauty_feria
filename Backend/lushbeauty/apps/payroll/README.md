@@ -1,6 +1,6 @@
 # payroll
 
-**Responsabilidad:** deducciones y liquidación semanal por especialista (F03). Hoy: deducciones (T1), borrador (T2) y aprobación, pago y ajustes (T3). El PDF y la vista propia llegan con F03-T4 y T6.
+**Responsabilidad:** deducciones y liquidación semanal por especialista (F03). Hoy: deducciones (T1), borrador (T2) y aprobación, pago y ajustes (T3). La vista propia es F03-T6; el PDF llega con F03-T4.
 
 **Contrato público** (`contracts.py`): `registrar_deduccion`, `generar_borrador`, `aprobar`, `marcar_pagada`, `listar`, `periodo_de`, `NominaRechazada`.
 Lee ventas por `sales.lineas_para_liquidar`, el sueldo fijo por `catalog.obtener_especialista` y el día de corte por `identity.dia_corte_del_salon`; no consulta tablas ajenas.
@@ -24,6 +24,8 @@ Lee ventas por `sales.lineas_para_liquidar`, el sueldo fijo por `catalog.obtener
 **API** (permiso `LIQUIDACION_APROBAR`, hoy solo la administradora): `POST /api/v1/nomina/deducciones/`, `POST /api/v1/nomina/liquidaciones/generar/` (`especialista_id`, `fecha`), `POST …/liquidaciones/<id>/aprobar/`, `POST …/liquidaciones/<id>/pagar/`,
 `GET /api/v1/nomina/liquidaciones/?especialista_id=&desde=&hasta=`, `GET /api/v1/nomina/liquidaciones/<id>/` (con detalle por línea y movimiento).
 
+**«Mi liquidación» (F03-T6, HU-09, CP-06):** con el permiso `LIQUIDACION_VER_PROPIA`, la especialista vinculada a su usuario ve **solo las suyas y solo aprobadas o pagadas** (un borrador es de trabajo y puede cambiar): `GET /api/v1/nomina/mis-liquidaciones/` y `GET …/mis-liquidaciones/<id>/` (con detalle). Pedir una liquidación de otra persona, una inexistente o un borrador da **403 y deja `ACCESO_DENEGADO`** en la bitácora (mismo código en los tres casos para no revelar cuáles existen). Quien no es especialista (administradora, lector) o no tiene ficha vinculada también recibe 403. Las rutas de administración siguen cerradas a la especialista.
+
 **Eventos que emite:** `liquidacion.aprobada` (entidad = id de la liquidación; payload `periodo_inicio`, `periodo_fin`).
 
-**Pendiente:** PDF/XLSX (T4), vista «Mi liquidación» de la especialista con `LIQUIDACION_VER_PROPIA` (T6), generar para todas las especialistas de una vez.
+**Pendiente:** PDF/XLSX (T4; falta elegir la librería de PDF), vista «Mi liquidación» de la especialista con `LIQUIDACION_VER_PROPIA` (T6), generar para todas las especialistas de una vez.
