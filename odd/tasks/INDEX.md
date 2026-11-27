@@ -21,7 +21,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 | 6 | [F10 dss-recomendacion-decisiones](F10-dss-recomendacion-decisiones.md) | UI parcial (T5/T6 maqueta) | Protegida (ciclo DSS) |
 | 6-7 | [F11 lush-insight](F11-lush-insight.md) | UI parcial (T5 maqueta) | Recortable |
 | 7 | [F12 lush-guard](F12-lush-guard.md) | UI parcial (T4 maqueta) | Recortable |
-| 7 | [F13 n8n-outbox](F13-n8n-outbox.md) | pendiente | Recortable (un flujo mínimo) |
+| 7 | [F13 n8n-outbox](F13-n8n-outbox.md) | Outbox y publicador hechos (T1 parcial, T2); sin cablear ni flujos n8n | Recortable (un flujo mínimo) |
 | 7-8 | [F14 seguridad-demo-feria](F14-seguridad-demo-feria.md) | pendiente | Protegida |
 
 Si falta tiempo (cap. 14): se protege el ciclo completo de F00–F04 + F08–F10 y un flujo de F13; se aplazan IA generativa avanzada, ML y optimización.
