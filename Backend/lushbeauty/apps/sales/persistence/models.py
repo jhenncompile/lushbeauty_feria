@@ -1,7 +1,8 @@
 import uuid
 
 from django.db import models
-from django.db.models import F, Q
+from django.db.models import Case, F, Q, Value, When
+from django.db.models.functions import Round
 from django.utils import timezone
 
 from shared.tenancy import SalonScopedManager
@@ -63,6 +64,12 @@ class LineaVenta(models.Model):
     costo_materiales = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     propina = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     metodo_propina = models.CharField(max_length=20, choices=METODOS, null=True, blank=True)
+    # Snapshot de la comisión (RN-02, F02): regla, base, tasa e importe al vender. Nulos solo en
+    # líneas anteriores a F02; toda línea nueva los trae.
+    regla_comision_id = models.UUIDField(null=True, blank=True)
+    base_comision = models.CharField(max_length=20, null=True, blank=True)
+    tasa_comision = models.DecimalField(max_digits=5, decimal_places=4, null=True, blank=True)
+    comision = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
 
     objects = SalonScopedManager()
 
@@ -82,6 +89,19 @@ class LineaVenta(models.Model):
             ),
             models.CheckConstraint(
                 condition=Q(propina=0) | Q(metodo_propina__isnull=False), name="ck_linea_venta_08"
+            ),
+            models.CheckConstraint(  # el snapshot va completo o no va
+                condition=(Q(regla_comision_id__isnull=True, base_comision__isnull=True,
+                             tasa_comision__isnull=True, comision__isnull=True)
+                           | Q(regla_comision_id__isnull=False, base_comision__isnull=False,
+                               tasa_comision__isnull=False, comision__isnull=False)),
+                name="ck_linea_venta_09",
+            ),
+            models.CheckConstraint(
+                condition=Q(comision__isnull=True) | Q(comision=Round(
+                    Case(When(base_comision="PRECIO_LISTA", then=F("precio_lista") * F("cantidad")),
+                         default=F("importe_cobrado")) * F("tasa_comision"), 2)),
+                name="ck_linea_venta_07",
             ),
         ]
 

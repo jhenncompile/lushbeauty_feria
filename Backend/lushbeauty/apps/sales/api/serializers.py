@@ -38,6 +38,9 @@ def venta_salida(v) -> dict:
         "cantidad": l.cantidad, "precio_lista": str(l.precio_lista), "descuento": str(l.descuento),
         "motivo_descuento": l.motivo_descuento, "importe_cobrado": str(l.importe_cobrado),
         "propina": str(l.propina), "metodo_propina": l.metodo_propina,
+        "comision": None if l.comision is None else str(l.comision),
+        "tasa_comision": None if l.tasa_comision is None else str(l.tasa_comision),
+        "base_comision": l.base_comision,
     } for l in v.lineas.all()]
     pagos = [{"metodo": p.metodo, "monto": str(p.monto)} for p in v.pagos.all()]
     return {

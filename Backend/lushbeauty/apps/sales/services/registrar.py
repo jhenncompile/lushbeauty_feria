@@ -11,6 +11,7 @@ from django.utils import timezone
 
 from apps.audit.contracts import registrar_evento
 from apps.catalog import contracts as catalogo
+from apps.commissions import contracts as comisiones
 from apps.identity import contracts as identidad
 from apps.sales.domain import calculo
 from apps.sales.persistence.models import LineaVenta, Pago, Venta
@@ -35,8 +36,9 @@ class PagoEntrada:
     monto: Decimal
 
 
-def _calcular(lineas: list[LineaEntrada], *, permisos: frozenset[str], usuario_id):
-    """Resuelve catálogo y calcula, sin escribir nada. Devuelve [(entrada, servicio, calculada)]."""
+def _calcular(lineas: list[LineaEntrada], *, permisos: frozenset[str], usuario_id, fecha_servicio):
+    """Resuelve catálogo y calcula, sin escribir nada. Devuelve [(entrada, servicio, calculada, comision)]."""
+    dia = timezone.localdate(fecha_servicio)
     propia = None if "CATALOGO_GESTIONAR" in permisos else catalogo.especialista_de_usuario(usuario_id)
     resueltas = []
     for entrada in lineas:
@@ -55,7 +57,14 @@ def _calcular(lineas: list[LineaEntrada], *, permisos: frozenset[str], usuario_i
             )
         except calculo.ErrorDeVenta as error:
             raise VentaRechazada(error.codigo, str(error)) from error
-        resueltas.append((entrada, servicio, calculada))
+        try:
+            comision = comisiones.comision_de_linea(
+                especialista_id=entrada.especialista_id, dia=dia, precio_lista=calculada.precio_lista,
+                cantidad=calculada.cantidad, importe_cobrado=calculada.importe_cobrado,
+            )
+        except comisiones.SinReglaVigente as error:
+            raise VentaRechazada("sin_regla_comision", str(error)) from error
+        resueltas.append((entrada, servicio, calculada, comision))
     return resueltas
 
 
@@ -72,8 +81,9 @@ def registrar_venta(*, uuid_cliente, cliente_id, fecha_servicio, lineas: list[Li
     if cliente_id is not None and not catalogo.cliente_existe(cliente_id):
         raise VentaRechazada("cliente_inexistente", "La clienta no existe.")
 
-    resueltas = _calcular(lineas, permisos=permisos, usuario_id=usuario.id)
-    calculadas = [c for _, _, c in resueltas]
+    fecha_servicio = fecha_servicio or timezone.now()
+    resueltas = _calcular(lineas, permisos=permisos, usuario_id=usuario.id, fecha_servicio=fecha_servicio)
+    calculadas = [c for _, _, c, _ in resueltas]
     try:
         calculo.validar_pagos(calculadas, [(p.metodo, p.monto) for p in pagos])
     except calculo.ErrorDeVenta as error:
@@ -91,16 +101,17 @@ def registrar_venta(*, uuid_cliente, cliente_id, fecha_servicio, lineas: list[Li
         with transaction.atomic():
             venta = Venta.objects.create(
                 salon_id=tenancy.salon_actual(), cliente_id=cliente_id, registrado_por=usuario.id,
-                uuid_cliente=uuid_cliente, fecha_servicio=fecha_servicio or timezone.now(),
+                uuid_cliente=uuid_cliente, fecha_servicio=fecha_servicio,
                 estado=Venta.Estado.CONFIRMADA, origen=Venta.Origen.WEB,
             )
-            for entrada, servicio, c in resueltas:
+            for entrada, servicio, c, com in resueltas:
                 LineaVenta.objects.create(
                     salon_id=venta.salon_id, venta=venta, servicio_id=servicio.id,
                     especialista_id=entrada.especialista_id, cantidad=c.cantidad, precio_lista=c.precio_lista,
                     descuento=c.descuento, motivo_descuento=c.motivo_descuento, importe_cobrado=c.importe_cobrado,
                     costo_materiales=servicio.costo_materiales, propina=entrada.propina,
-                    metodo_propina=entrada.metodo_propina,
+                    metodo_propina=entrada.metodo_propina, regla_comision_id=com.regla_id,
+                    base_comision=com.base, tasa_comision=com.tasa, comision=com.comision,
                 )
             for p in pagos:
                 Pago.objects.create(salon_id=venta.salon_id, venta=venta, metodo=p.metodo, monto=p.monto)
