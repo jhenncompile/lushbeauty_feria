@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, timedelta
+from uuid import UUID
 from decimal import Decimal
 
 from django.db import transaction
@@ -185,6 +186,22 @@ def detalle_de(liquidacion: Liquidacion) -> Detalle:
     lineas = ventas.lineas_de_liquidacion(liquidacion.id)
     movimientos = list(MovimientoNomina.objects.filter(liquidacion_id=liquidacion.id).order_by("fecha", "id"))
     return Detalle(liquidacion, lineas, movimientos, sum(1 for l in lineas if l.comision is None))
+
+
+def de_la_especialista(usuario_id) -> UUID | None:
+    """La especialista vinculada a este usuario (None si el usuario no es especialista)."""
+    return catalogo.especialista_de_usuario(usuario_id)
+
+
+def liquidaciones_propias(especialista_id) -> list[Liquidacion]:
+    """Solo las aprobadas o pagadas: un borrador es de trabajo de la administradora y aún puede cambiar."""
+    return [l for l in listar(especialista_id=especialista_id) if l.estado != Liquidacion.Estado.BORRADOR]
+
+
+def liquidacion_propia(liquidacion_id, especialista_id) -> Liquidacion | None:
+    """None si no existe, es de otra especialista o sigue en borrador (el llamador no distingue los casos)."""
+    l = Liquidacion.objects.filter(id=liquidacion_id, especialista_id=especialista_id).first()
+    return None if l is None or l.estado == Liquidacion.Estado.BORRADOR else l
 
 
 def obtener(liquidacion_id) -> Liquidacion | None:

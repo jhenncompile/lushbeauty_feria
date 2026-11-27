@@ -2,6 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.audit.contracts import registrar_acceso_denegado
 from apps.identity.contracts import TienePermiso
 from apps.payroll.api import serializers as ser
 from apps.payroll.services import nomina
@@ -40,6 +41,39 @@ class GenerarView(APIView):
         except NominaRechazada as error:
             return _rechazo(error)
         return Response(ser.detalle_salida(detalle), status=201)
+
+
+def _denegar(request, permiso: str) -> Response:
+    registrar_acceso_denegado(permiso=permiso, ruta=request.path, metodo=request.method,
+                              direccion_ip=request.META.get("REMOTE_ADDR"))
+    return Response({"detail": "No tienes permiso para esta operación."}, status=403)
+
+
+class MisLiquidacionesView(APIView):
+    """«Mi liquidación» (HU-09): la especialista ve solo las suyas, aprobadas o pagadas."""
+
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = "LIQUIDACION_VER_PROPIA"
+
+    def get(self, request):
+        propia = nomina.de_la_especialista(request.user.id)
+        if propia is None:
+            return _denegar(request, "LIQUIDACION_VER_PROPIA")
+        return Response([ser.liquidacion_salida(l) for l in nomina.liquidaciones_propias(propia)])
+
+
+class MiLiquidacionDetalleView(APIView):
+    """CP-06: pedir la liquidación de otra persona (o una que no existe o no está aprobada) da 403 y queda registrado."""
+
+    permission_classes = [IsAuthenticated, TienePermiso]
+    permiso_requerido = "LIQUIDACION_VER_PROPIA"
+
+    def get(self, request, liquidacion_id):
+        propia = nomina.de_la_especialista(request.user.id)
+        liquidacion = None if propia is None else nomina.liquidacion_propia(liquidacion_id, propia)
+        if liquidacion is None:
+            return _denegar(request, "LIQUIDACION_VER_PROPIA")
+        return Response(ser.detalle_salida(nomina.detalle_de(liquidacion)))
 
 
 class AprobarView(APIView):
