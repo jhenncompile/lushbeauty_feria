@@ -18,6 +18,10 @@ class Salon(models.Model):
         validators=[MinValueValidator(Decimal("0")), MaxValueValidator(Decimal("1"))],
     )
 
+    # Último día de la semana de liquidación (0 = lunes … 6 = domingo). Valor inicial de la decisión 6.
+    dia_corte_semana = models.PositiveSmallIntegerField(
+        default=6, validators=[MaxValueValidator(6)])
+
     objects = SalonScopedManager(campo="id")
 
     class Meta:

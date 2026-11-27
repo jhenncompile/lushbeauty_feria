@@ -22,6 +22,11 @@ def nombres_de_usuarios(ids) -> dict:
     return dict(Usuario.objects.filter(id__in=set(ids)).values_list("id", "nombre"))
 
 
+def dia_corte_del_salon() -> int:
+    """Último día de la semana de liquidación del salón activo (0 = lunes … 6 = domingo)."""
+    return Salon.objects.values_list("dia_corte_semana", flat=True).get()
+
+
 def salon_existe(salon_id) -> bool:
     """Con el salón ya activo en el contexto (la RLS oculta los demás)."""
     return Salon.objects.filter(id=salon_id).exists()

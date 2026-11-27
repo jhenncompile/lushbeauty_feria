@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "apps.cashier",
     "apps.analytics",
     "apps.notifications",
+    "apps.payroll",
     "apps.sales",
     "apps.demo",
 ]
@@ -57,6 +58,7 @@ MIGRATION_MODULES = {
     "commissions": "apps.commissions.persistence.migrations",
     "cashier": "apps.cashier.persistence.migrations",
     "notifications": "apps.notifications.persistence.migrations",
+    "payroll": "apps.payroll.persistence.migrations",
     "sales": "apps.sales.persistence.migrations",
 }
 
