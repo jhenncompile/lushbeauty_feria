@@ -13,8 +13,12 @@ from apps.audit.contracts import registrar_evento
 from apps.cashier.domain import caja as dominio
 from apps.cashier.persistence.models import CierreCaja
 from apps.identity import contracts as identidad
+from apps.notifications import contracts as notificaciones
 from apps.sales import contracts as ventas
 from shared import tenancy
+
+
+EVENTO_CIERRE_APROBADO = "cierre_caja.aprobado"
 
 
 class CierreRechazado(Exception):
@@ -81,7 +85,11 @@ def registrar_cierre(fecha: date, declaraciones: list[Declaracion], *, usuario_i
 
 
 def aprobar_cierre(cierre_id, *, usuario) -> CierreCaja:
-    """Aprueba un cierre. El evento `caja.cierre_aprobado` al outbox queda para F13 (decisión 9)."""
+    """Aprueba un cierre y deja el evento `cierre_caja.aprobado` en el outbox, en la misma transacción.
+
+    Decisión 9: un evento por fila (método) aprobada; la entidad del evento es el id del cierre. El payload
+    no lleva datos personales: solo fecha, método y si cuadró.
+    """
     if "CAJA_CERRAR" not in identidad.permisos_de(usuario):
         raise CierreRechazado("sin_permiso", "No tiene permiso para aprobar el cierre de caja.", 403)
     with transaction.atomic():
@@ -97,4 +105,7 @@ def aprobar_cierre(cierre_id, *, usuario) -> CierreCaja:
         registrar_evento("APROBAR", "cierre_caja", entidad_id=cierre.id, valor_nuevo={
             "fecha": cierre.fecha.isoformat(), "metodo": cierre.metodo,
             "diferencia": str(dominio.diferencia(cierre.declarado, cierre.esperado))})
+        notificaciones.publicar_evento(EVENTO_CIERRE_APROBADO, cierre.id, {
+            "fecha": cierre.fecha.isoformat(), "metodo": cierre.metodo,
+            "estado": dominio.estado_de(dominio.diferencia(cierre.declarado, cierre.esperado))})
     return cierre

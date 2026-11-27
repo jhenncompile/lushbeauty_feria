@@ -154,3 +154,67 @@ class PermisosTests(CajaTestCase):
         with tenancy.en_salon(self.salon_b), connection.cursor() as c:
             c.execute("SELECT count(*) FROM cierre_caja")
             self.assertEqual(c.fetchone()[0], 0)
+
+
+class EventoDeCierreTests(CajaTestCase):
+    """Decisión 9: un evento `cierre_caja.aprobado` por método aprobado, en la misma transacción."""
+
+    def eventos(self):
+        from apps.notifications.persistence.models import EventoOutbox
+        with tenancy.en_salon(self.salon_a):
+            return list(EventoOutbox.objects.order_by("creado_en"))
+
+    def aprobar(self, auth, cierre):
+        return self.client.post(f"/api/v1/caja/cierres/{cierre['id']}/aprobar/", **auth)
+
+    def test_aprobar_deja_un_evento_con_el_id_del_cierre(self):
+        auth = self.datos()
+        cierre = self.cerrar(auth, [{"metodo": "QR", "declarado": "70.00"}]).json()[0]
+        self.assertEqual(self.eventos(), [])  # registrar no emite
+        self.assertEqual(self.aprobar(auth, cierre).status_code, 200)
+        (evento,) = self.eventos()
+        self.assertEqual((evento.tipo, str(evento.entidad_id), evento.estado), ("cierre_caja.aprobado", cierre["id"], "PENDIENTE"))
+        self.assertEqual(evento.payload, {"fecha": HOY.isoformat(), "metodo": "QR", "estado": "CUADRA"})
+
+    def test_cada_metodo_aprobado_emite_su_propio_evento(self):
+        auth = self.datos()
+        filas = self.cerrar(auth, [{"metodo": "QR", "declarado": "70.00"},
+                                   {"metodo": "EFECTIVO", "declarado": "120.00", "justificacion": "Cambio dado"}]).json()
+        for fila in filas:
+            self.aprobar(auth, fila)
+        eventos = self.eventos()
+        self.assertEqual(len(eventos), 2)
+        self.assertEqual(sorted(e.payload["estado"] for e in eventos), ["CUADRA", "FALTA"])
+
+    def test_aprobar_dos_veces_no_duplica_el_evento(self):
+        auth = self.datos()
+        cierre = self.cerrar(auth, [{"metodo": "QR", "declarado": "70.00"}]).json()[0]
+        self.aprobar(auth, cierre)
+        self.assertEqual(self.aprobar(auth, cierre).status_code, 409)
+        self.assertEqual(len(self.eventos()), 1)
+
+    def test_una_aprobacion_rechazada_no_deja_evento(self):
+        auth = self.datos()
+        cierre = self.cerrar(auth, [{"metodo": "QR", "declarado": "70.00"}]).json()[0]
+        self.assertEqual(self.aprobar(self.login("esp@a.test"), cierre).status_code, 403)
+        self.assertEqual(self.eventos(), [])
+
+    def test_si_falla_el_evento_la_aprobacion_se_deshace(self):
+        from unittest import mock
+        auth = self.datos()
+        cierre = self.cerrar(auth, [{"metodo": "QR", "declarado": "70.00"}]).json()[0]
+        with mock.patch("apps.cashier.services.caja.notificaciones.publicar_evento", side_effect=RuntimeError("outbox caído")):
+            with self.assertRaises(RuntimeError):
+                self.aprobar(auth, cierre)
+        with tenancy.en_salon(self.salon_a):
+            self.assertIsNone(CierreCaja.objects.get(id=cierre["id"]).aprobado_por)
+
+    def test_el_publicador_entrega_el_evento_de_cierre(self):
+        from apps.notifications.services import publicador
+        auth = self.datos()
+        cierre = self.cerrar(auth, [{"metodo": "QR", "declarado": "70.00"}]).json()[0]
+        self.aprobar(auth, cierre)
+        recibidos = []
+        cuenta = publicador.publicar_pendientes(recibidos.append)
+        self.assertEqual(cuenta["enviados"], 1)
+        self.assertEqual((recibidos[0].tipo, str(recibidos[0].entidad_id)), ("cierre_caja.aprobado", cierre["id"]))

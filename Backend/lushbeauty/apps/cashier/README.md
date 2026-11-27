@@ -18,6 +18,6 @@ Aprobado, un cierre no se modifica y ninguno se borra (trigger).
 **API** (todo con permiso `CAJA_CERRAR`, hoy solo la administradora): `GET /api/v1/caja/resumen/?desde=&hasta=`,
 `GET/POST /api/v1/caja/cierres/` (`fecha` + `declaraciones[{metodo, declarado, justificacion}]`), `POST /api/v1/caja/cierres/<id>/aprobar/`.
 
-**Eventos:** todavía ninguno. Aprobar debería emitir `caja.cierre_aprobado` al outbox (F13); falta decidir si es por método o al completar el día, y unificar el nombre con `cierre_caja.aprobado` (decisión 9).
+**Eventos que emite:** `cierre_caja.aprobado`, **uno por método aprobado** (decisión 9), con el id del cierre como entidad. Se escribe en el outbox (`notifications`) en la misma transacción que la aprobación: si el evento falla, la aprobación se deshace; aprobar dos veces no lo duplica. Payload sin datos personales: `fecha`, `metodo` y `estado` (`CUADRA`/`FALTA`/`SOBRA`). Registrar un cierre no emite nada; solo aprobarlo.
 
 **Pendiente:** la pantalla y la vista móvil conectadas al servidor; si una especialista puede registrar el conteo (hoy no tiene permiso).
