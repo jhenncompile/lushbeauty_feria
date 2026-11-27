@@ -8,12 +8,14 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass
+from datetime import date
 from decimal import Decimal
 
 from django.db import IntegrityError
 from django.utils import timezone
 
 from apps.catalog import contracts as catalogo
+from apps.commissions import contracts as comisiones
 from apps.identity import contracts as identidad
 from apps.sales import contracts as ventas
 from shared import tenancy
@@ -60,7 +62,7 @@ SALONES_DEMO = (
 
 def sembrar() -> dict[str, int]:
     """Devuelve cuántos registros nuevos creó (0 si ya estaba todo)."""
-    nuevos = {"salones": 0, "usuarios": 0, "servicios": 0, "especialistas": 0, "clientas": 0, "ventas": 0}
+    nuevos = {"salones": 0, "usuarios": 0, "servicios": 0, "especialistas": 0, "clientas": 0, "reglas": 0, "ventas": 0}
     for demo in SALONES_DEMO:
         salon_id = uuid.uuid5(_NS, demo.nombre)  # determinista: así se reconoce en la siguiente corrida
         with tenancy.en_salon(salon_id):
@@ -90,6 +92,7 @@ def sembrar() -> dict[str, int]:
                     catalogo.crear_especialista(nombre=nombre, sueldo_fijo=Decimal(sueldo),
                                                 usuario_id=usuarios.get(email) if email else None)
                     nuevos["especialistas"] += 1
+            nuevos["reglas"] += _sembrar_reglas()
             ya = {c.nombre for c in catalogo.listar_clientes()}
             for nombre, telefono in CLIENTAS:
                 if nombre not in ya:
@@ -98,6 +101,22 @@ def sembrar() -> dict[str, int]:
             if demo.con_ventas:
                 nuevos["ventas"] += _sembrar_ventas(admin_id)
     return nuevos
+
+
+def _sembrar_reglas() -> int:
+    """Política general (35 % sobre lista) y una propia de la segunda especialista (40 % sobre lo cobrado).
+    Los porcentajes son de ejemplo, no una decisión de negocio (decisión abierta 2)."""
+    if comisiones.listar():
+        return 0
+    comisiones.crear_version(porcentaje="0.35", base=comisiones.PRECIO_LISTA, desde=date(2026, 1, 1),
+                             motivo="Política general de demostración")
+    creadas = 1
+    segunda = next((e for e in catalogo.listar_especialistas() if e.nombre == "Especialista Dos"), None)
+    if segunda is not None:
+        comisiones.crear_version(porcentaje="0.40", base=comisiones.PRECIO_COBRADO, desde=date(2026, 1, 1),
+                                 motivo="Acuerdo propio de demostración", especialista_id=segunda.id)
+        creadas += 1
+    return creadas
 
 
 def _sembrar_ventas(admin_id) -> int:

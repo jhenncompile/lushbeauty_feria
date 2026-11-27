@@ -2,7 +2,10 @@ import json
 import uuid
 from decimal import Decimal
 
+from datetime import date
+
 from apps.catalog import contracts as catalogo
+from apps.commissions import contracts as comisiones
 from apps.identity import contracts as identidad
 from apps.identity.tests.base import CLAVE, DosSalonesTestCase
 from shared import tenancy
@@ -22,9 +25,13 @@ class VentasTestCase(DosSalonesTestCase):
             cls.tinte = catalogo.crear_servicio(categoria="Color", nombre="Tinte", precio_lista="300.00")
             cls.paty = catalogo.crear_especialista(nombre="Paty", sueldo_fijo="1500.00", usuario_id=cls.esp_a)
             cls.kathe = catalogo.crear_especialista(nombre="Katherine")
+            cls.regla_general = comisiones.crear_version(
+                porcentaje="0.35", base=comisiones.PRECIO_LISTA, desde=date(2020, 1, 1), motivo="Política base (prueba)")
         with tenancy.en_salon(cls.salon_b, cls.admin_b):
             cls.corte_b = catalogo.crear_servicio(categoria="Cabello", nombre="Corte", precio_lista="90.00")
             cls.esp_b = catalogo.crear_especialista(nombre="Esp B")
+            comisiones.crear_version(
+                porcentaje="0.50", base=comisiones.PRECIO_COBRADO, desde=date(2020, 1, 1), motivo="Política base B (prueba)")
 
     def cuerpo(self, *, lineas=None, pagos=None, uuid_cliente=None):
         lineas = lineas or [{"servicio_id": str(self.corte.id), "especialista_id": str(self.paty.id)}]

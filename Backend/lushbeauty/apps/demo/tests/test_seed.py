@@ -46,6 +46,14 @@ class SeedDemoTests(TestCase):
         self.assertGreaterEqual(len(self.client.get("/api/v1/especialistas/", **cab).json()), 2)
         self.assertGreaterEqual(len(self.client.get("/api/v1/clientes/", **cab).json()), 2)
 
+    def test_deja_politicas_de_comision_general_y_propia(self):
+        sembrar()
+        cab = {"HTTP_AUTHORIZATION": f"Bearer {self.login('admin@lush.test').json()['token']}"}
+        reglas = self.client.get("/api/v1/comisiones/reglas/", **cab).json()
+        self.assertEqual(sorted(r["base"] for r in reglas), ["PRECIO_COBRADO", "PRECIO_LISTA"])
+        ventas = self.client.get("/api/v1/ventas/", **cab).json()
+        self.assertTrue(all(l["comision"] is not None for v in ventas for l in v["lineas"]))
+
     def test_hay_un_segundo_salon_para_probar_aislamiento(self):
         sembrar()
         self.assertGreaterEqual(len(SALONES_DEMO), 2)
