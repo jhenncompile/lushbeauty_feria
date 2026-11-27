@@ -1,3 +1,4 @@
+import { toCents } from '../../../shared/money'
 import type { PaymentMethod, SaleRow, SaleStatus } from '../types'
 
 /** Forma de `venta_salida` del backend (`apps/sales/api/serializers.py`). Los importes llegan como texto decimal. */
@@ -29,12 +30,6 @@ const STATUS_BY_CODE: Record<VentaApi['estado'], SaleStatus> = {
   CONFIRMADA: 'confirmada',
   REQUIERE_REVISION: 'revision',
   ANULADA: 'anulada',
-}
-
-/** «120.00» → 12000. Sin pasar por coma flotante: el dinero se parte como texto. */
-export function toCents(amount: string): number {
-  const [whole, fraction = ''] = amount.split('.')
-  return Number(whole) * 100 + Number(fraction.padEnd(2, '0').slice(0, 2)) * (whole.startsWith('-') ? -1 : 1)
 }
 
 const dayFormat = new Intl.DateTimeFormat('es-BO', { day: 'numeric', month: 'short' })

@@ -1,2 +1,2 @@
-export { formatBs, parseAmountToCents } from './money'
+export { formatBs, parseAmountToCents, toCents } from './money'
 export type { FormatOptions } from './money'

@@ -17,7 +17,9 @@ export function useCloseCashFlow() {
   }
 
   function confirm() {
-    setStep(cash.close() ? 'done' : 'idle')
+    const result = cash.close()
+    if (typeof result === 'boolean') setStep(result ? 'done' : 'idle')
+    else void result.then((ok) => setStep(ok ? 'done' : 'idle'))
   }
 
   const dialogs = (
