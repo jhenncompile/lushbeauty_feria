@@ -10,7 +10,7 @@ Etiquetas: `[BE]` backend Django/DRF · `[WEB]` vista de administradora · `[MOB
 |---|---|---|---|
 | 1-2 | [F00 foundation](F00-foundation.md) | Hecho (incluye T7); falta ver la CI en GitHub | Protegida |
 | 2 | [F01 caja-ventas-pagos](F01-caja-ventas-pagos.md) | Backend T1–T4/T7 hecho; UI T5/T6 sin conectar | Protegida |
-| 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | UI parcial (T4 lectura) | Protegida |
+| 2 | [F02 comisiones-versionadas](F02-comisiones-versionadas.md) | Backend T1–T3 hecho; UI T4 solo lectura | Protegida |
 | 2 | [F03 liquidacion-semanal](F03-liquidacion-semanal.md) | UI parcial (T5/T6 maqueta) | Protegida |
 | 2 | [F04 cierre-caja](F04-cierre-caja.md) | UI parcial (T4 maqueta) | Protegida |
 | 3 | [F05 pwa-offline-sync](F05-pwa-offline-sync.md) | UI parcial (T5 maqueta) | Alta |
@@ -91,7 +91,7 @@ DSS-08 (proyección de caja) · DSS-09 (optimización de capacidad) · DSS-10 (p
 
 ## Decisiones abiertas que bloquean tasks (validar con la administradora)
 1. Redondeo de moneda (RN-03) → F01.
-2. Base de comisión: precio de lista o importe neto → F02.
+2. ~~Base de comisión~~ Resuelta técnicamente **por regla** (cada versión elige lista o neto); la administradora debe confirmar cuál usar → F02.
 3. Costos variables de materiales por servicio → F08.
 4. Pesos de la matriz multicriterio → F09.
 5. Fecha real de la feria, para revisar el plan de 8 semanas → todo el calendario.
