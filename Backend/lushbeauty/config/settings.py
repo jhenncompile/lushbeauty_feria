@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "apps.commissions",
     "apps.cashier",
     "apps.analytics",
+    "apps.notifications",
     "apps.sales",
     "apps.demo",
 ]
@@ -55,6 +56,7 @@ MIGRATION_MODULES = {
     "catalog": "apps.catalog.persistence.migrations",
     "commissions": "apps.commissions.persistence.migrations",
     "cashier": "apps.cashier.persistence.migrations",
+    "notifications": "apps.notifications.persistence.migrations",
     "sales": "apps.sales.persistence.migrations",
 }
 
@@ -79,6 +81,11 @@ REST_FRAMEWORK = {
 
 # Descuento (fracción del precio de lista de la línea) que una especialista puede aplicar sin
 # aprobación. Valor ilustrativo del diseño; pendiente de la decisión 8 con la administradora.
+# --- Outbox / n8n: sin URL o secreto el publicador no corre; los eventos quedan pendientes ---
+N8N_WEBHOOK_URL = os.environ.get("N8N_WEBHOOK_URL", "")
+N8N_WEBHOOK_SECRET = os.environ.get("N8N_WEBHOOK_SECRET", "")
+OUTBOX_MAX_INTENTOS = int(os.environ.get("OUTBOX_MAX_INTENTOS", "5"))
+
 VENTAS_UMBRAL_DESCUENTO_SIN_APROBACION = os.environ.get("VENTAS_UMBRAL_DESCUENTO", "0.10")
 
 # Vigencia del token de sesión, en segundos.
