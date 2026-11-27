@@ -1,0 +1,113 @@
+\section{Implementación y Resultados Técnicos}\label{cap:implementacion}
+
+Este capítulo documenta lo que existe construido y verificado al 26 de noviembre de 2026 (semana 4 del cronograma). Todas las cifras proceden de ejecuciones realizadas sobre el repositorio en esa fecha o del conteo de su código y esquema; no provienen de datos reales del salón. Los resultados de efecto sobre el tiempo de liquidación, los errores de cálculo y la usabilidad (Capítulo~\ref{cap:operacionalizacion}) \textbf{no se reportan aquí}, porque requieren la medición posterior descrita en el marco metodológico.
+
+\subsection{Alcance construido}
+
+El sistema se implementó como un monolito modular: cada dominio tiene su propia carpeta con reglas puras (\textit{domain}), casos de uso (\textit{services}), adaptador HTTP (\textit{api}), persistencia y un contrato público, de modo que un módulo pueda extraerse como microservicio sin reescribirlo. La Tabla~\ref{tab:impl_1} resume los módulos de backend en operación.
+
+\vspace{8pt}{\small\setstretch{1.0}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}>{\centering\arraybackslash}p{0.15\linewidth}}
+\caption{Módulos de backend implementados}\label{tab:impl_1}\\
+\toprule
+\textbf{Módulo} & \textbf{Responsabilidad} & \textbf{Métodos de prueba} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Módulo} & \textbf{Responsabilidad} & \textbf{Métodos de prueba} \\
+\midrule\endhead
+\bottomrule\endfoot
+\bottomrule\endlastfoot
+identity & Salones, usuarios, roles, permisos y autenticación & 28 \\
+audit & Historial de cambios con contexto de usuario & 4 \\
+catalog & Servicios, especialistas y clientas & 9 \\
+commissions & Reglas de comisión versionadas y snapshot por línea de venta & 34 \\
+sales & Ventas multilínea, pagos divididos, anulación e idempotencia por UUID & 53 \\
+cashier & Resumen y cierre de caja por método de pago & 30 \\
+payroll & Deducciones, liquidación semanal, aprobación, pago, PDF y XLSX & 79 \\
+analytics & Panel financiero (lectura) & 19 \\
+notifications & Bandeja de salida (\textit{outbox}) para n8n & 28 \\
+demo & Datos sintéticos para la demostración & 7 \\
+\end{longtable}}
+\nota{Elaboración propia a partir de \texttt{Backend/lushbeauty/apps/}. Se contaron los métodos \texttt{test\_*} de cada módulo (291); el ejecutor de pruebas reporta 295 casos porque algunos métodos generan más de un caso.}
+
+En el frente de usuario existen dos clientes: la aplicación web progresiva (PWA) de React y TypeScript, organizada por módulos (\textit{sales}, \textit{payroll}, \textit{cashier}, \textit{analytics}, \textit{decisions}, \textit{insight}, \textit{guard}, \textit{imports}, entre otros), y una réplica móvil en Flutter con las vistas de la especialista (ingreso, \textit{Hoy}, registro rápido, sincronización, \textit{Mi liquidación} y cierre de caja). La base de datos PostgreSQL se define en un esquema propio con 23 tablas y 20 políticas de seguridad a nivel de fila (RLS).
+
+\subsection{Verificación ejecutada}
+
+La Tabla~\ref{tab:impl_2} presenta las suites ejecutadas el 26 de noviembre de 2026. El backend se probó contra PostgreSQL dentro de Docker; las pruebas de dominio (comisión, contribución, liquidación) usan \texttt{Decimal} y no requieren base de datos.
+
+\vspace{8pt}{\small\setstretch{1.0}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\centering\arraybackslash}p{0.14\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}}
+\caption{Pruebas automatizadas ejecutadas}\label{tab:impl_2}\\
+\toprule
+\textbf{Componente} & \textbf{Herramienta} & \textbf{Casos} & \textbf{Resultado} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Componente} & \textbf{Herramienta} & \textbf{Casos} & \textbf{Resultado} \\
+\midrule\endhead
+\bottomrule\endfoot
+\bottomrule\endlastfoot
+Backend Django/DRF & \texttt{manage.py test}, PostgreSQL 17 & 295 & Todos aprobados \\
+Web (PWA) & Vitest & 120 & Todos aprobados \\
+Móvil (Flutter) & \texttt{flutter test} & 32 & Todos aprobados \\
+\end{longtable}}
+\nota{Elaboración propia. El número de casos de cada suite es el informado por su ejecutor. No se midió cobertura de código; por tanto, estas cifras indican qué comportamientos están cubiertos, no qué porcentaje del código lo está.}
+
+Entre los comportamientos comprobados por las pruebas se encuentran los siguientes casos de aceptación del Anexo~J:
+
+\begin{vinetas}
+\item \textbf{CP-01, descuento sin alterar la lista.} Un servicio de lista Bs~120 con descuento de Bs~8 se cobra a Bs~112; se conserva el precio de lista y la comisión (35\,\% ilustrativo) se calcula sobre la lista: Bs~42,00. Se verifica en dominio, API y pantalla.
+\item \textbf{Idempotencia.} Reenviar una venta con el mismo UUID devuelve la existente (201 la primera vez, 200 después) sin crear filas; el mismo UUID en otro salón es otra venta.
+\item \textbf{Integridad monetaria.} Pagos distintos de las líneas se rechazan sin dejar filas; el umbral de descuento de 10\,\% pasa sin aprobación y un centavo más la exige.
+\item \textbf{Inmutabilidad.} La base de datos no permite borrar ni modificar líneas confirmadas ni liquidaciones aprobadas; la anulación conserva las líneas y queda auditada.
+\item \textbf{Aislamiento por salón y por rol.} Un salón no ve datos de otro; una especialista solo ve sus servicios y únicamente sus liquidaciones aprobadas, con su comprobante PDF.
+\end{vinetas}
+
+\subsection{Ciclo operativo demostrable}
+
+El ciclo central de caja y nómina funciona de extremo a extremo en el backend: registro de venta con pagos $\rightarrow$ cálculo de comisión por \textit{snapshot} versionado $\rightarrow$ cierre de caja por método $\rightarrow$ borrador y aprobación de la liquidación semanal (sueldo fijo, comisión, propina y deducciones con motivo) $\rightarrow$ marcado como pagada y emisión de comprobante PDF y resumen XLSX. La fórmula de liquidación se aplica igual en el dominio y en una restricción de la base de datos. Los eventos de cierre y de liquidación se escriben en la bandeja de salida para su entrega por n8n.
+
+\subsection{Estado por funcionalidad}
+
+La Tabla~\ref{tab:impl_3} distingue lo implementado de lo que sigue como maqueta. Se toma del backlog del repositorio (\texttt{odd/tasks/INDEX.md}) y se contrastó con el código y las pruebas.
+
+\vspace{8pt}{\small\setstretch{1.0}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}}
+\caption{Estado de las funcionalidades al 26 de noviembre de 2026}\label{tab:impl_3}\\
+\toprule
+\textbf{Funcionalidad} & \textbf{Backend} & \textbf{Interfaz} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Funcionalidad} & \textbf{Backend} & \textbf{Interfaz} \\
+\midrule\endhead
+\bottomrule\endfoot
+\bottomrule\endlastfoot
+Base y seguridad (F00, F14) & Hecho; RLS, auditoría y datos demo; parcial en despliegue y CI & Solo el inicio de sesión consume la API \\
+Caja, ventas y pagos (F01) & Hecho & Maqueta sin conectar \\
+Comisiones versionadas (F02) & Hecho & Lectura con datos de prueba \\
+Liquidación semanal (F03) & Hecho, con PDF y XLSX & Maqueta \\
+Cierre de caja (F04) & Hecho & Maqueta \\
+PWA sin conexión (F05) & Idempotencia lista; cola y sincronizador pendientes & Maqueta \\
+Importador de Excel (F06) & Sin empezar & Maqueta \\
+Panel financiero (F07) & Lectura hecha & Maqueta \\
+Contribución y What-If (F08) & Parcial & Maqueta \\
+Matriz y sensibilidad (F09) & Sin empezar & Maqueta \\
+Recomendación y decisiones (F10) & Sin empezar & Maqueta \\
+Lush Insight (F11) y Guard (F12) & Sin empezar & Maqueta / respuestas fijas \\
+n8n y \textit{outbox} (F13) & Eventos de cierre y liquidación; faltan los flujos & Sin empezar \\
+\end{longtable}}
+\nota{Elaboración propia. «Maqueta» significa pantalla con datos en memoria que no llama al API correspondiente, aunque el endpoint exista.}
+
+\subsection{Decisiones abiertas con valor provisional}
+
+Algunas reglas se aplicaron con un valor inicial a la espera de validación con la administradora: el redondeo de la comisión (mitad hacia arriba, a dos decimales), el umbral de descuento sin aprobación (10\,\%), los métodos de pago (efectivo, QR, transferencia y tarjeta), la semana de liquidación (lunes a domingo, configurable por salón) y los pesos por defecto de la matriz de decisión (40/25/20/15, de ejemplo). Los resultados que dependen de ellos deben leerse como condicionados a esa validación.
+
+\subsection{Limitaciones del avance}
+
+\begin{vinetas}
+\item La interfaz web aún no consume la mayoría de los endpoints existentes; la integración convertirá las maquetas en pantallas reales.
+\item El módulo de soporte para decisiones (escenarios, matriz, sensibilidad, recomendación y seguimiento) carece de backend, salvo un avance parcial del modelo de contribución.
+\item No se han hecho pruebas de carga, de concurrencia real ni de campo con conexión intermitente.
+\item Las capturas de pantalla de las vistas de la PWA y de Flutter se incorporarán cuando estén conectadas al API; hasta entonces no se presentan como evidencia de funcionamiento.
+\item No hay mediciones de tiempo de liquidación, tasa de errores ni usabilidad (SUS); las hipótesis siguen sin contrastarse.
+\end{vinetas}
